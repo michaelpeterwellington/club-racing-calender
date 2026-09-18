@@ -22,3 +22,26 @@ export const newsletter = {
   action: null,
   pitch: 'A short email each week: what’s racing, and whose entries just opened.',
 };
+
+// Accommodation affiliate, shown on circuit pages. Circuits are rural and most
+// meetings are a weekend, so this is the one affiliate link that is genuinely
+// useful rather than tacked on.
+//
+// Set `bookingAid` to your Booking.com affiliate id to switch it on; null hides
+// the block entirely. Every link is rendered rel="sponsored nofollow" with a
+// visible disclosure, which the CMA requires for affiliate content, not just ads.
+export const accommodation = {
+  bookingAid: null,
+  // Booking.com searches on place names. A circuit's own name usually works;
+  // override where the nearest town is the better search.
+  searchOverrides: {
+    'billown': 'Castletown, Isle of Man',
+    'iom-mountain': 'Douglas, Isle of Man',
+    'olivers-mount': 'Scarborough',
+    'nw200': 'Portrush',
+    'darley-moor': 'Ashbourne, Derbyshire',
+    'cadwell': 'Louth, Lincolnshire',
+    'pembrey': 'Llanelli',
+    'anglesey': 'Anglesey, Wales',
+  },
+};

@@ -28,26 +28,62 @@ const tailTokens = (s) =>
    .split(/\s+/)
    .filter((t) => /^-?[\d:.]+$/.test(t) || /^\d+Lap$/.test(t));
 
+const isHeader = (l) => /\bPOS\b/.test(l) && /\bNAME\b/.test(l) && /\bLAPS\b/.test(l);
+
+// Some clubs (EMRA) publish only a combined "PDF Book" per meeting: every
+// session concatenated into one document. Split on each classification header
+// and parse the sections independently.
+export function parseAll(text) {
+  const lines = text.split('\n');
+  const heads = lines.map((l, i) => (isHeader(l) ? i : -1)).filter((i) => i >= 0);
+  const looksLikeRow = (l) => /^\s*\d+\s+\d+\s/.test(l);
+  const out = heads.map((hi, n) => {
+    // Meta sits directly above the header; walk up until the previous section's
+    // data starts, so a book's earlier results can't be mistaken for a title.
+    let from = hi;
+    for (let k = hi - 1; k >= 0 && hi - k <= 12; k--) { if (looksLikeRow(lines[k])) break; from = k; }
+    const end = n + 1 < heads.length ? heads[n + 1] : lines.length;
+    return parseSection(lines, hi, end, from);
+  }).filter((r) => r && r.rows.length);
+
+  // A long classification runs over several pages, each repeating the header.
+  // Merge consecutive sections describing the same session.
+  const merged = [];
+  for (const sec of out) {
+    const prev = merged[merged.length - 1];
+    if (prev && prev.className === sec.className && prev.session === sec.session && prev.meeting === sec.meeting) {
+      prev.rows.push(...sec.rows);
+    } else merged.push(sec);
+  }
+  return merged;
+}
+
 export function parseResult(text) {
   const lines = text.split('\n');
-  const hi = lines.findIndex((l) => /\bPOS\b/.test(l) && /\bNAME\b/.test(l) && /\bLAPS\b/.test(l));
-  if (hi < 0) return null;
+  const hi = lines.findIndex(isHeader);
+  return hi < 0 ? null : parseSection(lines, hi, lines.length, 0);
+}
 
+function parseSection(lines, hi, end, metaFrom = 0) {
   const header = lines[hi];
   const nameAt = columnStart(header, 'NAME');
   const entryAt = columnStart(header, 'ENTRY');
   if (nameAt < 0 || entryAt < 0) return null;
 
-  const pre = lines.slice(0, hi).map((l) => l.trim()).filter(Boolean);
+  const pre = lines.slice(metaFrom, hi).map((l) => l.trim()).filter(Boolean).slice(-8);
   const meta = {
-    meeting: pre[0] ?? '',
-    className: pre[1] ?? '',
+    meeting: pre.find((l) => /@/.test(l)) ?? pre[0] ?? '',
+    className: (() => {
+      const at = pre.findIndex((l) => /@/.test(l));
+      const after = at >= 0 ? pre.slice(at + 1) : pre.slice(1);
+      return after.find((l) => /[A-Za-z]{3}/.test(l) && !/CLASSIFICATION|QUALIFYING|GRID|Race Distance|^Page\b/i.test(l)) ?? '';
+    })(),
     session: (pre.find((l) => /CLASSIFICATION|QUALIFYING|GRID/i.test(l)) ?? '').trim(),
     distance: (pre.find((l) => /Race Distance/i.test(l)) ?? '').replace(/.*Race Distance:\s*/i, '').trim() || null,
   };
 
   const rows = [];
-  for (let i = hi + 1; i < lines.length; i++) {
+  for (let i = hi + 1; i < end; i++) {
     const line = lines[i];
     if (!line.trim()) continue;
     const head = line.slice(0, nameAt).trim().split(/\s+/).filter(Boolean);
@@ -112,5 +148,7 @@ export function parseResult(text) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  console.log(JSON.stringify(parseResult(pdfToText(process.argv[2])), null, 2));
+  const all = process.argv.includes('--book');
+  const text = pdfToText(process.argv[2]);
+  console.log(JSON.stringify(all ? parseAll(text) : parseResult(text), null, 2));
 }

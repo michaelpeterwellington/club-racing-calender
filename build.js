@@ -4,7 +4,7 @@ import { circuits } from './data/circuits.js';
 import { organisers } from './data/organisers.js';
 import { championships } from './data/championships.js';
 import { meetings } from './data/meetings.js';
-import { sponsors, circuitLinks, newsletter } from './data/sponsors.js';
+import { sponsors, circuitLinks, newsletter, accommodation } from './data/sponsors.js';
 import { SITE } from './site.config.js';
 
 // Pace benchmarks from scraped results (scrape/analyse.mjs). Optional: the site
@@ -202,6 +202,40 @@ function paceTable(circuitId) {
 </section>`;
 }
 
+// All of these are cookieless and store no personal data, so the site still
+// needs no consent banner. Nothing is emitted unless a provider is configured.
+function analyticsTag() {
+  const a = SITE.analytics ?? {};
+  switch (a.provider) {
+    case 'plausible':
+      return a.domain ? `<script defer data-domain="${esc(a.domain)}" src="${esc(a.src ?? 'https://plausible.io/js/script.js')}"></script>` : '';
+    case 'fathom':
+      return a.siteId ? `<script src="${esc(a.src ?? 'https://cdn.usefathom.com/script.js')}" data-site="${esc(a.siteId)}" defer></script>` : '';
+    case 'cloudflare':
+      return a.siteId ? `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"${esc(a.siteId)}"}'></script>` : '';
+    case 'umami':
+      return a.siteId && a.src ? `<script defer src="${esc(a.src)}" data-website-id="${esc(a.siteId)}"></script>` : '';
+    default: return '';
+  }
+}
+
+// Booking.com affiliate for the circuit's area. Rendered with a visible
+// disclosure and rel="sponsored nofollow" — the CMA requires affiliate links
+// to be as obvious as ads, not just paid links to be marked for Google.
+function accommodationBlock(c) {
+  if (!accommodation?.bookingAid) return '';
+  const q = accommodation.searchOverrides?.[c.id] ?? `${c.name}, UK`;
+  const url = `https://www.booking.com/searchresults.html?ss=${encodeURIComponent(q)}&aid=${encodeURIComponent(accommodation.bookingAid)}`;
+  return `<aside class="promo promo--stay">
+  <span class="promo-tag">Affiliate</span>
+  <a href="${esc(url)}" rel="sponsored nofollow noopener" class="js-out" target="_blank">
+    <b>Places to stay near ${esc(c.name)}</b>
+    <span>Most meetings here are a weekend. Searches ${esc(q)} on Booking.com.</span>
+  </a>
+  <p class="promo-disc">We may earn a commission if you book through this link. It costs you nothing extra and never affects what is listed on this site.</p>
+</aside>`;
+}
+
 function newsletterBlock() {
   if (!newsletter.action) return '';
   return `<section class="signup">
@@ -229,6 +263,7 @@ ${canonical ? `<link rel="canonical" href="${esc(SITE.url + canonical)}">` : ''}
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="${base}style.css">
+${analyticsTag()}
 ${jsonld.length ? `<script type="application/ld+json">${JSON.stringify(jsonld.length === 1 ? jsonld[0] : jsonld)}</script>` : ''}
 </head>
 <body${wide ? ' class="wide"' : ''}>
@@ -365,6 +400,7 @@ for (const c of usedCircuits) {
 <p class="lede">${esc(c.region)} \u00b7 ${c.type === 'road' ? 'Closed roads course' : 'Short circuit'} \u00b7 ${up.length} upcoming meeting${up.length === 1 ? '' : 's'}</p>
 <p class="subscribe"><a href="../../feeds/circuit-${c.id}.ics">Subscribe to ${esc(c.name)} dates (.ics)</a></p>
 ${links.map((l) => adBlock({ ...l, slot: 'inline' })).join('')}
+${accommodationBlock(c)}
 ${paceTable(c.id)}
 ${paceTable(c.id) ? '<h2>Meetings</h2>' : ''}
 ${monthList(up, { base: '../../' })}

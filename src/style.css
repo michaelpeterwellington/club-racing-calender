@@ -100,6 +100,8 @@ h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mut
 .promo a{display:block;padding:.85rem .9rem;text-decoration:none}
 .promo b{display:block;font-size:.95rem}
 .promo span{display:block;font-size:.85rem;color:var(--muted);margin-top:.15rem}
+.promo--stay a{padding-bottom:.4rem}
+.promo-disc{margin:0;padding:0 .9rem .8rem;font-size:.72rem;color:var(--muted);line-height:1.45}
 .promo-tag{position:absolute;top:.5rem;right:.6rem;font-size:.6rem;text-transform:uppercase;
   letter-spacing:.08em;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 .25rem}
 

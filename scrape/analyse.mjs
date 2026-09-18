@@ -26,6 +26,8 @@ const median = (a) => { if (!a.length) return null; const s = [...a].sort((x, y)
 
 // "Brands Hatch Indy" -> { circuit: 'brands-hatch', config: 'Indy' }
 const NAMES = circuits.map((c) => ({ id: c.id, name: c.name })).sort((a, b) => b.name.length - a.name.length);
+// TSL don't always spell a venue the way the circuit is named.
+const ALIASES = { 'donington': 'donington', 'trac mon': 'anglesey', 'brands hatch indy': 'brands-hatch', 'brands hatch gp': 'brands-hatch' };
 export function matchVenue(venue) {
   const v = (venue ?? '').trim();
   for (const c of NAMES) {
@@ -33,6 +35,9 @@ export function matchVenue(venue) {
     if (v.toLowerCase().startsWith(base.toLowerCase())) {
       return { circuit: c.id, config: v.slice(base.length).trim() || null };
     }
+  }
+  for (const [alias, id] of Object.entries(ALIASES)) {
+    if (v.toLowerCase().startsWith(alias)) return { circuit: id, config: v.slice(alias.length).trim() || null };
   }
   return { circuit: null, config: null, raw: v };
 }
