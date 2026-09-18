@@ -156,6 +156,11 @@ table#pacetable{border-collapse:separate;border-spacing:0;width:100%;font-size:.
 #pacetable tr.v-podium .verdict{color:var(--road)}
 #pacetable tr.v-mid .verdict{color:var(--muted)}
 #pacetable tr.v-off .verdict{color:var(--muted);font-weight:400}
+.pace-input select{font:inherit;font-size:.9rem;padding:.5rem .6rem;border:1px solid var(--line);
+  border-radius:8px;background:var(--panel);color:var(--ink);max-width:16rem}
+.pace-hint{font-size:.8rem;color:var(--muted);margin:0 0 .75rem}
+#pacetable td.onbike{text-align:right;font-variant-numeric:tabular-nums;font-size:.8rem;color:var(--muted)}
+#pacetable tr.no-bike{opacity:.4}
 .pace-note{font-size:.78rem;color:var(--muted);margin:.8rem 0 0;max-width:46rem;line-height:1.5}
 .clubnote{font-size:.85rem;color:var(--warn);background:var(--warn-bg);border-radius:8px;
   padding:.6rem .75rem;margin:0 0 1.25rem}

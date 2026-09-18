@@ -12,6 +12,8 @@ import { SITE } from './site.config.js';
 let PACE = [];
 try { PACE = JSON.parse(readFileSync('data/pace.json', 'utf8')); }
 catch { console.log('  (no data/pace.json \u2014 skipping pace tables)'); }
+let BIKES = { index: [], byGroup: {} };
+try { BIKES = JSON.parse(readFileSync('data/bikes.json', 'utf8')); } catch {}
 
 const OUT = 'dist';
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -176,29 +178,43 @@ function paceTable(circuitId) {
     .sort((a, b) => (toSec(a.winningLap) ?? 1e9) - (toSec(b.winningLap) ?? 1e9));
   if (!rows.length) return '';
   const cfg = [...new Set(rows.map((r) => r.config).filter(Boolean))];
+  const gkey = (r) => `${r.circuit}|${r.config ?? ''}|${r.club}|${r.className.toUpperCase().replace(/\s+/g, ' ').trim()}`;
+  // Only bikes that actually appear at this circuit are worth offering.
+  const here = new Map();
+  for (const r of rows) for (const b of BIKES.byGroup[gkey(r)] ?? []) here.set(b.label, (here.get(b.label) ?? 0) + b.riders);
+  const bikeOpts = [...here].sort((a, b) => b[1] - a[1]);
+  const groupData = Object.fromEntries(rows.map((r) => [gkey(r), BIKES.byGroup[gkey(r)] ?? []]));
   return `<section class="pace">
   <h2>Pace here</h2>
   <p class="pace-intro">From ${rows.reduce((n, r) => n + r.races, 0)} races in the 2026 season${cfg.length ? ` (${cfg.map(esc).join(', ')})` : ''}. Put your best lap in to see where it would have put you.</p>
   <div class="pace-input">
     <label for="mylap">Your best lap</label>
     <input id="mylap" type="text" inputmode="decimal" placeholder="e.g. 1:38.5 or 55.0" autocomplete="off">
+    ${bikeOpts.length ? `<label for="mybike">Your bike</label>
+    <select id="mybike">
+      <option value="">Any bike</option>
+      ${bikeOpts.map(([label, n]) => `<option value="${esc(label)}">${esc(label)} (${n})</option>`).join('')}
+    </select>` : ''}
     <button type="button" id="mylap-clear">Clear</button>
   </div>
+  <p class="pace-hint" id="bikehint" hidden></p>
   <div class="tablewrap"><table id="pacetable">
-    <thead><tr><th>Club</th><th>Class</th><th class="n">Field</th><th class="n">Win</th><th class="n">Podium</th><th class="n">National mark</th><th class="verdict-h">You</th></tr></thead>
+    <thead><tr><th>Club</th><th>Class</th><th class="n">Field</th><th class="n">Win</th><th class="n">Podium</th><th class="n">National mark</th><th class="n">On your bike</th><th class="verdict-h">You</th></tr></thead>
     <tbody>
-    ${rows.map((r) => `<tr data-win="${toSec(r.winningLap) ?? ''}" data-podium="${toSec(r.podiumLap) ?? ''}" data-mid="${toSec(r.midfieldLap) ?? ''}" data-nat="${toSec(r.nationalLap) ?? ''}" data-ratio="${r.avgToBest ?? ''}">
+    ${rows.map((r) => `<tr data-key="${esc(gkey(r))}" data-win="${toSec(r.winningLap) ?? ''}" data-podium="${toSec(r.podiumLap) ?? ''}" data-mid="${toSec(r.midfieldLap) ?? ''}" data-nat="${toSec(r.nationalLap) ?? ''}" data-ratio="${r.avgToBest ?? ''}">
       <td>${esc(r.clubName)}</td>
       <td>${esc(r.className)}</td>
       <td class="n">${r.typicalField || '\u2014'}</td>
       <td class="n">${esc(r.winningLap ?? '\u2014')}</td>
       <td class="n">${esc(r.podiumLap ?? '\u2014')}</td>
       <td class="n">${esc(r.nationalLap ?? '\u2014')}</td>
+      <td class="onbike"></td>
       <td class="verdict"></td>
     </tr>`).join('')}
     </tbody>
   </table></div>
-  <p class="pace-note"><b>National mark</b> is 92.5% of the winner\u2019s race average speed, shown as the average lap you would need to hold \u2014 not a single fast lap. When you enter a best lap it is projected into a realistic race average using the best-to-average ratio measured in that class, so the comparison is like for like. Indicative only: the ACU\u2019s criteria, and how many results count, are theirs.</p>
+  <script type="application/json" id="bikedata">${JSON.stringify(groupData).replace(/</g, '\\u003c')}</script>
+  <p class="pace-note"><b>On your bike</b> is the pace of riders running the bike you picked, in that class at this circuit \u2014 usually a fairer target than the class as a whole, since one class often spans very different machinery. Classes where nobody raced your bike are dimmed. Which classes a bike is eligible for is taken from what riders actually entered, not from the regulations, so treat it as a guide and check the club\u2019s SRs.<br><br><b>National mark</b> is 92.5% of the winner\u2019s race average speed, shown as the average lap you would need to hold \u2014 not a single fast lap. When you enter a best lap it is projected into a realistic race average using the best-to-average ratio measured in that class, so the comparison is like for like. Indicative only: the ACU\u2019s criteria, and how many results count, are theirs.</p>
 </section>`;
 }
 
@@ -404,7 +420,15 @@ ${accommodationBlock(c)}
 ${paceTable(c.id)}
 ${paceTable(c.id) ? '<h2>Meetings</h2>' : ''}
 ${monthList(up, { base: '../../' })}
-${list.length > up.length ? `<details class="past"><summary>Past meetings (${list.length - up.length})</summary>${monthList(list.filter((m) => (m.end ?? m.start) < TODAY), { base: '../../' })}</details>` : ''}
+${(() => {
+  const past = list.filter((m) => (m.end ?? m.start) < TODAY);
+  const withResults = past.filter((m) => m.resultsUrl);
+  const rest = past.filter((m) => !m.resultsUrl);
+  // Results are the reason to visit a circuit page, so never bury them in a
+  // collapsed panel; only past meetings with nothing to show get folded away.
+  return (withResults.length ? `<h2>Results from previous meetings here</h2>${monthList(withResults, { base: '../../' })}` : '')
+    + (rest.length ? `<details class="past"><summary>Other past meetings (${rest.length})</summary>${monthList(rest, { base: '../../' })}</details>` : '');
+})()}
 ${paceTable(c.id) ? '<script src="../../pace.js" defer></script>' : ''}`,
   }));
   write(`feeds/circuit-${c.id}.ics`, ics(list, `${c.name} \u2014 race dates`));
