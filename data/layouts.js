@@ -11,23 +11,23 @@
 // isn't listed here, and keeps such groups separate rather than merging them.
 export const layouts = {
   // Told to us directly.
-  'nolimits|Brands Hatch': 'GP',
-  'ngroadracing|Brands Hatch': 'Indy',
+  'no-limits|Brands Hatch': 'GP',
+  'ng|Brands Hatch': 'Indy',
 
   // Inferred from lap times against a layout the same data names outright.
   // The separation is not subtle, so these are safe, but they are inferences:
   //   Donington    NG 73.2s vs BMCRC National 75.0s   |  NLR 96.0s vs BMCRC GP 101.4s
   //   Snetterton   NLR 117.4s, BMCRC 122.1s  vs  BMCRC 300 121.3s
-  'ngroadracing|Donington': 'National',
-  'ngroadracing|Donington Park': 'National',
-  'nolimits|Donington Park': 'GP',
-  'nolimits|Snetterton': '300',
-  'bmcrc|Snetterton': '300',
+  'ng|Donington': 'National',
+  'ng|Donington Park': 'National',
+  'no-limits|Donington Park': 'GP',
+  'no-limits|Snetterton': '300',
+  'bemsee|Snetterton': '300',
 
   // Inferred without a same-venue reference in the data: 72.6s matches the
   // Coastal layout; the International layout is half a minute slower. Lower
   // confidence than the above — worth confirming with the club.
-  'ngroadracing|Anglesey': 'Coastal',
+  'ng|Anglesey': 'Coastal',
   // BHR's fastest lap there is 76.5s. On classic machinery that fits Coastal
   // (NG's modern bikes win in 69-77s); the International layout would put even
   // quick classics past 110s.

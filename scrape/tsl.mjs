@@ -16,7 +16,15 @@ const BASE = 'https://www.tsl-timing.com';
 const UA = 'uk-race-calendar/0.1 (club racing calendar aggregator; contact via site)';
 const DELAY_MS = 1200;
 const CACHE = 'scrape/.cache';
-const CLUBS = { bmcrc: 'BEMSEE', nolimits: 'No Limits', emra: 'EMRA', ngroadracing: 'NG Road Racing' };
+// TSL's URL slug -> our organiser id (data/organisers.js) and display name.
+// These are not the same thing, and conflating them left results filed under
+// clubs that didn't exist in the calendar.
+const CLUBS = {
+  bmcrc:        { id: 'bemsee',    name: 'BEMSEE' },
+  nolimits:     { id: 'no-limits', name: 'No Limits' },
+  emra:         { id: 'emra',      name: 'EMRA' },
+  ngroadracing: { id: 'ng',        name: 'NG Road Racing' },
+};
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let last = 0;
@@ -96,7 +104,7 @@ async function scrapeEvent(club, eventId) {
   } else {
     process.stderr.write(`  event ${eventId}: ${meetingTitle}\n    no results published\n`);
   }
-  return { club, clubName: CLUBS[club] ?? club, eventId, meetingTitle, races };
+  return { club: CLUBS[club]?.id ?? club, clubName: CLUBS[club]?.name ?? club, eventId, meetingTitle, races };
 }
 
 const args = process.argv.slice(2);
@@ -109,7 +117,7 @@ const only = args.includes('--event') ? args[args.indexOf('--event') + 1] : null
 const limit = args.includes('--limit') ? Number(args[args.indexOf('--limit') + 1]) : Infinity;
 
 const events = only ? [{ id: only, title: '' }] : (await listEvents(club)).slice(0, limit);
-process.stderr.write(`${CLUBS[club]}: ${events.length} event(s)\n`);
+process.stderr.write(`${CLUBS[club].name}: ${events.length} event(s)\n`);
 const out = [];
 for (const e of events) out.push(await scrapeEvent(club, e.id));
 
@@ -119,7 +127,7 @@ if (!races) {
   process.exit(1);
 }
 mkdirSync('data/results', { recursive: true });
-const file = `data/results/${club}-2026.json`;
+const file = `data/results/${CLUBS[club].id}-2026.json`;
 writeFileSync(file, JSON.stringify(out, null, 2));
 const rows = out.reduce((n, e) => n + e.races.reduce((m, r) => m + r.rows.length, 0), 0);
 process.stderr.write(`\n✓ ${file}: ${out.length} event(s), ${races} races, ${rows} result rows\n`);
