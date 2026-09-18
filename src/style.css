@@ -119,6 +119,8 @@ ul.feeds a{display:block;background:var(--panel);border:1px solid var(--line);bo
 ul.feeds a:hover{border-color:var(--accent)}
 .subscribe{margin:1.5rem 0;font-size:.9rem}
 .subscribe a{color:var(--accent);font-weight:600}
+.clubnote{font-size:.85rem;color:var(--warn);background:var(--warn-bg);border-radius:8px;
+  padding:.6rem .75rem;margin:0 0 1.25rem}
 .past{margin-top:2rem;border-top:1px solid var(--line);padding-top:1rem}
 .past summary{cursor:pointer;color:var(--muted);font-size:.9rem}
 main p a{color:var(--accent)}

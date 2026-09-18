@@ -95,7 +95,7 @@ function meetingCard(m, { base }) {
   <div class="mtg-date"><b>${esc(dl.big)}</b><span>${esc(dl.small)}</span><em>${esc(dayLabel(m))}</em></div>
   <div class="mtg-main">
     <h3>${c ? `<a href="${base}circuit/${m.circuit}/">${venue}</a>` : venue}${m.config ? `<span class="cfg">${esc(m.config)}</span>` : ''}</h3>
-    <p class="mtg-org"><a href="${base}organiser/${m.organiser}/">${esc(o?.short ?? o?.name ?? m.organiser)}</a>${m.name ? ` <span class="sep">\u00b7</span> ${esc(m.name)}` : ''}</p>
+    <p class="mtg-org"><a href="${base}organiser/${m.organiser}/">${esc(o?.short ?? o?.name ?? m.organiser)}</a>${m.round ? ` <span class="sep">\u00b7</span> Round ${esc(m.round)}` : ''}${m.name ? ` <span class="sep">\u00b7</span> ${esc(m.name)}` : ''}</p>
     ${champs.length ? `<p class="mtg-champs">${champs.map((n) => `<span>${esc(n)}</span>`).join('')}</p>` : ''}
     ${m.notes ? `<p class="mtg-notes">${esc(m.notes)}</p>` : ''}
   </div>
@@ -313,6 +313,7 @@ for (const o of usedOrgs) {
     body: `<nav class="crumbs"><a href="../../">Calendar</a> <span>/</span> ${esc(o.short ?? o.name)}</nav>
 <h1>${esc(o.name)}</h1>
 <p class="lede">${up.length} upcoming meeting${up.length === 1 ? '' : 's'}${o.website ? ` \u00b7 <a href="${esc(o.website)}" rel="noopener" class="js-out">Club website</a>` : ''}</p>
+${o.note ? `<p class="clubnote">${esc(o.note)}</p>` : ''}
 <p class="subscribe"><a href="../../feeds/organiser-${o.id}.ics">Subscribe to ${esc(o.short ?? o.name)} dates (.ics)</a></p>
 ${monthList(up, { base: '../../' })}
 ${list.length > up.length ? `<details class="past"><summary>Past meetings (${list.length - up.length})</summary>${monthList(list.filter((m) => (m.end ?? m.start) < TODAY), { base: '../../' })}</details>` : ''}`,

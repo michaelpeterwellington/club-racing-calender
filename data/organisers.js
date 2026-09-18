@@ -4,7 +4,8 @@
 
 export const organisers = [
   { id: 'bemsee',        name: 'BEMSEE (British Motorcycle Racing Club)', short: 'BEMSEE',   website: 'https://www.bemsee.co.uk' },
-  { id: 'no-limits',     name: 'No Limits Racing',                        short: 'No Limits', website: null },
+  { id: 'no-limits',     name: 'No Limits Racing',                        short: 'No Limits', website: null,
+    note: 'No Limits publish their calendar with the caveat that all dates and venues are subject to change.' },
   { id: 'msvr',          name: 'MSVR / Club MSV',                         short: 'MSVR',     website: 'https://www.msvr.co.uk' },
   { id: 'wirral-100',    name: 'Wirral 100 Motor Club',                   short: 'Wirral 100', website: null },
   { id: 'derby-phoenix', name: 'Derby Phoenix MCRC',                      short: 'Derby Phoenix', website: null },
