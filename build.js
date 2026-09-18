@@ -29,6 +29,28 @@ const all = [...meetings].sort((a, b) => a.start.localeCompare(b.start) || a.id.
 const upcoming = all.filter((m) => (m.end ?? m.start) >= TODAY);
 const hasExamples = all.some((m) => m.example);
 
+/* ---------- clash detection ----------
+   Two meetings clash if their dates overlap and a different club runs each —
+   i.e. a rider has to choose. Test days, race schools and cancelled meetings
+   are excluded; a club clashing with itself isn't a choice, it's a typo. */
+const overlaps = (a, b) => a.start <= (b.end ?? b.start) && b.start <= (a.end ?? a.start);
+const clashMap = new Map();
+{
+  const races = all.filter((m) => (m.kind ?? 'race') === 'race' && m.status !== 'cancelled');
+  for (let i = 0; i < races.length; i++) {
+    for (let j = i + 1; j < races.length; j++) {
+      const a = races[i], b = races[j];
+      if (a.organiser === b.organiser || !overlaps(a, b)) continue;
+      if (!clashMap.has(a.id)) clashMap.set(a.id, []);
+      if (!clashMap.has(b.id)) clashMap.set(b.id, []);
+      clashMap.get(a.id).push(b);
+      clashMap.get(b.id).push(a);
+    }
+  }
+}
+const clashing = all.filter((m) => clashMap.has(m.id));
+const upcomingClashes = clashing.filter((m) => (m.end ?? m.start) >= TODAY);
+
 /* ---------- formatting ---------- */
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -68,6 +90,7 @@ function dateLong(m) {
   if (a.m === b.m) return `${a.d}\u2013${b.d} ${MONTH[a.m]} ${a.y}`;
   return `${a.d} ${MONTH[a.m]} \u2013 ${b.d} ${MONTH[b.m]} ${b.y}`;
 }
+const shortRange = (m) => { const d = dateLabel(m); return `${d.big} ${d.small}`; };
 const monthKey = (m) => m.start.slice(0, 7);
 const monthName = (k) => { const [y, mo] = k.split('-'); return `${MONTH[+mo - 1]} ${y}`; };
 
@@ -90,14 +113,16 @@ function meetingCard(m, { base }) {
   const status = m.status ?? 'confirmed';
   const kind = m.kind ?? 'race';
   const venue = c ? esc(c.name) : 'Venue TBC';
+  const clash = clashMap.get(m.id) ?? [];
   const search = [c?.name, m.config, o?.name, o?.short, m.name, ...champs, c?.region, KINDS[kind], ...daysCovered(m)].filter(Boolean).join(' ').toLowerCase();
-  return `<article class="mtg${m.example ? ' is-example' : ''}" data-search="${esc(search)}" data-circuit="${esc(m.circuit ?? '')}" data-organiser="${esc(m.organiser)}" data-type="${esc(c?.type ?? '')}" data-status="${esc(status)}" data-kind="${esc(kind)}">
+  return `<article class="mtg${m.example ? ' is-example' : ''}" data-search="${esc(search)}" data-circuit="${esc(m.circuit ?? '')}" data-organiser="${esc(m.organiser)}" data-type="${esc(c?.type ?? '')}" data-status="${esc(status)}" data-kind="${esc(kind)}" data-clash="${clash.length ? '1' : '0'}">
   <div class="mtg-date"><b>${esc(dl.big)}</b><span>${esc(dl.small)}</span><em>${esc(dayLabel(m))}</em></div>
   <div class="mtg-main">
     <h3>${c ? `<a href="${base}circuit/${m.circuit}/">${venue}</a>` : venue}${m.config ? `<span class="cfg">${esc(m.config)}</span>` : ''}</h3>
     <p class="mtg-org"><a href="${base}organiser/${m.organiser}/">${esc(o?.short ?? o?.name ?? m.organiser)}</a>${m.round ? ` <span class="sep">\u00b7</span> Round ${esc(m.round)}` : ''}${m.name ? ` <span class="sep">\u00b7</span> ${esc(m.name)}` : ''}</p>
     ${champs.length ? `<p class="mtg-champs">${champs.map((n) => `<span>${esc(n)}</span>`).join('')}</p>` : ''}
     ${m.notes ? `<p class="mtg-notes">${esc(m.notes)}</p>` : ''}
+    ${clash.length ? `<p class="mtg-clash"><b>Clashes with</b> ${clash.map((x) => `<a href="${base}organiser/${x.organiser}/">${esc(O[x.organiser]?.short ?? x.organiser)}</a> at ${esc(x.circuit ? C[x.circuit].name : 'venue TBC')}${x.config ? ' ' + esc(x.config) : ''} <span class="nowrap">(${esc(shortRange(x))})</span>`).join(', ')}</p>` : ''}
   </div>
   <div class="mtg-side">
     ${kind !== 'race' ? `<span class="badge badge--kind">${esc(KINDS[kind])}</span>` : ''}
@@ -168,7 +193,7 @@ ${jsonld.length ? `<script type="application/ld+json">${JSON.stringify(jsonld.le
 <header class="site">
   <div class="wrap">
     <a class="brand" href="${base}">${esc(SITE.name)}</a>
-    <nav><a href="${base}feeds/">Calendar feeds</a><a href="${base}about/">About</a></nav>
+    <nav><a href="${base}clashes/">Clashes</a><a href="${base}feeds/">Calendar feeds</a><a href="${base}about/">About</a></nav>
   </div>
 </header>
 ${hasExamples ? `<div class="warnbar"><div class="wrap">This site is showing <b>example data</b>. Delete the demo rows in <code>data/meetings.js</code>.</div></div>` : ''}
@@ -266,7 +291,7 @@ write('index.html', layout({
   jsonld: upcoming.slice(0, 60).map(eventLd),
   body: `<div class="hero">
   <h1>UK motorcycle racing calendar</h1>
-  <p>Every club and national road race meeting, from every organising club, in one place. ${upcoming.length} upcoming meeting${upcoming.length === 1 ? '' : 's'}.</p>
+  <p>Every club and national road race meeting, from every organising club, in one place. ${upcoming.length} upcoming meeting${upcoming.length === 1 ? '' : 's'}${upcomingClashes.length ? `, including <a href="clashes/">${upcomingClashes.length} that clash</a>` : ''}.</p>
 </div>
 <div class="filters">
   <input type="search" id="q" placeholder="Search circuit, club, series\u2026" aria-label="Search meetings">
@@ -274,6 +299,7 @@ write('index.html', layout({
   <select id="f-org" aria-label="Filter by club"><option value="">All clubs</option>${usedOrgs.map((o) => `<option value="${esc(o.id)}">${esc(o.short ?? o.name)}</option>`).join('')}</select>
   <select id="f-type" aria-label="Filter by circuit type"><option value="">Circuits &amp; roads</option><option value="short">Short circuits</option><option value="road">Road races</option></select>
   <label class="chk"><input type="checkbox" id="f-races"> Race meetings only</label>
+  <label class="chk"><input type="checkbox" id="f-clash"> Clashes only</label>
   <button id="reset" type="button">Reset</button>
 </div>
 <p class="count" id="count" aria-live="polite"></p>
@@ -314,6 +340,11 @@ for (const o of usedOrgs) {
 <h1>${esc(o.name)}</h1>
 <p class="lede">${up.length} upcoming meeting${up.length === 1 ? '' : 's'}${o.website ? ` \u00b7 <a href="${esc(o.website)}" rel="noopener" class="js-out">Club website</a>` : ''}</p>
 ${o.note ? `<p class="clubnote">${esc(o.note)}</p>` : ''}
+${(o.results ?? []).length ? `<div class="results-box">
+  <h2>Past results</h2>
+  <p>See how competitive this club\u2019s grids are before you enter \u2014 grid sizes, lap times and who turns up.</p>
+  <ul class="feeds">${o.results.map((r) => `<li><a href="${esc(r.url)}" rel="noopener" class="js-out">${esc(r.provider)}${r.note ? ` \u2014 ${esc(r.note)}` : ''}</a></li>`).join('')}</ul>
+</div>` : ''}
 <p class="subscribe"><a href="../../feeds/organiser-${o.id}.ics">Subscribe to ${esc(o.short ?? o.name)} dates (.ics)</a></p>
 ${monthList(up, { base: '../../' })}
 ${list.length > up.length ? `<details class="past"><summary>Past meetings (${list.length - up.length})</summary>${monthList(list.filter((m) => (m.end ?? m.start) < TODAY), { base: '../../' })}</details>` : ''}`,
@@ -356,6 +387,17 @@ write('feeds/index.html', layout({
 <h2>By club</h2>
 <ul class="feeds">${usedOrgs.map((o) => `<li><a href="organiser-${o.id}.ics">${esc(o.name)}</a></li>`).join('')}</ul>
 ${usedChamps.length ? `<h2>By championship</h2>\n<ul class="feeds">${usedChamps.map((s) => `<li><a href="championship-${s.id}.ics">${esc(s.name)}</a></li>`).join('')}</ul>` : ''}`,
+}));
+
+// clashes
+write('clashes/index.html', layout({
+  title: `Date clashes \u2014 ${SITE.name}`,
+  description: 'UK motorcycle race meetings that fall on the same weekend as another club\u2019s, so you can plan a season without booking two places at once.',
+  canonical: '/clashes/', base: '../', wide: true,
+  body: `<nav class="crumbs"><a href="../">Calendar</a> <span>/</span> Clashes</nav>
+<h1>Date clashes</h1>
+<p class="lede">Weekends where two clubs are running at once, so you have to pick. ${upcomingClashes.length} of ${upcoming.filter((m) => (m.kind ?? 'race') === 'race').length} upcoming race meetings clash with another club\u2019s.</p>
+${upcomingClashes.length ? monthList(upcomingClashes, { base: '../' }) : '<p class="empty">No clashes in the calendar. Add more clubs and that will change.</p>'}`,
 }));
 
 // about

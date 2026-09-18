@@ -119,6 +119,14 @@ ul.feeds a{display:block;background:var(--panel);border:1px solid var(--line);bo
 ul.feeds a:hover{border-color:var(--accent)}
 .subscribe{margin:1.5rem 0;font-size:.9rem}
 .subscribe a{color:var(--accent);font-weight:600}
+.mtg-clash{margin:.4rem 0 0;font-size:.8rem;color:var(--accent);line-height:1.45}
+.mtg-clash b{font-weight:650}
+.mtg-clash a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.nowrap{white-space:nowrap}
+.results-box{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:1rem 1.1rem;margin:0 0 1.5rem}
+.results-box h2{margin-top:0}
+.results-box p{margin:0 0 .7rem;font-size:.85rem;color:var(--muted)}
 .clubnote{font-size:.85rem;color:var(--warn);background:var(--warn-bg);border-radius:8px;
   padding:.6rem .75rem;margin:0 0 1.25rem}
 .past{margin-top:2rem;border-top:1px solid var(--line);padding-top:1rem}

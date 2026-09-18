@@ -4,6 +4,7 @@
   var fo = document.getElementById('f-org');
   var ft = document.getElementById('f-type');
   var fr = document.getElementById('f-races');
+  var fx = document.getElementById('f-clash');
   var reset = document.getElementById('reset');
   var count = document.getElementById('count');
   var cards = [].slice.call(document.querySelectorAll('.mtg'));
@@ -18,7 +19,8 @@
         && (!fc.value || el.dataset.circuit === fc.value)
         && (!fo.value || el.dataset.organiser === fo.value)
         && (!ft.value || el.dataset.type === ft.value)
-        && (!fr.checked || el.dataset.kind === 'race');
+        && (!fr.checked || el.dataset.kind === 'race')
+        && (!fx.checked || el.dataset.clash === '1');
       el.hidden = !ok;
       if (ok) shown++;
     });
@@ -35,6 +37,7 @@
       if (fo.value) p.set('club', fo.value);
       if (ft.value) p.set('type', ft.value);
       if (fr.checked) p.set('races', '1');
+      if (fx.checked) p.set('clashes', '1');
       var s = p.toString();
       history.replaceState(null, '', s ? '?' + s : location.pathname);
     } catch (e) {}
@@ -47,14 +50,15 @@
     fo.value = p.get('club') || '';
     ft.value = p.get('type') || '';
     fr.checked = p.get('races') === '1';
+    fx.checked = p.get('clashes') === '1';
   } catch (e) {}
 
-  [q, fc, fo, ft, fr].forEach(function (el) {
+  [q, fc, fo, ft, fr, fx].forEach(function (el) {
     el.addEventListener('input', apply);
     el.addEventListener('change', apply);
   });
   reset.addEventListener('click', function () {
-    q.value = ''; fc.value = ''; fo.value = ''; ft.value = ''; fr.checked = false; apply();
+    q.value = ''; fc.value = ''; fo.value = ''; ft.value = ''; fr.checked = false; fx.checked = false; apply();
   });
   apply();
 })();
