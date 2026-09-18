@@ -1,4 +1,4 @@
-dist/
-node_modules/
-.DS_Store
 scrape/.cache/
+node_modules/
+dist/
+.DS_Store

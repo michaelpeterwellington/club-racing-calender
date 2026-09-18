@@ -15,8 +15,9 @@ export const organisers = [
     note: 'No Limits publish their calendar with the caveat that all dates and venues are subject to change.',
     results: [{ provider: 'TSL Timing', url: 'https://www.tsl-timing.com/Results/nolimits/', note: 'results by season, 2002 onwards' }] },
   { id: 'msvr',          name: 'MSVR / Club MSV',                         short: 'MSVR',     website: 'https://www.msvr.co.uk' },
-  { id: 'wirral-100',    name: 'Wirral 100 Motor Club',                   short: 'Wirral 100', website: null },
-  { id: 'derby-phoenix', name: 'Derby Phoenix MCRC',                      short: 'Derby Phoenix', website: null },
+  // Wirral 100 Motor Club: closed down, so not listed.
+  // Derby Phoenix MCRC: closed down, so not listed. Absent from the ACU's
+  // 2026 permit list too, which corroborates it.
   { id: 'darley-moor',   name: 'Darley Moor MRRC',                        short: 'Darley Moor', website: 'https://www.darleymoor.co.uk' },
   { id: 'emra',          name: 'EMRA (East Midlands Racing Association)',  short: 'EMRA',     website: null,
     results: [{ provider: 'TSL Timing', url: 'https://www.tsl-timing.com/Results/emra/', note: 'results by season, 2002 onwards' }] },

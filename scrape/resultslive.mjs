@@ -1,7 +1,7 @@
-// Scrape British Historic Racing results from theresultslive.co.uk.
+// Scrape results from theresultslive.co.uk, which hosts several UK bike clubs.
 //
-//   node scrape/bhr.mjs            2026 season
-//   node scrape/bhr.mjs --limit 1  first meeting only
+//   node scrape/resultslive.mjs bhrc              2026 season
+//   node scrape/resultslive.mjs darley-moor --limit 1
 //
 // Unlike TSL, these are HTML rather than PDF, but they aren't in the page
 // either: each session page is a stub whose results are fetched by
@@ -16,7 +16,11 @@ import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 
 const BASE = 'https://www.theresultslive.co.uk';
-const INDEX = `${BASE}/british-historic-racing-club`;
+// site path -> our organiser id (data/organisers.js) and display name
+const CLUBS = {
+  bhrc: { path: 'british-historic-racing-club', id: 'bhr', name: 'BHRC' },
+  'darley-moor': { path: 'darley-moor-motor-cycle-racing-club', id: 'darley-moor', name: 'Darley Moor' },
+};
 const UA = 'uk-race-calendar/0.1 (club racing calendar aggregator; contact via site)';
 const DELAY_MS = 1200;
 const CACHE = 'scrape/.cache';
@@ -26,6 +30,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let last = 0;
 async function get(url) {
   mkdirSync(CACHE, { recursive: true });
+  // Prefix kept as 'bhr-' so the existing BHRC cache stays valid; the hash is
+  // of the full URL, so it is unique per club regardless.
   const key = join(CACHE, 'bhr-' + createHash('sha1').update(url).digest('hex') + '.txt');
   if (existsSync(key)) return readFileSync(key, 'utf8');
   const wait = DELAY_MS - (Date.now() - last);
@@ -58,12 +64,12 @@ function normLap(v) {
 // The index lists each meeting as a table row of date / venue / round. The
 // meeting page's own <h1> is just "2026 meetings", so the venue has to come
 // from here or pace data ends up filed under no circuit at all.
-async function meetingUrls() {
-  const html = await get(INDEX);
+async function meetingUrls(club) {
+  const html = await get(`${BASE}/${club.path}`);
   const out = [], seen = new Set();
-  for (const row of html.matchAll(/<tr[^>]*data-href="(\/british-historic-racing-club\/[^"]+)"[^>]*>([\s\S]*?)<\/tr>/g)) {
+  for (const row of html.matchAll(/<tr[^>]*data-href="(\/[^"]+)"[^>]*>([\s\S]*?)<\/tr>/g)) {
     const url = BASE + row[1];
-    if (!row[1].includes(`/${YEAR}/`) || seen.has(url)) continue;
+    if (!row[1].startsWith(`/${club.path}/${YEAR}/`) || seen.has(url)) continue;
     seen.add(url);
     const cells = [...row[2].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((c) => strip(c[1]));
     out.push({ url, date: cells[0] ?? '', venue: cells[1] ?? '', round: cells[2] ?? '' });
@@ -146,9 +152,15 @@ async function scrapeSession(s) {
   };
 }
 
-const limit = process.argv.includes('--limit') ? Number(process.argv[process.argv.indexOf('--limit') + 1]) : Infinity;
-const meets = (await meetingUrls()).slice(0, limit);
-process.stderr.write(`British Historic Racing: ${meets.length} ${YEAR} meeting(s)\n`);
+const args = process.argv.slice(2);
+const club = CLUBS[args[0]];
+if (!club) {
+  console.error(`usage: node scrape/resultslive.mjs <${Object.keys(CLUBS).join('|')}> [--limit N]`);
+  process.exit(1);
+}
+const limit = args.includes('--limit') ? Number(args[args.indexOf('--limit') + 1]) : Infinity;
+const meets = (await meetingUrls(club)).slice(0, limit);
+process.stderr.write(`${club.name}: ${meets.length} ${YEAR} meeting(s)\n`);
 
 const out = [];
 for (const meet of meets) {
@@ -159,17 +171,17 @@ for (const meet of meets) {
   for (const s of sessions) {
     try {
       const r = await scrapeSession(s);
-      if (r) { r.meeting = `BHR ${meet.round || title} @ ${meet.venue}`; races.push(r); }
+      if (r) { r.meeting = `${club.name} ${meet.round || title} @ ${meet.venue}`; races.push(r); }
     } catch (e) { process.stderr.write(`    ! ${s.label}: ${e.message}\n`); }
   }
   process.stderr.write(`    ${races.length} with results\n`);
-  out.push({ club: 'bhr', clubName: 'BHRC', eventId: mu.split('/').pop(),
+  out.push({ club: club.id, clubName: club.name, eventId: mu.split('/').pop(),
     meetingTitle: `${meet.round || title} \u2014 ${meet.venue} (${meet.date})`, venue: meet.venue, races });
 }
 
 const races = out.reduce((n, e) => n + e.races.length, 0);
 if (!races) { process.stderr.write('\n! no races parsed — not writing\n'); process.exit(1); }
 mkdirSync('data/results', { recursive: true });
-writeFileSync(`data/results/bhr-${YEAR}.json`, JSON.stringify(out, null, 2));
+writeFileSync(`data/results/${club.id}-${YEAR}.json`, JSON.stringify(out, null, 2));
 const rows = out.reduce((n, e) => n + e.races.reduce((m, r) => m + r.rows.length, 0), 0);
-process.stderr.write(`\n✓ data/results/bhr-${YEAR}.json: ${out.length} meeting(s), ${races} races, ${rows} rows\n`);
+process.stderr.write(`\n✓ data/results/${club.id}-${YEAR}.json: ${out.length} meeting(s), ${races} races, ${rows} rows\n`);

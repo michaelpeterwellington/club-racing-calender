@@ -5,16 +5,17 @@
       "key": "HONDA|500",
       "make": "HONDA",
       "cc": 500,
-      "riders": 218,
-      "entries": 1740,
+      "riders": 234,
+      "entries": 1857,
       "spellings": [
-        "HONDA CB500 (1138)",
-        "HONDA 500 (527)",
-        "HONDA CB 500 (36)",
+        "HONDA CB500 (1142)",
+        "HONDA 500 (533)",
+        "HONDA CB 500 (128)",
         "HONDA 500 4 (15)",
         "HONDA CB500 4 (11)",
         "HONDA CBR500R (8)",
-        "HONDA CBR500 (5)"
+        "HONDA CB500 500 (7)",
+        "HONDA CB 500 499 (6)"
       ],
       "classes": [
         {
@@ -64,6 +65,26 @@
         {
           "club": "crmc",
           "className": "IHRO 1, 2, 3"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Lightweight & Honda CB500 Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Honda CB500 & Suzuki Bandit Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "HONDA CB 500 & SUZUKI BANDIT CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "SUPERTWINS & MINI TWINS CHAMPIONSHIPS"
         },
         {
           "club": "emra",
@@ -120,17 +141,17 @@
       "key": "YAMAHA|600",
       "make": "YAMAHA",
       "cc": 600,
-      "riders": 215,
-      "entries": 1718,
+      "riders": 226,
+      "entries": 1852,
       "spellings": [
         "YAMAHA R6 (1095)",
-        "YAMAHA 600 (446)",
+        "YAMAHA 600 (470)",
+        "YAMAHA R6 600 (110)",
         "YAMAHA YZF R6 (76)",
         "YAMAHA FZ600 (40)",
         "YAMAHA R6 13S (14)",
         "YAMAHA FZR600R (13)",
-        "YAMAHA R6 GYTR (10)",
-        "YAMAHA YZFR6 (8)"
+        "YAMAHA R6 GYTR (10)"
       ],
       "classes": [
         {
@@ -160,6 +181,38 @@
         {
           "club": "bhr",
           "className": "Earlystocks, BEARS Solos, Japanese & European Solos"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open 600 Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Golden Supersport 600 Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Ben Godfrey Trophy Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "GOLDEN SUPERSPORT 600 CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "OPEN 600 CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "DARLEY CUP & WILSON TROPHY CHAMPIONSHIPS"
+        },
+        {
+          "club": "darley-moor",
+          "className": "BEN GODFREY TROPHY CHAMPIONSHIP"
         },
         {
           "club": "emra",
@@ -256,17 +309,17 @@
       "key": "SUZUKI|650",
       "make": "SUZUKI",
       "cc": 650,
-      "riders": 144,
-      "entries": 1388,
+      "riders": 148,
+      "entries": 1433,
       "spellings": [
-        "SUZUKI SV650 (869)",
+        "SUZUKI SV650 (870)",
         "SUZUKI 650 (252)",
-        "SUZUKI SV 650 (142)",
+        "SUZUKI SV 650 (172)",
         "SUZUKI SV (97)",
+        "SUZUKI SV650 650 (10)",
         "SUZUKI SV650 SK1 (9)",
         "SUZUKI SV MINITWIN (7)",
-        "SUZUKI SV 650 SK1 (4)",
-        "SUZUKI SV650S (4)"
+        "SUZUKI SV 650 SK1 (4)"
       ],
       "classes": [
         {
@@ -300,6 +353,22 @@
         {
           "club": "crmc",
           "className": "8c ,8d, 8e,13a&13B SB & 500"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Supertwins & Mini Twins Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "SUPERTWINS & MINI TWINS CHAMPIONSHIPS"
+        },
+        {
+          "club": "darley-moor",
+          "className": "DARLEY CUP & WILSON TROPHY CHAMPIONSHIPS"
         },
         {
           "club": "emra",
@@ -348,14 +417,16 @@
       "key": "KAWASAKI|600",
       "make": "KAWASAKI",
       "cc": 600,
-      "riders": 100,
-      "entries": 633,
+      "riders": 102,
+      "entries": 666,
       "spellings": [
         "KAWASAKI 600 (300)",
-        "KAWASAKI ZX6R (269)",
+        "KAWASAKI ZX6R (275)",
         "KAWASAKI ZX636 (31)",
+        "KAWASAKI ZX6R 600 (24)",
         "KAWASAKI ZXR600 (18)",
         "KAWASAKI ZX6R B1H (13)",
+        "KAWASAKI ZXR 600 (3)",
         "KAWASAKI ZX6 RR (2)"
       ],
       "classes": [
@@ -370,6 +441,22 @@
         {
           "club": "bemsee",
           "className": "Open 500 & Rookie 600"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open 600 Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Ben Godfrey Trophy Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "OPEN 600 CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "BEN GODFREY TROPHY CHAMPIONSHIP"
         },
         {
           "club": "emra",
@@ -458,14 +545,14 @@
       "key": "HONDA|600",
       "make": "HONDA",
       "cc": 600,
-      "riders": 86,
-      "entries": 497,
+      "riders": 97,
+      "entries": 588,
       "spellings": [
-        "HONDA 600 (199)",
-        "HONDA CBR600RR (90)",
-        "HONDA CBR 600 RR (36)",
-        "HONDA CBR 600 (35)",
-        "HONDA CBR 600RR (34)",
+        "HONDA 600 (205)",
+        "HONDA CBR600RR (117)",
+        "HONDA CBR 600RR (61)",
+        "HONDA CBR 600 (57)",
+        "HONDA CBR 600 RR (40)",
         "HONDA CBR 600 F3 (24)",
         "HONDA CBR600 (18)",
         "HONDA CBR600 F3 (17)"
@@ -486,6 +573,34 @@
         {
           "club": "bhr",
           "className": "Production Sports and Superbikes Pre 2000, Supermonos"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open 600 Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Golden Supersport 600 Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Ben Godfrey Trophy Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "GOLDEN SUPERSPORT 600 CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "OPEN 600 CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "DARLEY CUP & WILSON TROPHY CHAMPIONSHIPS"
         },
         {
           "club": "emra",
@@ -574,170 +689,17 @@
       ]
     },
     {
-      "label": "YAMAHA YZF R1 1000",
-      "key": "YAMAHA|1000",
-      "make": "YAMAHA",
-      "cc": 1000,
-      "riders": 75,
-      "entries": 508,
-      "spellings": [
-        "YAMAHA R1 (250)",
-        "YAMAHA 1000 (203)",
-        "YAMAHA YZF R1 (37)",
-        "YAMAHA R1 4C8 (15)",
-        "YAMAHA R1 2CR (3)"
-      ],
-      "classes": [
-        {
-          "club": "bemsee",
-          "className": "Seton Tuning Powerbikes inc Clubman 1000 & Retro 1000"
-        },
-        {
-          "club": "bemsee",
-          "className": "BMCRC Thunderbike Ultra & Extreme"
-        },
-        {
-          "club": "bemsee",
-          "className": "Powerbikes inc Clubman 1000 & Retro 1000 "
-        },
-        {
-          "club": "bemsee",
-          "className": "Thunderbike Ultra & Extreme"
-        },
-        {
-          "club": "bemsee",
-          "className": "Powerbikes inc Clubman 1000 & Retro 1000"
-        },
-        {
-          "club": "emra",
-          "className": "CLASSIC ERA"
-        },
-        {
-          "club": "emra",
-          "className": "PRE-INJECTION"
-        },
-        {
-          "club": "emra",
-          "className": "EMRA OPEN & OPEN 600"
-        },
-        {
-          "club": "emra",
-          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
-        },
-        {
-          "club": "emra",
-          "className": "MALLORY TROPHY"
-        },
-        {
-          "club": "emra",
-          "className": "EMRA OPEN"
-        },
-        {
-          "club": "emra",
-          "className": "Classic ERA"
-        },
-        {
-          "club": "ng",
-          "className": "Open / Sound of Thunder"
-        },
-        {
-          "club": "ng",
-          "className": "Powerbike / Powerbike Cup"
-        },
-        {
-          "club": "no-limits",
-          "className": "Pirelli Super Series Power Trophy "
-        },
-        {
-          "club": "no-limits",
-          "className": "Brandfixx Club Power Cup "
-        }
-      ]
-    },
-    {
-      "label": "YAMAHA TZR250",
-      "key": "YAMAHA|250",
-      "make": "YAMAHA",
-      "cc": 250,
-      "riders": 74,
-      "entries": 967,
-      "spellings": [
-        "YAMAHA TZR250 (367)",
-        "YAMAHA TZR 250 (280)",
-        "YAMAHA TZ 250 (94)",
-        "YAMAHA TZ250 (87)",
-        "YAMAHA TZ 250 3YL (47)",
-        "YAMAHA RD250 (19)",
-        "YAMAHA TZR 250 2MA (13)",
-        "YAMAHA TZ250 L 250 L (11)"
-      ],
-      "classes": [
-        {
-          "club": "bemsee",
-          "className": "Yamaha Past Masters"
-        },
-        {
-          "club": "bemsee",
-          "className": "Open 500 & Rookie 600"
-        },
-        {
-          "club": "bhr",
-          "className": "Girder forks, pre 63 250, 351-500, Japanese 250, 125 production"
-        },
-        {
-          "club": "emra",
-          "className": "GP80-450 & MINITWIN"
-        },
-        {
-          "club": "emra",
-          "className": "GP80 - 450cc"
-        },
-        {
-          "club": "ng",
-          "className": "NG Road Racing - Rounds 1, 2 & 3 @ Brands Hatch"
-        },
-        {
-          "club": "ng",
-          "className": "Mini Twins / Open 500 / Lightweight Naked Streetbike"
-        },
-        {
-          "club": "ng",
-          "className": "NG Road Racing - Rounds 4, 5 & 6 @ Cadwell Park"
-        },
-        {
-          "club": "ng",
-          "className": "NG Road Racing - Rounds 7, 8 & 9 @ Anglesey"
-        },
-        {
-          "club": "ng",
-          "className": "NG Road Racing - Rounds 10, 11 & 12 @ Pembrey"
-        },
-        {
-          "club": "ng",
-          "className": "NG Road Racing - Rounds 13, 14 & 15 @ Castle Combe"
-        },
-        {
-          "club": "ng",
-          "className": "NG Road Racing - Rounds 16,17 & 18 @ Thruxton"
-        },
-        {
-          "club": "ng",
-          "className": "NG Road Racing - Rounds 19, 20 & 21 @ Donington"
-        }
-      ]
-    },
-    {
       "label": "KAWASAKI NINJA 400",
       "key": "KAWASAKI|400",
       "make": "KAWASAKI",
       "cc": 400,
-      "riders": 73,
-      "entries": 829,
+      "riders": 82,
+      "entries": 892,
       "spellings": [
-        "KAWASAKI NINJA 400 (516)",
-        "KAWASAKI ZXR400 (103)",
+        "KAWASAKI NINJA 400 (531)",
+        "KAWASAKI ZXR400 (117)",
+        "KAWASAKI ZXR 400 (104)",
         "KAWASAKI 400 (77)",
-        "KAWASAKI ZXR 400 (72)",
         "KAWASAKI EX400 (20)",
         "KAWASAKI NINJA400 (11)",
         "KAWASAKI 400 RESTRICTED TO 300 (5)",
@@ -767,6 +729,26 @@
         {
           "club": "bhr",
           "className": "Production Sports and Superbikes Pre 2000, Supermonos"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Lightweight & Honda CB500 Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Lightweight Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "LIGHTWEIGHT CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "DARLEY CUP & WILSON TROPHY CHAMPIONSHIPS"
         },
         {
           "club": "emra",
@@ -823,21 +805,19 @@
       ]
     },
     {
-      "label": "HONDA CBR1000RR",
-      "key": "HONDA|1000",
-      "make": "HONDA",
+      "label": "YAMAHA YZF R1 1000",
+      "key": "YAMAHA|1000",
+      "make": "YAMAHA",
       "cc": 1000,
-      "riders": 64,
-      "entries": 472,
+      "riders": 79,
+      "entries": 547,
       "spellings": [
-        "HONDA 1000 (177)",
-        "HONDA CBR1000RR (85)",
-        "HONDA CBR1000 (33)",
-        "HONDA CBR 1000 (31)",
-        "HONDA FIREBLADE 1000RR R (28)",
-        "HONDA CBRR 1000 (23)",
-        "HONDA CBR 954RR FIREBLADE (22)",
-        "HONDA CBR 1000 RR (19)"
+        "YAMAHA R1 (254)",
+        "YAMAHA 1000 (206)",
+        "YAMAHA YZF R1 (37)",
+        "YAMAHA R1 1000 (32)",
+        "YAMAHA R1 4C8 (15)",
+        "YAMAHA R1 2CR (3)"
       ],
       "classes": [
         {
@@ -854,11 +834,51 @@
         },
         {
           "club": "bemsee",
-          "className": "Powerbikes inc Clubman 1000 & Retro 1000"
+          "className": "Thunderbike Ultra & Extreme"
         },
         {
           "club": "bemsee",
-          "className": "Thunderbike Ultra & Extreme"
+          "className": "Powerbikes inc Clubman 1000 & Retro 1000"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo & Golden Superbike Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Ben Godfrey Trophy Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "OPEN SOLO CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "BEN GODFREY TROPHY CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo (inc. Golden Superbike) Championship"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA"
+        },
+        {
+          "club": "emra",
+          "className": "PRE-INJECTION"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA OPEN & OPEN 600"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
         },
         {
           "club": "emra",
@@ -869,16 +889,16 @@
           "className": "EMRA OPEN"
         },
         {
+          "club": "emra",
+          "className": "Classic ERA"
+        },
+        {
           "club": "ng",
           "className": "Open / Sound of Thunder"
         },
         {
           "club": "ng",
           "className": "Powerbike / Powerbike Cup"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600 / Naked Streetbike"
         },
         {
           "club": "no-limits",
@@ -891,17 +911,102 @@
       ]
     },
     {
+      "label": "YAMAHA TZR250",
+      "key": "YAMAHA|250",
+      "make": "YAMAHA",
+      "cc": 250,
+      "riders": 74,
+      "entries": 975,
+      "spellings": [
+        "YAMAHA TZR250 (371)",
+        "YAMAHA TZR 250 (280)",
+        "YAMAHA TZ 250 (94)",
+        "YAMAHA TZ250 (87)",
+        "YAMAHA TZ 250 3YL (47)",
+        "YAMAHA RD250 (19)",
+        "YAMAHA TZR 250 2MA (13)",
+        "YAMAHA TZ250 L 250 L (11)"
+      ],
+      "classes": [
+        {
+          "club": "bemsee",
+          "className": "Yamaha Past Masters"
+        },
+        {
+          "club": "bemsee",
+          "className": "Open 500 & Rookie 600"
+        },
+        {
+          "club": "bhr",
+          "className": "Girder forks, pre 63 250, 351-500, Japanese 250, 125 production"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Lightweight & Honda CB500 Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Lightweight Championship"
+        },
+        {
+          "club": "emra",
+          "className": "GP80-450 & MINITWIN"
+        },
+        {
+          "club": "emra",
+          "className": "GP80 - 450cc"
+        },
+        {
+          "club": "ng",
+          "className": "NG Road Racing - Rounds 1, 2 & 3 @ Brands Hatch"
+        },
+        {
+          "club": "ng",
+          "className": "Mini Twins / Open 500 / Lightweight Naked Streetbike"
+        },
+        {
+          "club": "ng",
+          "className": "NG Road Racing - Rounds 4, 5 & 6 @ Cadwell Park"
+        },
+        {
+          "club": "ng",
+          "className": "NG Road Racing - Rounds 7, 8 & 9 @ Anglesey"
+        },
+        {
+          "club": "ng",
+          "className": "NG Road Racing - Rounds 10, 11 & 12 @ Pembrey"
+        },
+        {
+          "club": "ng",
+          "className": "NG Road Racing - Rounds 13, 14 & 15 @ Castle Combe"
+        },
+        {
+          "club": "ng",
+          "className": "NG Road Racing - Rounds 16,17 & 18 @ Thruxton"
+        },
+        {
+          "club": "ng",
+          "className": "NG Road Racing - Rounds 19, 20 & 21 @ Donington"
+        }
+      ]
+    },
+    {
       "label": "APRILIA RS660",
       "key": "APRILIA|660",
       "make": "APRILIA",
       "cc": 660,
-      "riders": 63,
-      "entries": 476,
+      "riders": 69,
+      "entries": 537,
       "spellings": [
         "APRILIA RS660 (259)",
-        "APRILIA 660 (197)",
+        "APRILIA 660 (203)",
+        "APRILIA RS 660 (54)",
         "APRILIA TUONO 660 (18)",
-        "APRILIA RS 660 (2)"
+        "APRILIA RS660 660 (3)"
       ],
       "classes": [
         {
@@ -915,6 +1020,22 @@
         {
           "club": "bemsee",
           "className": "Helmet City MRO Supersport 600 inc Clubman 600"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Supertwins & Mini Twins Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "SUPERTWINS & MINI TWINS CHAMPIONSHIPS"
+        },
+        {
+          "club": "darley-moor",
+          "className": "DARLEY CUP & WILSON TROPHY CHAMPIONSHIPS"
         },
         {
           "club": "emra",
@@ -971,6 +1092,202 @@
         {
           "club": "no-limits",
           "className": "SORN Cover Stock Twins "
+        }
+      ]
+    },
+    {
+      "label": "HONDA CBR1000RR",
+      "key": "HONDA|1000",
+      "make": "HONDA",
+      "cc": 1000,
+      "riders": 66,
+      "entries": 504,
+      "spellings": [
+        "HONDA 1000 (197)",
+        "HONDA CBR1000RR (85)",
+        "HONDA CBR 1000 (43)",
+        "HONDA CBR1000 (33)",
+        "HONDA FIREBLADE 1000RR R (28)",
+        "HONDA CBRR 1000 (23)",
+        "HONDA CBR 954RR FIREBLADE (22)",
+        "HONDA CBR 1000 RR (19)"
+      ],
+      "classes": [
+        {
+          "club": "bemsee",
+          "className": "Seton Tuning Powerbikes inc Clubman 1000 & Retro 1000"
+        },
+        {
+          "club": "bemsee",
+          "className": "BMCRC Thunderbike Ultra & Extreme"
+        },
+        {
+          "club": "bemsee",
+          "className": "Powerbikes inc Clubman 1000 & Retro 1000 "
+        },
+        {
+          "club": "bemsee",
+          "className": "Powerbikes inc Clubman 1000 & Retro 1000"
+        },
+        {
+          "club": "bemsee",
+          "className": "Thunderbike Ultra & Extreme"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo & Golden Superbike Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Ben Godfrey Trophy Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "OPEN SOLO CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "BEN GODFREY TROPHY CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo (inc. Golden Superbike) Championship"
+        },
+        {
+          "club": "emra",
+          "className": "MALLORY TROPHY"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA OPEN"
+        },
+        {
+          "club": "ng",
+          "className": "Open / Sound of Thunder"
+        },
+        {
+          "club": "ng",
+          "className": "Powerbike / Powerbike Cup"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600 / Naked Streetbike"
+        },
+        {
+          "club": "no-limits",
+          "className": "Pirelli Super Series Power Trophy "
+        },
+        {
+          "club": "no-limits",
+          "className": "Brandfixx Club Power Cup "
+        }
+      ]
+    },
+    {
+      "label": "BMW S1000RR",
+      "key": "BMW|1000",
+      "make": "BMW",
+      "cc": 1000,
+      "riders": 55,
+      "entries": 456,
+      "spellings": [
+        "BMW 1000 (220)",
+        "BMW S1000RR (161)",
+        "BMW S1000RR 1000 (21)",
+        "BMW S1000 1000 (18)",
+        "BMW R100 (8)",
+        "BMW S1000 (6)",
+        "BMW R100RS (4)",
+        "BMW 1000RR 1000 (4)"
+      ],
+      "classes": [
+        {
+          "club": "bemsee",
+          "className": "Seton Tuning Powerbikes inc Clubman 1000 & Retro 1000"
+        },
+        {
+          "club": "bemsee",
+          "className": "Powerbikes inc Clubman 1000 & Retro 1000 "
+        },
+        {
+          "club": "bemsee",
+          "className": "BMCRC Thunderbike Ultra & Extreme"
+        },
+        {
+          "club": "bemsee",
+          "className": "Powerbikes inc Clubman 1000 & Retro 1000"
+        },
+        {
+          "club": "bhr",
+          "className": "Pre 63/73, F750, J&E Air Cooled Pre 82, 500cc Twins Solos"
+        },
+        {
+          "club": "bhr",
+          "className": "Earlystocks, BEARS Solos, Japanese & European Solos"
+        },
+        {
+          "club": "bhr",
+          "className": "Pre 63/73, f750, J&E air cooled Pre 82"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo & Golden Superbike Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Ben Godfrey Trophy Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "OPEN SOLO CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "BEN GODFREY TROPHY CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo (inc. Golden Superbike) Championship"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA OPEN"
+        },
+        {
+          "club": "emra",
+          "className": "MALLORY TROPHY"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA OPEN & OPEN 600"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA Open"
+        },
+        {
+          "club": "ng",
+          "className": "Open / Sound of Thunder"
+        },
+        {
+          "club": "ng",
+          "className": "Powerbike / Powerbike Cup"
+        },
+        {
+          "club": "no-limits",
+          "className": "Pirelli Super Series Power Trophy "
+        },
+        {
+          "club": "no-limits",
+          "className": "Brandfixx Club Power Cup "
         }
       ]
     },
@@ -1059,85 +1376,6 @@
         {
           "club": "ng",
           "className": "Lansdowne"
-        }
-      ]
-    },
-    {
-      "label": "BMW S1000RR",
-      "key": "BMW|1000",
-      "make": "BMW",
-      "cc": 1000,
-      "riders": 51,
-      "entries": 388,
-      "spellings": [
-        "BMW 1000 (217)",
-        "BMW S1000RR (150)",
-        "BMW R100 (8)",
-        "BMW R100RS (4)",
-        "BMW M1000RR (4)",
-        "BMW S1000 (4)",
-        "BMW S1000R (1)"
-      ],
-      "classes": [
-        {
-          "club": "bemsee",
-          "className": "Seton Tuning Powerbikes inc Clubman 1000 & Retro 1000"
-        },
-        {
-          "club": "bemsee",
-          "className": "Powerbikes inc Clubman 1000 & Retro 1000 "
-        },
-        {
-          "club": "bemsee",
-          "className": "BMCRC Thunderbike Ultra & Extreme"
-        },
-        {
-          "club": "bemsee",
-          "className": "Powerbikes inc Clubman 1000 & Retro 1000"
-        },
-        {
-          "club": "bhr",
-          "className": "Pre 63/73, F750, J&E Air Cooled Pre 82, 500cc Twins Solos"
-        },
-        {
-          "club": "bhr",
-          "className": "Earlystocks, BEARS Solos, Japanese & European Solos"
-        },
-        {
-          "club": "bhr",
-          "className": "Pre 63/73, f750, J&E air cooled Pre 82"
-        },
-        {
-          "club": "emra",
-          "className": "EMRA OPEN"
-        },
-        {
-          "club": "emra",
-          "className": "MALLORY TROPHY"
-        },
-        {
-          "club": "emra",
-          "className": "EMRA OPEN & OPEN 600"
-        },
-        {
-          "club": "emra",
-          "className": "EMRA Open"
-        },
-        {
-          "club": "ng",
-          "className": "Open / Sound of Thunder"
-        },
-        {
-          "club": "ng",
-          "className": "Powerbike / Powerbike Cup"
-        },
-        {
-          "club": "no-limits",
-          "className": "Pirelli Super Series Power Trophy "
-        },
-        {
-          "club": "no-limits",
-          "className": "Brandfixx Club Power Cup "
         }
       ]
     },
@@ -1234,10 +1472,10 @@
       "key": "TRIUMPH|675",
       "make": "TRIUMPH",
       "cc": 675,
-      "riders": 46,
-      "entries": 293,
+      "riders": 48,
+      "entries": 301,
       "spellings": [
-        "TRIUMPH 675 (168)",
+        "TRIUMPH 675 (176)",
         "TRIUMPH DAYTONA 675 (43)",
         "TRIUMPH DAYTONA 675R (41)",
         "TRIUMPH 675R DAYTONA (20)",
@@ -1253,6 +1491,14 @@
         {
           "club": "bemsee",
           "className": "Open 500 & Rookie 600"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open 600 Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Ben Godfrey Trophy Championship"
         },
         {
           "club": "emra",
@@ -1305,6 +1551,109 @@
         {
           "club": "no-limits",
           "className": "Pirelli Super Series Sport Trophy "
+        }
+      ]
+    },
+    {
+      "label": "TRIUMPH 765 EVO",
+      "key": "TRIUMPH|765",
+      "make": "TRIUMPH",
+      "cc": 765,
+      "riders": 46,
+      "entries": 300,
+      "spellings": [
+        "TRIUMPH 765 (246)",
+        "TRIUMPH 765 EVO (19)",
+        "TRIUMPH 765RS (19)",
+        "TRIUMPH STREET TRIPLE 765 (10)",
+        "TRIUMPH 765 DAYTONA (3)",
+        "TRIUMPH TRIPLE 765 (2)",
+        "TRIUMPH DAYTONA 765 (1)"
+      ],
+      "classes": [
+        {
+          "club": "bemsee",
+          "className": "Helmet City MRO Supersport 600 inc Clubman 600"
+        },
+        {
+          "club": "bemsee",
+          "className": "Seton Tuning Powerbikes inc Clubman 1000 & Retro 1000"
+        },
+        {
+          "club": "bemsee",
+          "className": "Powerbikes inc Clubman 1000 & Retro 1000"
+        },
+        {
+          "club": "bemsee",
+          "className": "BMCRC Thunderbike Ultra & Extreme"
+        },
+        {
+          "club": "bemsee",
+          "className": "Powerbikes inc Clubman 1000 & Retro 1000 "
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo (inc. Golden Superbike) Championship"
+        },
+        {
+          "club": "emra",
+          "className": "OPEN 600"
+        },
+        {
+          "club": "emra",
+          "className": "SPORT TWINS & F900 TROPHY"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA OPEN & OPEN 600"
+        },
+        {
+          "club": "emra",
+          "className": "ROOKIES"
+        },
+        {
+          "club": "emra",
+          "className": "MALLORY TROPHY"
+        },
+        {
+          "club": "emra",
+          "className": "Mallory Trophy"
+        },
+        {
+          "club": "emra",
+          "className": "Rookies"
+        },
+        {
+          "club": "ng",
+          "className": "National 600 / Next Gen Supersport"
+        },
+        {
+          "club": "ng",
+          "className": "Open / Sound of Thunder"
+        },
+        {
+          "club": "ng",
+          "className": "Clubman 600"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600 / Naked Streetbike"
+        },
+        {
+          "club": "no-limits",
+          "className": "Pirelli Super Series Sport Trophy "
+        },
+        {
+          "club": "no-limits",
+          "className": "Club Sport Cup "
+        },
+        {
+          "club": "no-limits",
+          "className": "Club Sport Cup "
+        },
+        {
+          "club": "no-limits",
+          "className": "Pirelli Super Series Power Trophy "
         }
       ]
     },
@@ -1386,254 +1735,16 @@
       ]
     },
     {
-      "label": "TRIUMPH 765 EVO",
-      "key": "TRIUMPH|765",
-      "make": "TRIUMPH",
-      "cc": 765,
-      "riders": 45,
-      "entries": 298,
-      "spellings": [
-        "TRIUMPH 765 (246)",
-        "TRIUMPH 765 EVO (19)",
-        "TRIUMPH 765RS (19)",
-        "TRIUMPH STREET TRIPLE 765 (10)",
-        "TRIUMPH 765 DAYTONA (3)",
-        "TRIUMPH DAYTONA 765 (1)"
-      ],
-      "classes": [
-        {
-          "club": "bemsee",
-          "className": "Helmet City MRO Supersport 600 inc Clubman 600"
-        },
-        {
-          "club": "bemsee",
-          "className": "Seton Tuning Powerbikes inc Clubman 1000 & Retro 1000"
-        },
-        {
-          "club": "bemsee",
-          "className": "Powerbikes inc Clubman 1000 & Retro 1000"
-        },
-        {
-          "club": "bemsee",
-          "className": "BMCRC Thunderbike Ultra & Extreme"
-        },
-        {
-          "club": "bemsee",
-          "className": "Powerbikes inc Clubman 1000 & Retro 1000 "
-        },
-        {
-          "club": "emra",
-          "className": "OPEN 600"
-        },
-        {
-          "club": "emra",
-          "className": "SPORT TWINS & F900 TROPHY"
-        },
-        {
-          "club": "emra",
-          "className": "EMRA OPEN & OPEN 600"
-        },
-        {
-          "club": "emra",
-          "className": "ROOKIES"
-        },
-        {
-          "club": "emra",
-          "className": "MALLORY TROPHY"
-        },
-        {
-          "club": "emra",
-          "className": "Mallory Trophy"
-        },
-        {
-          "club": "emra",
-          "className": "Rookies"
-        },
-        {
-          "club": "ng",
-          "className": "National 600 / Next Gen Supersport"
-        },
-        {
-          "club": "ng",
-          "className": "Open / Sound of Thunder"
-        },
-        {
-          "club": "ng",
-          "className": "Clubman 600"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600 / Naked Streetbike"
-        },
-        {
-          "club": "no-limits",
-          "className": "Pirelli Super Series Sport Trophy "
-        },
-        {
-          "club": "no-limits",
-          "className": "Club Sport Cup "
-        },
-        {
-          "club": "no-limits",
-          "className": "Club Sport Cup "
-        },
-        {
-          "club": "no-limits",
-          "className": "Pirelli Super Series Power Trophy "
-        }
-      ]
-    },
-    {
-      "label": "HONDA CBR",
-      "key": "HONDA|CBR",
-      "make": "HONDA",
-      "cc": null,
-      "riders": 39,
-      "entries": 203,
-      "spellings": [
-        "HONDA CBR (203)"
-      ],
-      "classes": [
-        {
-          "club": "bhr",
-          "className": "Production Sports and Superbikes Pre 2000, Supermonos"
-        },
-        {
-          "club": "bhr",
-          "className": "FSRA Preinjection F1 / F2"
-        },
-        {
-          "club": "bhr",
-          "className": "Earlystocks, BEARS Solos, Japanese & European Solos"
-        },
-        {
-          "club": "crmc",
-          "className": "SB & SS 600,750 (8a,8k,8p,8t)"
-        },
-        {
-          "club": "crmc",
-          "className": "ACU P.Classic 750 (10b)"
-        },
-        {
-          "club": "crmc",
-          "className": "SS400 & GP250 (8m,8n,9h)"
-        },
-        {
-          "club": "crmc",
-          "className": "SBK750,SS600 (8a,8k,8p,8t)"
-        },
-        {
-          "club": "crmc",
-          "className": "ACU P.Classic (10b)"
-        },
-        {
-          "club": "crmc",
-          "className": "8a, 8k, 8p & 8t 750 & 600"
-        },
-        {
-          "club": "crmc",
-          "className": "8m, 8n & 9h 400 & 250GP"
-        },
-        {
-          "club": "crmc",
-          "className": "8a, 8k, 8p & 8t SB750 & 600"
-        },
-        {
-          "club": "ng",
-          "className": "Sportbike / Supertwins / Pre-Injection 600"
-        },
-        {
-          "club": "ng",
-          "className": "Powerbike / Powerbike Cup"
-        },
-        {
-          "club": "ng",
-          "className": "Open / Sound of Thunder"
-        }
-      ]
-    },
-    {
-      "label": "BMW 900",
-      "key": "BMW|900",
-      "make": "BMW",
-      "cc": 900,
-      "riders": 38,
-      "entries": 197,
-      "spellings": [
-        "BMW 900 (139)",
-        "BMW F900 (49)",
-        "BMW F900R (9)"
-      ],
-      "classes": [
-        {
-          "club": "bemsee",
-          "className": "Thunderbike Sport & Supertwins"
-        },
-        {
-          "club": "emra",
-          "className": "EMRA OPEN"
-        },
-        {
-          "club": "emra",
-          "className": "SPORT TWINS & F900 TROPHY"
-        },
-        {
-          "club": "emra",
-          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
-        },
-        {
-          "club": "emra",
-          "className": "EMRA OPEN & OPEN 600"
-        },
-        {
-          "club": "emra",
-          "className": "EMRA Open"
-        },
-        {
-          "club": "emra",
-          "className": "ROOKIES"
-        },
-        {
-          "club": "ng",
-          "className": "Open / Sound of Thunder"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600 / Naked Streetbike / Clubman 600 non qualifiers"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600 / Naked Streetbike"
-        },
-        {
-          "club": "ng",
-          "className": "National 600 / Next Gen Supersport"
-        },
-        {
-          "club": "no-limits",
-          "className": "SORN Cover Stock Twins "
-        },
-        {
-          "club": "no-limits",
-          "className": "Club Sport Cup "
-        }
-      ]
-    },
-    {
       "label": "SUZUKI GSXR 600",
       "key": "SUZUKI|600",
       "make": "SUZUKI",
       "cc": 600,
-      "riders": 37,
-      "entries": 268,
+      "riders": 41,
+      "entries": 304,
       "spellings": [
         "SUZUKI 600 (95)",
-        "SUZUKI GSXR 600 (65)",
-        "SUZUKI BANDIT 600 (35)",
+        "SUZUKI GSXR 600 (86)",
+        "SUZUKI BANDIT 600 (50)",
         "SUZUKI GSX R600 (34)",
         "SUZUKI GSXR600 (21)",
         "SUZUKI GSX R 600 (15)",
@@ -1651,6 +1762,38 @@
         {
           "club": "bemsee",
           "className": "Open 500 & Rookie 600"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open 600 Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Lightweight & Honda CB500 Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Golden Supersport 600 Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Honda CB500 & Suzuki Bandit Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "GOLDEN SUPERSPORT 600 CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "HONDA CB 500 & SUZUKI BANDIT CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "DARLEY CUP & WILSON TROPHY CHAMPIONSHIPS"
         },
         {
           "club": "emra",
@@ -1731,13 +1874,17 @@
       "key": "KAWASAKI|1000",
       "make": "KAWASAKI",
       "cc": 1000,
-      "riders": 37,
-      "entries": 218,
+      "riders": 40,
+      "entries": 247,
       "spellings": [
         "KAWASAKI 1000 (153)",
-        "KAWASAKI ZX10R (53)",
-        "KAWASAKI ZX10RR (9)",
-        "KAWASAKI ZX 10R (3)"
+        "KAWASAKI ZX10R (68)",
+        "KAWASAKI ZX10RR (11)",
+        "KAWASAKI ZX9R 1000 (4)",
+        "KAWASAKI ZX10RR 1000 (4)",
+        "KAWASAKI ZX 10R (3)",
+        "KAWASAKI ZXR9 1000 (2)",
+        "KAWASAKI ZX10R 1000 (2)"
       ],
       "classes": [
         {
@@ -1759,6 +1906,22 @@
         {
           "club": "bemsee",
           "className": "Powerbikes inc Clubman 1000 & Retro 1000"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo & Golden Superbike Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Ben Godfrey Trophy Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo (inc. Golden Superbike) Championship"
         },
         {
           "club": "emra",
@@ -1791,6 +1954,154 @@
         {
           "club": "no-limits",
           "className": "Brandfixx Club Power Cup "
+        }
+      ]
+    },
+    {
+      "label": "HONDA CBR",
+      "key": "HONDA|CBR",
+      "make": "HONDA",
+      "cc": null,
+      "riders": 39,
+      "entries": 203,
+      "spellings": [
+        "HONDA CBR (203)"
+      ],
+      "classes": [
+        {
+          "club": "bhr",
+          "className": "Production Sports and Superbikes Pre 2000, Supermonos"
+        },
+        {
+          "club": "bhr",
+          "className": "FSRA Preinjection F1 / F2"
+        },
+        {
+          "club": "bhr",
+          "className": "Earlystocks, BEARS Solos, Japanese & European Solos"
+        },
+        {
+          "club": "crmc",
+          "className": "SB & SS 600,750 (8a,8k,8p,8t)"
+        },
+        {
+          "club": "crmc",
+          "className": "ACU P.Classic 750 (10b)"
+        },
+        {
+          "club": "crmc",
+          "className": "SS400 & GP250 (8m,8n,9h)"
+        },
+        {
+          "club": "crmc",
+          "className": "SBK750,SS600 (8a,8k,8p,8t)"
+        },
+        {
+          "club": "crmc",
+          "className": "ACU P.Classic (10b)"
+        },
+        {
+          "club": "crmc",
+          "className": "8a, 8k, 8p & 8t 750 & 600"
+        },
+        {
+          "club": "crmc",
+          "className": "8m, 8n & 9h 400 & 250GP"
+        },
+        {
+          "club": "crmc",
+          "className": "8a, 8k, 8p & 8t SB750 & 600"
+        },
+        {
+          "club": "ng",
+          "className": "Sportbike / Supertwins / Pre-Injection 600"
+        },
+        {
+          "club": "ng",
+          "className": "Powerbike / Powerbike Cup"
+        },
+        {
+          "club": "ng",
+          "className": "Open / Sound of Thunder"
+        }
+      ]
+    },
+    {
+      "label": "BMW 900",
+      "key": "BMW|900",
+      "make": "BMW",
+      "cc": 900,
+      "riders": 38,
+      "entries": 201,
+      "spellings": [
+        "BMW 900 (139)",
+        "BMW F900 (49)",
+        "BMW F900R (13)"
+      ],
+      "classes": [
+        {
+          "club": "bemsee",
+          "className": "Thunderbike Sport & Supertwins"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Supertwins & Mini Twins Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA OPEN"
+        },
+        {
+          "club": "emra",
+          "className": "SPORT TWINS & F900 TROPHY"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA OPEN & OPEN 600"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA Open"
+        },
+        {
+          "club": "emra",
+          "className": "ROOKIES"
+        },
+        {
+          "club": "ng",
+          "className": "Open / Sound of Thunder"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600 / Naked Streetbike / Clubman 600 non qualifiers"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600 / Naked Streetbike"
+        },
+        {
+          "club": "ng",
+          "className": "National 600 / Next Gen Supersport"
+        },
+        {
+          "club": "no-limits",
+          "className": "SORN Cover Stock Twins "
+        },
+        {
+          "club": "no-limits",
+          "className": "Club Sport Cup "
         }
       ]
     },
@@ -1868,6 +2179,110 @@
       ]
     },
     {
+      "label": "SUZUKI GSXR 750",
+      "key": "SUZUKI|750",
+      "make": "SUZUKI",
+      "cc": 750,
+      "riders": 34,
+      "entries": 241,
+      "spellings": [
+        "SUZUKI GSXR 750 (146)",
+        "SUZUKI 750 (33)",
+        "SUZUKI GSXR750 (21)",
+        "SUZUKI GSXR 750 K1 (15)",
+        "SUZUKI GSXR 750Y K1 (6)",
+        "SUZUKI SRAD 750 (6)",
+        "SUZUKI GSXR750K1 (5)",
+        "SUZUKI GSXR750 NEXT GEN (3)"
+      ],
+      "classes": [
+        {
+          "club": "bemsee",
+          "className": "Seton Tuning Powerbikes inc Clubman 1000 & Retro 1000"
+        },
+        {
+          "club": "bemsee",
+          "className": "BMCRC Thunderbike Ultra & Extreme"
+        },
+        {
+          "club": "bemsee",
+          "className": "Powerbikes inc Clubman 1000 & Retro 1000 "
+        },
+        {
+          "club": "bemsee",
+          "className": "Thunderbike Ultra & Extreme"
+        },
+        {
+          "club": "bhr",
+          "className": "Production Sports and Superbikes Pre 2000, Supermonos"
+        },
+        {
+          "club": "bhr",
+          "className": "Earlystocks, BEARS Solos, Japanese & European Solos"
+        },
+        {
+          "club": "darley-moor",
+          "className": "OPEN SOLO CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo (inc. Golden Superbike) Championship"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA"
+        },
+        {
+          "club": "emra",
+          "className": "MALLORY TROPHY"
+        },
+        {
+          "club": "emra",
+          "className": "OPEN 600"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
+        },
+        {
+          "club": "emra",
+          "className": "Classic ERA"
+        },
+        {
+          "club": "emra",
+          "className": "PRE-INJECTION"
+        },
+        {
+          "club": "ng",
+          "className": "Powerbike / Powerbike Cup"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600"
+        },
+        {
+          "club": "ng",
+          "className": "National 600 / Next Gen Supersport"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600 / Naked Streetbike / Clubman 600 non qualifiers"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600 / Naked Streetbike"
+        },
+        {
+          "club": "no-limits",
+          "className": "Pirelli Super Series Sport Trophy "
+        },
+        {
+          "club": "no-limits",
+          "className": "Brandfixx Club Power Cup "
+        }
+      ]
+    },
+    {
       "label": "KAWASAKI ZXR",
       "key": "KAWASAKI|ZXR",
       "make": "KAWASAKI",
@@ -1925,102 +2340,6 @@
         {
           "club": "crmc",
           "className": "8a, 8k, 8p & 8t SB750 & 600"
-        }
-      ]
-    },
-    {
-      "label": "SUZUKI GSXR 750",
-      "key": "SUZUKI|750",
-      "make": "SUZUKI",
-      "cc": 750,
-      "riders": 32,
-      "entries": 236,
-      "spellings": [
-        "SUZUKI GSXR 750 (144)",
-        "SUZUKI 750 (30)",
-        "SUZUKI GSXR750 (21)",
-        "SUZUKI GSXR 750 K1 (15)",
-        "SUZUKI GSXR 750Y K1 (6)",
-        "SUZUKI SRAD 750 (6)",
-        "SUZUKI GSXR750K1 (5)",
-        "SUZUKI GSXR750 NEXT GEN (3)"
-      ],
-      "classes": [
-        {
-          "club": "bemsee",
-          "className": "Seton Tuning Powerbikes inc Clubman 1000 & Retro 1000"
-        },
-        {
-          "club": "bemsee",
-          "className": "BMCRC Thunderbike Ultra & Extreme"
-        },
-        {
-          "club": "bemsee",
-          "className": "Powerbikes inc Clubman 1000 & Retro 1000 "
-        },
-        {
-          "club": "bemsee",
-          "className": "Thunderbike Ultra & Extreme"
-        },
-        {
-          "club": "bhr",
-          "className": "Production Sports and Superbikes Pre 2000, Supermonos"
-        },
-        {
-          "club": "bhr",
-          "className": "Earlystocks, BEARS Solos, Japanese & European Solos"
-        },
-        {
-          "club": "emra",
-          "className": "CLASSIC ERA"
-        },
-        {
-          "club": "emra",
-          "className": "MALLORY TROPHY"
-        },
-        {
-          "club": "emra",
-          "className": "OPEN 600"
-        },
-        {
-          "club": "emra",
-          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
-        },
-        {
-          "club": "emra",
-          "className": "Classic ERA"
-        },
-        {
-          "club": "emra",
-          "className": "PRE-INJECTION"
-        },
-        {
-          "club": "ng",
-          "className": "Powerbike / Powerbike Cup"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600"
-        },
-        {
-          "club": "ng",
-          "className": "National 600 / Next Gen Supersport"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600 / Naked Streetbike / Clubman 600 non qualifiers"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600 / Naked Streetbike"
-        },
-        {
-          "club": "no-limits",
-          "className": "Pirelli Super Series Sport Trophy "
-        },
-        {
-          "club": "no-limits",
-          "className": "Brandfixx Club Power Cup "
         }
       ]
     },
@@ -2174,74 +2493,12 @@
       ]
     },
     {
-      "label": "MATCHLESS SEELEY G50 500",
-      "key": "MATCHLESS|500",
-      "make": "MATCHLESS",
-      "cc": 500,
-      "riders": 22,
-      "entries": 92,
-      "spellings": [
-        "MATCHLESS G50 (81)",
-        "MATCHLESS SEELEY G50 (11)"
-      ],
-      "classes": [
-        {
-          "club": "bhr",
-          "className": "Pre 63/73, F750, J&E Air Cooled Pre 82, 500cc Twins Solos"
-        },
-        {
-          "club": "bhr",
-          "className": "Pre 63/73, f750, J&E air cooled Pre 82"
-        },
-        {
-          "club": "crmc",
-          "className": "Landsdowne (11a,11b,11c,11d)"
-        },
-        {
-          "club": "crmc",
-          "className": "Classic 500, 750 (5a,5b,5c,6a)"
-        },
-        {
-          "club": "crmc",
-          "className": "ACU Classic350 & 500 (10a)"
-        },
-        {
-          "club": "crmc",
-          "className": "C500,F750 (5a,5b,5c,6a)"
-        },
-        {
-          "club": "crmc",
-          "className": "Lansdowne (11a,11b,11c,11d)"
-        },
-        {
-          "club": "crmc",
-          "className": "11a, 11b, 11c & 11d"
-        },
-        {
-          "club": "crmc",
-          "className": "5a, 5b, 5c & 6a"
-        },
-        {
-          "club": "crmc",
-          "className": "5a, 5b, 5c, 6a Cl500 F750"
-        },
-        {
-          "club": "ng",
-          "className": "Lansdowne Classics"
-        },
-        {
-          "club": "ng",
-          "className": "Lansdowne"
-        }
-      ]
-    },
-    {
       "label": "HONDA RS250",
       "key": "HONDA|250",
       "make": "HONDA",
       "cc": 250,
-      "riders": 22,
-      "entries": 140,
+      "riders": 23,
+      "entries": 144,
       "spellings": [
         "HONDA 250 (36)",
         "HONDA RS250 (19)",
@@ -2249,10 +2506,14 @@
         "HONDA TSR TSR250 (16)",
         "HONDA RS250R (16)",
         "HONDA NSF250R (9)",
-        "HONDA RS 250 (5)",
-        "HONDA NSF 250 F (5)"
+        "HONDA NS 250 (7)",
+        "HONDA RS 250 (5)"
       ],
       "classes": [
+        {
+          "club": "darley-moor",
+          "className": "DARLEY CUP & WILSON TROPHY CHAMPIONSHIPS"
+        },
         {
           "club": "emra",
           "className": "GP80-450 & MINITWIN"
@@ -2324,12 +2585,13 @@
       "key": "KAWASAKI|650",
       "make": "KAWASAKI",
       "cc": 650,
-      "riders": 18,
-      "entries": 61,
+      "riders": 22,
+      "entries": 78,
       "spellings": [
         "KAWASAKI ER6 (29)",
+        "KAWASAKI ER 650 (16)",
         "KAWASAKI ER650 (12)",
-        "KAWASAKI 650 (10)",
+        "KAWASAKI 650 (11)",
         "KAWASAKI Z650 (8)",
         "KAWASAKI NINJA 650 (1)",
         "KAWASAKI Z 650 (1)"
@@ -2342,6 +2604,18 @@
         {
           "club": "bemsee",
           "className": "MRO Minitwins & Rookie Minitwins"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Supertwins & Mini Twins Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "SUPERTWINS & MINI TWINS CHAMPIONSHIPS"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
         },
         {
           "club": "emra",
@@ -2358,6 +2632,68 @@
         {
           "club": "no-limits",
           "className": "SORN Cover Stock Twins "
+        }
+      ]
+    },
+    {
+      "label": "MATCHLESS SEELEY G50 500",
+      "key": "MATCHLESS|500",
+      "make": "MATCHLESS",
+      "cc": 500,
+      "riders": 22,
+      "entries": 92,
+      "spellings": [
+        "MATCHLESS G50 (81)",
+        "MATCHLESS SEELEY G50 (11)"
+      ],
+      "classes": [
+        {
+          "club": "bhr",
+          "className": "Pre 63/73, F750, J&E Air Cooled Pre 82, 500cc Twins Solos"
+        },
+        {
+          "club": "bhr",
+          "className": "Pre 63/73, f750, J&E air cooled Pre 82"
+        },
+        {
+          "club": "crmc",
+          "className": "Landsdowne (11a,11b,11c,11d)"
+        },
+        {
+          "club": "crmc",
+          "className": "Classic 500, 750 (5a,5b,5c,6a)"
+        },
+        {
+          "club": "crmc",
+          "className": "ACU Classic350 & 500 (10a)"
+        },
+        {
+          "club": "crmc",
+          "className": "C500,F750 (5a,5b,5c,6a)"
+        },
+        {
+          "club": "crmc",
+          "className": "Lansdowne (11a,11b,11c,11d)"
+        },
+        {
+          "club": "crmc",
+          "className": "11a, 11b, 11c & 11d"
+        },
+        {
+          "club": "crmc",
+          "className": "5a, 5b, 5c & 6a"
+        },
+        {
+          "club": "crmc",
+          "className": "5a, 5b, 5c, 6a Cl500 F750"
+        },
+        {
+          "club": "ng",
+          "className": "Lansdowne Classics"
+        },
+        {
+          "club": "ng",
+          "className": "Lansdowne"
         }
       ]
     },
@@ -2386,6 +2722,82 @@
         {
           "club": "bhr",
           "className": "ACU Super Scooter Championship"
+        }
+      ]
+    },
+    {
+      "label": "HONDA VFR400",
+      "key": "HONDA|400",
+      "make": "HONDA",
+      "cc": 400,
+      "riders": 18,
+      "entries": 147,
+      "spellings": [
+        "HONDA VFR400 (25)",
+        "HONDA CBR400R (24)",
+        "HONDA VFR NC30 (20)",
+        "HONDA 400 (17)",
+        "HONDA RVF400CC NC35 (15)",
+        "HONDA CBR 400 (15)",
+        "HONDA VFR400 NC30 (13)",
+        "HONDA CBR400RR (5)"
+      ],
+      "classes": [
+        {
+          "club": "bhr",
+          "className": "Production Sports and Superbikes Pre 2000, Supermonos"
+        },
+        {
+          "club": "crmc",
+          "className": "SS400 & GP250 (8m,8n,9h)"
+        },
+        {
+          "club": "crmc",
+          "className": "8m, 8n & 9h 400 and 250GP"
+        },
+        {
+          "club": "crmc",
+          "className": "ACU P.Classic 750 (10b)"
+        },
+        {
+          "club": "crmc",
+          "className": "8m, 8n & 9h 400 & 250GP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Lightweight & Honda CB500 Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Lightweight Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "LIGHTWEIGHT CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "DARLEY CUP & WILSON TROPHY CHAMPIONSHIPS"
+        },
+        {
+          "club": "emra",
+          "className": "GP80-450 & MINITWIN"
+        },
+        {
+          "club": "emra",
+          "className": "BYRON CUP"
+        },
+        {
+          "club": "emra",
+          "className": "GP80 - 450cc"
+        },
+        {
+          "club": "ng",
+          "className": "Ducati Desmo / F400"
         }
       ]
     },
@@ -2558,62 +2970,6 @@
         {
           "club": "ng",
           "className": "Ducati Desmo / F400 / Junior Supersport"
-        },
-        {
-          "club": "ng",
-          "className": "Ducati Desmo / F400"
-        }
-      ]
-    },
-    {
-      "label": "HONDA VFR400",
-      "key": "HONDA|400",
-      "make": "HONDA",
-      "cc": 400,
-      "riders": 16,
-      "entries": 120,
-      "spellings": [
-        "HONDA VFR400 (25)",
-        "HONDA CBR400R (24)",
-        "HONDA VFR NC30 (20)",
-        "HONDA RVF400CC NC35 (15)",
-        "HONDA VFR400 NC30 (13)",
-        "HONDA 400 (8)",
-        "HONDA CBR400RR (5)",
-        "HONDA VFR400CC NC30 (4)"
-      ],
-      "classes": [
-        {
-          "club": "bhr",
-          "className": "Production Sports and Superbikes Pre 2000, Supermonos"
-        },
-        {
-          "club": "crmc",
-          "className": "SS400 & GP250 (8m,8n,9h)"
-        },
-        {
-          "club": "crmc",
-          "className": "8m, 8n & 9h 400 and 250GP"
-        },
-        {
-          "club": "crmc",
-          "className": "ACU P.Classic 750 (10b)"
-        },
-        {
-          "club": "crmc",
-          "className": "8m, 8n & 9h 400 & 250GP"
-        },
-        {
-          "club": "emra",
-          "className": "GP80-450 & MINITWIN"
-        },
-        {
-          "club": "emra",
-          "className": "BYRON CUP"
-        },
-        {
-          "club": "emra",
-          "className": "GP80 - 450cc"
         },
         {
           "club": "ng",
@@ -2868,6 +3224,82 @@
       ]
     },
     {
+      "label": "KAWASAKI ZX7R 750",
+      "key": "KAWASAKI|750",
+      "make": "KAWASAKI",
+      "cc": 750,
+      "riders": 15,
+      "entries": 82,
+      "spellings": [
+        "KAWASAKI ZX7R (40)",
+        "KAWASAKI 750 (13)",
+        "KAWASAKI Z750 (10)",
+        "KAWASAKI GPX750R (6)",
+        "KAWASAKI ZX R750 (4)",
+        "KAWASAKI ZXR750 H1 (4)",
+        "KAWASAKI ZX7R 750 (2)",
+        "KAWASAKI ZXR750 (2)"
+      ],
+      "classes": [
+        {
+          "club": "bemsee",
+          "className": "Thunderbike Ultra & Extreme"
+        },
+        {
+          "club": "bhr",
+          "className": "Earlystocks, BEARS Solos"
+        },
+        {
+          "club": "bhr",
+          "className": "Production Sports and Superbikes Pre 2000, Supermonos"
+        },
+        {
+          "club": "bhr",
+          "className": "Earlystocks, BEARS Solos, Japanese & European Solos"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo & Golden Superbike Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo Championship"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
+        },
+        {
+          "club": "emra",
+          "className": "PRE-INJECTION"
+        },
+        {
+          "club": "emra",
+          "className": "Classic ERA"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600"
+        },
+        {
+          "club": "ng",
+          "className": "Powerbike / Powerbike Cup"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600 / Naked Streetbike / Clubman 600 non qualifiers"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600 / Naked Streetbike"
+        },
+        {
+          "club": "no-limits",
+          "className": "Brandfixx Club Power Cup "
+        }
+      ]
+    },
+    {
       "label": "BSA BANTAM 175",
       "key": "BSA|175",
       "make": "BSA",
@@ -2968,74 +3400,6 @@
       ]
     },
     {
-      "label": "KAWASAKI ZX7R 750",
-      "key": "KAWASAKI|750",
-      "make": "KAWASAKI",
-      "cc": 750,
-      "riders": 13,
-      "entries": 77,
-      "spellings": [
-        "KAWASAKI ZX7R (40)",
-        "KAWASAKI Z750 (10)",
-        "KAWASAKI 750 (10)",
-        "KAWASAKI GPX750R (6)",
-        "KAWASAKI ZX R750 (4)",
-        "KAWASAKI ZXR750 H1 (4)",
-        "KAWASAKI ZXR750 (2)",
-        "KAWASAKI ZXR 750 (1)"
-      ],
-      "classes": [
-        {
-          "club": "bemsee",
-          "className": "Thunderbike Ultra & Extreme"
-        },
-        {
-          "club": "bhr",
-          "className": "Earlystocks, BEARS Solos"
-        },
-        {
-          "club": "bhr",
-          "className": "Production Sports and Superbikes Pre 2000, Supermonos"
-        },
-        {
-          "club": "bhr",
-          "className": "Earlystocks, BEARS Solos, Japanese & European Solos"
-        },
-        {
-          "club": "emra",
-          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
-        },
-        {
-          "club": "emra",
-          "className": "PRE-INJECTION"
-        },
-        {
-          "club": "emra",
-          "className": "Classic ERA"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600"
-        },
-        {
-          "club": "ng",
-          "className": "Powerbike / Powerbike Cup"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600 / Naked Streetbike / Clubman 600 non qualifiers"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600 / Naked Streetbike"
-        },
-        {
-          "club": "no-limits",
-          "className": "Brandfixx Club Power Cup "
-        }
-      ]
-    },
-    {
       "label": "DUCATI",
       "key": "DUCATI|?",
       "make": "DUCATI",
@@ -3093,6 +3457,68 @@
       ]
     },
     {
+      "label": "TRIUMPH DAYTONA 660",
+      "key": "TRIUMPH|660",
+      "make": "TRIUMPH",
+      "cc": 660,
+      "riders": 12,
+      "entries": 102,
+      "spellings": [
+        "TRIUMPH DAYTONA 660 (60)",
+        "TRIUMPH 660 (42)"
+      ],
+      "classes": [
+        {
+          "club": "bemsee",
+          "className": "Thunderbike Sport & Supertwins"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Supertwins & Mini Twins Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
+        },
+        {
+          "club": "emra",
+          "className": "SPORT TWINS & F900 TROPHY"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA OPEN"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
+        },
+        {
+          "club": "ng",
+          "className": "National 600 / Next Gen Supersport"
+        },
+        {
+          "club": "ng",
+          "className": "Open / Sound of Thunder"
+        },
+        {
+          "club": "ng",
+          "className": "Sportbike / Supertwins / Pre-Injection 600"
+        },
+        {
+          "club": "no-limits",
+          "className": "Club Sport Cup "
+        },
+        {
+          "club": "no-limits",
+          "className": "SORN Cover Stock Twins "
+        },
+        {
+          "club": "no-limits",
+          "className": "Pirelli Super Series Sport Trophy "
+        }
+      ]
+    },
+    {
       "label": "HONDA",
       "key": "HONDA|?",
       "make": "HONDA",
@@ -3146,68 +3572,14 @@
       ]
     },
     {
-      "label": "TRIUMPH DAYTONA 660",
-      "key": "TRIUMPH|660",
-      "make": "TRIUMPH",
-      "cc": 660,
-      "riders": 11,
-      "entries": 99,
-      "spellings": [
-        "TRIUMPH DAYTONA 660 (60)",
-        "TRIUMPH 660 (39)"
-      ],
-      "classes": [
-        {
-          "club": "bemsee",
-          "className": "Thunderbike Sport & Supertwins"
-        },
-        {
-          "club": "emra",
-          "className": "SPORT TWINS & F900 TROPHY"
-        },
-        {
-          "club": "emra",
-          "className": "EMRA OPEN"
-        },
-        {
-          "club": "emra",
-          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
-        },
-        {
-          "club": "ng",
-          "className": "National 600 / Next Gen Supersport"
-        },
-        {
-          "club": "ng",
-          "className": "Open / Sound of Thunder"
-        },
-        {
-          "club": "ng",
-          "className": "Sportbike / Supertwins / Pre-Injection 600"
-        },
-        {
-          "club": "no-limits",
-          "className": "Club Sport Cup "
-        },
-        {
-          "club": "no-limits",
-          "className": "SORN Cover Stock Twins "
-        },
-        {
-          "club": "no-limits",
-          "className": "Pirelli Super Series Sport Trophy "
-        }
-      ]
-    },
-    {
       "label": "KAWASAKI GPZ500S",
       "key": "KAWASAKI|500",
       "make": "KAWASAKI",
       "cc": 500,
       "riders": 11,
-      "entries": 130,
+      "entries": 131,
       "spellings": [
-        "KAWASAKI GPZ500S (47)",
+        "KAWASAKI GPZ500S (48)",
         "KAWASAKI GPZ 500 (44)",
         "KAWASAKI GPZ500 (32)",
         "KAWASAKI KLE 500 (7)"
@@ -3228,6 +3600,10 @@
         {
           "club": "bhr",
           "className": "500cc Twins"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Darley Cup & Wilson Trophy Championships"
         }
       ]
     },
@@ -3287,6 +3663,44 @@
         {
           "club": "crmc",
           "className": "5a, 5b, 5c & 6a"
+        }
+      ]
+    },
+    {
+      "label": "YAMAHA 700",
+      "key": "YAMAHA|700",
+      "make": "YAMAHA",
+      "cc": 700,
+      "riders": 11,
+      "entries": 29,
+      "spellings": [
+        "YAMAHA 700 (26)",
+        "YAMAHA R7 700 (3)"
+      ],
+      "classes": [
+        {
+          "club": "darley-moor",
+          "className": "SUPERTWINS & MINI TWINS CHAMPIONSHIPS"
+        },
+        {
+          "club": "emra",
+          "className": "GP80-450 & MINITWIN"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA OPEN"
+        },
+        {
+          "club": "no-limits",
+          "className": "SORN Cover Stock Twins "
+        },
+        {
+          "club": "no-limits",
+          "className": "SORN Cover Stock Twins "
         }
       ]
     },
@@ -3389,39 +3803,6 @@
         {
           "club": "no-limits",
           "className": "Club Sport Cup "
-        }
-      ]
-    },
-    {
-      "label": "YAMAHA 700",
-      "key": "YAMAHA|700",
-      "make": "YAMAHA",
-      "cc": 700,
-      "riders": 10,
-      "entries": 26,
-      "spellings": [
-        "YAMAHA 700 (26)"
-      ],
-      "classes": [
-        {
-          "club": "emra",
-          "className": "GP80-450 & MINITWIN"
-        },
-        {
-          "club": "emra",
-          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
-        },
-        {
-          "club": "emra",
-          "className": "EMRA OPEN"
-        },
-        {
-          "club": "no-limits",
-          "className": "SORN Cover Stock Twins "
-        },
-        {
-          "club": "no-limits",
-          "className": "SORN Cover Stock Twins "
         }
       ]
     },
@@ -3592,6 +3973,58 @@
         {
           "club": "crmc",
           "className": "ACU P.Classic 750 (10b)"
+        }
+      ]
+    },
+    {
+      "label": "YAMAHA FZ750",
+      "key": "YAMAHA|750",
+      "make": "YAMAHA",
+      "cc": 750,
+      "riders": 9,
+      "entries": 53,
+      "spellings": [
+        "YAMAHA FZ750 (20)",
+        "YAMAHA OW01 750 (16)",
+        "YAMAHA YZF 750 (10)",
+        "YAMAHA 750 (7)"
+      ],
+      "classes": [
+        {
+          "club": "bhr",
+          "className": "Earlystocks, BEARS Solos, Japanese & European Solos"
+        },
+        {
+          "club": "bhr",
+          "className": "Production Sports and Superbikes Pre 2000, Supermonos"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo & Golden Superbike Championship"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA"
+        },
+        {
+          "club": "emra",
+          "className": "PRE-INJECTION"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600 / Naked Streetbike / Clubman 600 non qualifiers"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600 / Naked Streetbike"
+        },
+        {
+          "club": "no-limits",
+          "className": "Brandfixx Club Power Cup "
         }
       ]
     },
@@ -3795,6 +4228,64 @@
       ]
     },
     {
+      "label": "KAWASAKI NINJA 300",
+      "key": "KAWASAKI|300",
+      "make": "KAWASAKI",
+      "cc": 300,
+      "riders": 8,
+      "entries": 80,
+      "spellings": [
+        "KAWASAKI NINJA 300 (67)",
+        "KAWASAKI 300 (13)"
+      ],
+      "classes": [
+        {
+          "club": "bemsee",
+          "className": "ACU Team Green Junior Cup & Senior Ninjas & 250 MZ"
+        },
+        {
+          "club": "bemsee",
+          "className": "ACU Team Green Junior Cup & Senior Ninjas "
+        },
+        {
+          "club": "bemsee",
+          "className": "ACU TG Junior & Senior Cup & 250 MZs"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Lightweight & Honda CB500 Championships"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Lightweight Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "LIGHTWEIGHT CHAMPIONSHIP"
+        },
+        {
+          "club": "emra",
+          "className": "GP80-450 & MINITWIN"
+        },
+        {
+          "club": "emra",
+          "className": "ROOKIES"
+        },
+        {
+          "club": "emra",
+          "className": "GP80 - 450cc"
+        },
+        {
+          "club": "emra",
+          "className": "BYRON CUP"
+        },
+        {
+          "club": "ng",
+          "className": "UK Junior Series / Junior Supersport"
+        }
+      ]
+    },
+    {
       "label": "TRIUMPH DAYTONA",
       "key": "TRIUMPH|DAYTONA",
       "make": "TRIUMPH",
@@ -3856,54 +4347,6 @@
         {
           "club": "crmc",
           "className": "12a & 12b Supermono GB"
-        }
-      ]
-    },
-    {
-      "label": "YAMAHA FZ750",
-      "key": "YAMAHA|750",
-      "make": "YAMAHA",
-      "cc": 750,
-      "riders": 8,
-      "entries": 51,
-      "spellings": [
-        "YAMAHA FZ750 (20)",
-        "YAMAHA OW01 750 (16)",
-        "YAMAHA YZF 750 (8)",
-        "YAMAHA 750 (7)"
-      ],
-      "classes": [
-        {
-          "club": "bhr",
-          "className": "Earlystocks, BEARS Solos, Japanese & European Solos"
-        },
-        {
-          "club": "bhr",
-          "className": "Production Sports and Superbikes Pre 2000, Supermonos"
-        },
-        {
-          "club": "emra",
-          "className": "CLASSIC ERA"
-        },
-        {
-          "club": "emra",
-          "className": "PRE-INJECTION"
-        },
-        {
-          "club": "emra",
-          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600 / Naked Streetbike / Clubman 600 non qualifiers"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600 / Naked Streetbike"
-        },
-        {
-          "club": "no-limits",
-          "className": "Brandfixx Club Power Cup "
         }
       ]
     },
@@ -3992,6 +4435,48 @@
       ]
     },
     {
+      "label": "YAMAHA 998",
+      "key": "YAMAHA|998",
+      "make": "YAMAHA",
+      "cc": 998,
+      "riders": 8,
+      "entries": 51,
+      "spellings": [
+        "YAMAHA 998 (42)",
+        "YAMAHA R1 998 (9)"
+      ],
+      "classes": [
+        {
+          "club": "darley-moor",
+          "className": "Open Solo & Golden Superbike Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "OPEN SOLO CHAMPIONSHIP"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo (inc. Golden Superbike) Championship"
+        },
+        {
+          "club": "emra",
+          "className": "PRE-INJECTION"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
+        },
+        {
+          "club": "no-limits",
+          "className": "Brandfixx Club Power Cup "
+        }
+      ]
+    },
+    {
       "label": "KAWASAKI NINJA",
       "key": "KAWASAKI|NINJA",
       "make": "KAWASAKI",
@@ -4029,52 +4514,6 @@
         {
           "club": "ng",
           "className": "#50 - No working transponder - please fix before next session or you will not be timed - ACU Road Rac"
-        }
-      ]
-    },
-    {
-      "label": "KAWASAKI NINJA 300",
-      "key": "KAWASAKI|300",
-      "make": "KAWASAKI",
-      "cc": 300,
-      "riders": 7,
-      "entries": 70,
-      "spellings": [
-        "KAWASAKI NINJA 300 (57)",
-        "KAWASAKI 300 (13)"
-      ],
-      "classes": [
-        {
-          "club": "bemsee",
-          "className": "ACU Team Green Junior Cup & Senior Ninjas & 250 MZ"
-        },
-        {
-          "club": "bemsee",
-          "className": "ACU Team Green Junior Cup & Senior Ninjas "
-        },
-        {
-          "club": "bemsee",
-          "className": "ACU TG Junior & Senior Cup & 250 MZs"
-        },
-        {
-          "club": "emra",
-          "className": "GP80-450 & MINITWIN"
-        },
-        {
-          "club": "emra",
-          "className": "ROOKIES"
-        },
-        {
-          "club": "emra",
-          "className": "GP80 - 450cc"
-        },
-        {
-          "club": "emra",
-          "className": "BYRON CUP"
-        },
-        {
-          "club": "ng",
-          "className": "UK Junior Series / Junior Supersport"
         }
       ]
     },
@@ -4141,27 +4580,29 @@
       ]
     },
     {
-      "label": "YAMAHA 998",
-      "key": "YAMAHA|998",
-      "make": "YAMAHA",
-      "cc": 998,
+      "label": "SUZUKI GSXR 125",
+      "key": "SUZUKI|125",
+      "make": "SUZUKI",
+      "cc": 125,
       "riders": 7,
-      "entries": 42,
+      "entries": 19,
       "spellings": [
-        "YAMAHA 998 (42)"
+        "SUZUKI GSXR 125 (16)",
+        "SUZUKI 125 (2)",
+        "SUZUKI GSXS 125 (1)"
       ],
       "classes": [
         {
-          "club": "emra",
-          "className": "PRE-INJECTION"
+          "club": "darley-moor",
+          "className": "ACU Ultra Lightweight Championship"
         },
         {
-          "club": "emra",
-          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
+          "club": "darley-moor",
+          "className": "LIGHTWEIGHT CHAMPIONSHIP"
         },
         {
-          "club": "no-limits",
-          "className": "Brandfixx Club Power Cup "
+          "club": "ng",
+          "className": "Ducati Desmo / F400 / Junior Supersport"
         }
       ]
     },
@@ -4208,6 +4649,51 @@
         {
           "club": "crmc",
           "className": "8m, 8n & 9h 400 and 250GP"
+        }
+      ]
+    },
+    {
+      "label": "KAWASAKI ZX10",
+      "key": "KAWASAKI|ZX10",
+      "make": "KAWASAKI",
+      "cc": null,
+      "riders": 6,
+      "entries": 21,
+      "spellings": [
+        "KAWASAKI ZX10 (21)"
+      ],
+      "classes": [
+        {
+          "club": "bemsee",
+          "className": "Seton Tuning Powerbikes inc Clubman 1000 & Retro 1000"
+        },
+        {
+          "club": "bemsee",
+          "className": "Powerbikes inc Clubman 1000 & Retro 1000 "
+        },
+        {
+          "club": "bemsee",
+          "className": "Powerbikes inc Clubman 1000 & Retro 1000"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Open Solo & Golden Superbike Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "Ben Godfrey Trophy Championship"
+        },
+        {
+          "club": "ng",
+          "className": "Powerbike / Powerbike Cup"
+        },
+        {
+          "club": "ng",
+          "className": "Golden Era Open & 600 / Naked Streetbike"
+        },
+        {
+          "club": "ng",
+          "className": "Open / Sound of Thunder"
         }
       ]
     },
@@ -4733,6 +5219,33 @@
       ]
     },
     {
+      "label": "APRILIA RSV4 1100",
+      "key": "APRILIA|1100",
+      "make": "APRILIA",
+      "cc": 1100,
+      "riders": 5,
+      "entries": 46,
+      "spellings": [
+        "APRILIA RSV4 1100 (23)",
+        "APRILIA 1100 (22)",
+        "APRILIA RSW4 1100 (1)"
+      ],
+      "classes": [
+        {
+          "club": "darley-moor",
+          "className": "Open Solo & Golden Superbike Championship"
+        },
+        {
+          "club": "ng",
+          "className": "Powerbike / Powerbike Cup"
+        },
+        {
+          "club": "no-limits",
+          "className": "Pirelli Super Series Power Trophy "
+        }
+      ]
+    },
+    {
       "label": "DUCATI PANIGALE V2 955",
       "key": "DUCATI|955",
       "make": "DUCATI",
@@ -4752,28 +5265,6 @@
         {
           "club": "no-limits",
           "className": "Pirelli Super Series Sport Trophy "
-        }
-      ]
-    },
-    {
-      "label": "APRILIA RSV4 1100",
-      "key": "APRILIA|1100",
-      "make": "APRILIA",
-      "cc": 1100,
-      "riders": 5,
-      "entries": 45,
-      "spellings": [
-        "APRILIA RSV4 1100 (23)",
-        "APRILIA 1100 (22)"
-      ],
-      "classes": [
-        {
-          "club": "ng",
-          "className": "Powerbike / Powerbike Cup"
-        },
-        {
-          "club": "no-limits",
-          "className": "Pirelli Super Series Power Trophy "
         }
       ]
     },
@@ -4803,43 +5294,6 @@
         {
           "club": "ng",
           "className": "National 600 / Next Gen Supersport"
-        },
-        {
-          "club": "ng",
-          "className": "Open / Sound of Thunder"
-        }
-      ]
-    },
-    {
-      "label": "KAWASAKI ZX10",
-      "key": "KAWASAKI|ZX10",
-      "make": "KAWASAKI",
-      "cc": null,
-      "riders": 4,
-      "entries": 15,
-      "spellings": [
-        "KAWASAKI ZX10 (15)"
-      ],
-      "classes": [
-        {
-          "club": "bemsee",
-          "className": "Seton Tuning Powerbikes inc Clubman 1000 & Retro 1000"
-        },
-        {
-          "club": "bemsee",
-          "className": "Powerbikes inc Clubman 1000 & Retro 1000 "
-        },
-        {
-          "club": "bemsee",
-          "className": "Powerbikes inc Clubman 1000 & Retro 1000"
-        },
-        {
-          "club": "ng",
-          "className": "Powerbike / Powerbike Cup"
-        },
-        {
-          "club": "ng",
-          "className": "Golden Era Open & 600 / Naked Streetbike"
         },
         {
           "club": "ng",
@@ -5978,6 +6432,136 @@
         {
           "club": "crmc",
           "className": "5a, 5b, 5c & 6a"
+        }
+      ]
+    },
+    {
+      "label": "SUZUKI BANDIT 599CC",
+      "key": "SUZUKI|599",
+      "make": "SUZUKI",
+      "cc": 599,
+      "riders": 3,
+      "entries": 12,
+      "spellings": [
+        "SUZUKI 599 (5)",
+        "SUZUKI BANDIT 599CC (5)",
+        "SUZUKI BANDIT 599 (2)"
+      ],
+      "classes": [
+        {
+          "club": "darley-moor",
+          "className": "Lightweight & Honda CB500 Championships"
+        },
+        {
+          "club": "emra",
+          "className": "EMRA OPEN & OPEN 600"
+        },
+        {
+          "club": "emra",
+          "className": "ROOKIES"
+        },
+        {
+          "club": "emra",
+          "className": "Rookies"
+        },
+        {
+          "club": "ng",
+          "className": "Sportbike / Supertwins / Pre-Injection 600"
+        },
+        {
+          "club": "ng",
+          "className": "Mini Twins / Open 500 / Lightweight Naked Streetbike"
+        }
+      ]
+    },
+    {
+      "label": "VIPER HONDA A SON",
+      "key": "VIPER|HONDA A SON",
+      "make": "VIPER",
+      "cc": null,
+      "riders": 3,
+      "entries": 9,
+      "spellings": [
+        "VIPER HONDA A SON (9)"
+      ],
+      "classes": [
+        {
+          "club": "darley-moor",
+          "className": "Superkarting-uk Clubmans Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "SUPERKARTING-UK CLUBMANS CHAMPIONSHIP"
+        }
+      ]
+    },
+    {
+      "label": "KTM ANDERSON",
+      "key": "KTM|ANDERSON",
+      "make": "KTM",
+      "cc": null,
+      "riders": 3,
+      "entries": 8,
+      "spellings": [
+        "KTM ANDERSON (8)"
+      ],
+      "classes": [
+        {
+          "club": "darley-moor",
+          "className": "Superkarting-uk Clubmans Championship"
+        },
+        {
+          "club": "darley-moor",
+          "className": "SUPERKARTING-UK CLUBMANS CHAMPIONSHIP"
+        }
+      ]
+    },
+    {
+      "label": "HONDA CB500 499",
+      "key": "HONDA|499",
+      "make": "HONDA",
+      "cc": 499,
+      "riders": 3,
+      "entries": 6,
+      "spellings": [
+        "HONDA CB500 499 (4)",
+        "HONDA 499 (2)"
+      ],
+      "classes": [
+        {
+          "club": "darley-moor",
+          "className": "HONDA CB 500 & SUZUKI BANDIT CHAMPIONSHIP"
+        },
+        {
+          "club": "emra",
+          "className": "BYRON CUP"
+        }
+      ]
+    },
+    {
+      "label": "SUZUKI GSXR 8R 800",
+      "key": "SUZUKI|800",
+      "make": "SUZUKI",
+      "cc": 800,
+      "riders": 3,
+      "entries": 9,
+      "spellings": [
+        "SUZUKI GSXR 8R 800 (4)",
+        "SUZUKI GSX800 (3)",
+        "SUZUKI 800 (2)"
+      ],
+      "classes": [
+        {
+          "club": "darley-moor",
+          "className": "SUPERTWINS & MINI TWINS CHAMPIONSHIPS"
+        },
+        {
+          "club": "emra",
+          "className": "CLASSIC ERA, F900R TROPHY & SPORT-BIKES"
+        },
+        {
+          "club": "ng",
+          "className": "Sportbike / Supertwins / Pre-Injection 600"
         }
       ]
     },
@@ -10630,6 +11214,419 @@
         "entries": 2,
         "bestLap": "1:17.695",
         "typicalLap": "1:19.314"
+      }
+    ],
+    "darley-moor||darley-moor|ACU ULTRA LIGHTWEIGHT CHAMPIONSHIP": [
+      {
+        "label": "SUZUKI GSXR 125",
+        "riders": 5,
+        "entries": 10,
+        "bestLap": "1:17.270",
+        "typicalLap": "1:26.610"
+      }
+    ],
+    "darley-moor||darley-moor|OPEN 600 CHAMPIONSHIP": [
+      {
+        "label": "YAMAHA R6 600",
+        "riders": 10,
+        "entries": 50,
+        "bestLap": "57.480",
+        "typicalLap": "1:01.645"
+      },
+      {
+        "label": "HONDA CBR 600",
+        "riders": 7,
+        "entries": 26,
+        "bestLap": "58.060",
+        "typicalLap": "1:04.155"
+      },
+      {
+        "label": "KAWASAKI ZX6R 600",
+        "riders": 4,
+        "entries": 28,
+        "bestLap": "58.820",
+        "typicalLap": "1:03.750"
+      },
+      {
+        "label": "TRIUMPH 675",
+        "riders": 2,
+        "entries": 6,
+        "bestLap": "58.850",
+        "typicalLap": "1:00.365"
+      },
+      {
+        "label": "SUZUKI GSXR 600",
+        "riders": 2,
+        "entries": 4,
+        "bestLap": "1:06.690",
+        "typicalLap": "1:09.575"
+      }
+    ],
+    "darley-moor||darley-moor|OPEN SOLO & GOLDEN SUPERBIKE CHAMPIONSHIP": [
+      {
+        "label": "BMW S1000RR 1000",
+        "riders": 6,
+        "entries": 12,
+        "bestLap": "57.070",
+        "typicalLap": "1:02.030"
+      },
+      {
+        "label": "KAWASAKI ZX10R 1000",
+        "riders": 4,
+        "entries": 8,
+        "bestLap": "1:02.080",
+        "typicalLap": "1:05.190"
+      },
+      {
+        "label": "HONDA CBR 1000",
+        "riders": 2,
+        "entries": 3,
+        "bestLap": "57.850",
+        "typicalLap": "57.890"
+      },
+      {
+        "label": "KAWASAKI ZX10",
+        "riders": 2,
+        "entries": 4,
+        "bestLap": "1:01.320",
+        "typicalLap": "1:04.315"
+      },
+      {
+        "label": "YAMAHA R1 1000",
+        "riders": 2,
+        "entries": 3,
+        "bestLap": "1:02.010",
+        "typicalLap": "1:12.450"
+      }
+    ],
+    "darley-moor||darley-moor|SUPERTWINS & MINI TWINS CHAMPIONSHIPS": [
+      {
+        "label": "SUZUKI SV 650",
+        "riders": 8,
+        "entries": 31,
+        "bestLap": "1:03.660",
+        "typicalLap": "1:08.400"
+      },
+      {
+        "label": "APRILIA RS 660",
+        "riders": 7,
+        "entries": 39,
+        "bestLap": "1:00.090",
+        "typicalLap": "1:04.020"
+      },
+      {
+        "label": "KAWASAKI ER 650",
+        "riders": 5,
+        "entries": 15,
+        "bestLap": "1:01.830",
+        "typicalLap": "1:03.980"
+      }
+    ],
+    "darley-moor||darley-moor|GOLDEN SUPERSPORT 600 CHAMPIONSHIP": [
+      {
+        "label": "HONDA CBR 600RR",
+        "riders": 11,
+        "entries": 47,
+        "bestLap": "58.200",
+        "typicalLap": "1:05.570"
+      },
+      {
+        "label": "YAMAHA R6 600",
+        "riders": 7,
+        "entries": 36,
+        "bestLap": "59.200",
+        "typicalLap": "1:05.755"
+      }
+    ],
+    "darley-moor||darley-moor|LIGHTWEIGHT & HONDA CB500 CHAMPIONSHIPS": [
+      {
+        "label": "HONDA CB 500",
+        "riders": 12,
+        "entries": 22,
+        "bestLap": "1:08.510",
+        "typicalLap": "1:13.965"
+      },
+      {
+        "label": "KAWASAKI ZXR400",
+        "riders": 4,
+        "entries": 8,
+        "bestLap": "1:07.850",
+        "typicalLap": "1:10.530"
+      },
+      {
+        "label": "HONDA CBR 400",
+        "riders": 2,
+        "entries": 4,
+        "bestLap": "1:12.100",
+        "typicalLap": "1:18.265"
+      }
+    ],
+    "darley-moor||darley-moor|SUPERKARTING-UK CLUBMANS CHAMPIONSHIP": [
+      {
+        "label": "VIPER HONDA A SON",
+        "riders": 3,
+        "entries": 9,
+        "bestLap": "1:03.600",
+        "typicalLap": "1:04.850"
+      },
+      {
+        "label": "KTM ANDERSON",
+        "riders": 3,
+        "entries": 8,
+        "bestLap": "1:05.980",
+        "typicalLap": "1:06.815"
+      },
+      {
+        "label": "TM ANDERSON",
+        "riders": 2,
+        "entries": 5,
+        "bestLap": "1:07.780",
+        "typicalLap": "1:10.380"
+      },
+      {
+        "label": "FPE ANDERSON",
+        "riders": 2,
+        "entries": 2,
+        "bestLap": "1:10.700",
+        "typicalLap": "1:10.900"
+      },
+      {
+        "label": "TM F1",
+        "riders": 2,
+        "entries": 14,
+        "bestLap": "1:08.010",
+        "typicalLap": "1:09.075"
+      },
+      {
+        "label": "DEA ANDERSON",
+        "riders": 2,
+        "entries": 3,
+        "bestLap": "1:03.260",
+        "typicalLap": "1:11.280"
+      }
+    ],
+    "darley-moor||darley-moor|BEN GODFREY TROPHY CHAMPIONSHIP": [
+      {
+        "label": "BMW S1000RR",
+        "riders": 7,
+        "entries": 26,
+        "bestLap": "55.310",
+        "typicalLap": "56.385"
+      },
+      {
+        "label": "YAMAHA R6 600",
+        "riders": 6,
+        "entries": 23,
+        "bestLap": "57.210",
+        "typicalLap": "1:01.850"
+      },
+      {
+        "label": "KAWASAKI ZX10R 1000",
+        "riders": 3,
+        "entries": 9,
+        "bestLap": "57.770",
+        "typicalLap": "1:00.220"
+      },
+      {
+        "label": "HONDA CBR 1000",
+        "riders": 3,
+        "entries": 15,
+        "bestLap": "55.300",
+        "typicalLap": "56.050"
+      },
+      {
+        "label": "YAMAHA R1 1000",
+        "riders": 3,
+        "entries": 13,
+        "bestLap": "56.920",
+        "typicalLap": "59.460"
+      },
+      {
+        "label": "KAWASAKI ZX10",
+        "riders": 2,
+        "entries": 2,
+        "bestLap": "1:07.730",
+        "typicalLap": "1:08.560"
+      },
+      {
+        "label": "HONDA CBR 600",
+        "riders": 2,
+        "entries": 2,
+        "bestLap": "1:02.340",
+        "typicalLap": "1:09.720"
+      }
+    ],
+    "darley-moor||darley-moor|DARLEY CUP & WILSON TROPHY CHAMPIONSHIPS": [
+      {
+        "label": "YAMAHA R6 600",
+        "riders": 6,
+        "entries": 25,
+        "bestLap": "7.400",
+        "typicalLap": "1:04.390"
+      },
+      {
+        "label": "APRILIA RS 660",
+        "riders": 5,
+        "entries": 22,
+        "bestLap": "1:00.720",
+        "typicalLap": "1:04.035"
+      },
+      {
+        "label": "HONDA CB 500",
+        "riders": 5,
+        "entries": 9,
+        "bestLap": "1:07.170",
+        "typicalLap": "1:12.240"
+      },
+      {
+        "label": "SUZUKI SV 650",
+        "riders": 5,
+        "entries": 14,
+        "bestLap": "1:06.610",
+        "typicalLap": "1:08.175"
+      },
+      {
+        "label": "KAWASAKI ZXR 400",
+        "riders": 4,
+        "entries": 23,
+        "bestLap": "1:01.110",
+        "typicalLap": "1:07.080"
+      },
+      {
+        "label": "HONDA CBR 600RR",
+        "riders": 3,
+        "entries": 16,
+        "bestLap": "1:03.560",
+        "typicalLap": "1:05.815"
+      },
+      {
+        "label": "HONDA CBR 400",
+        "riders": 3,
+        "entries": 11,
+        "bestLap": "1:08.160",
+        "typicalLap": "1:11.600"
+      }
+    ],
+    "darley-moor||darley-moor|LIGHTWEIGHT CHAMPIONSHIP": [
+      {
+        "label": "KAWASAKI ZXR 400",
+        "riders": 9,
+        "entries": 32,
+        "bestLap": "1:01.150",
+        "typicalLap": "1:06.370"
+      },
+      {
+        "label": "HONDA CBR 400",
+        "riders": 3,
+        "entries": 12,
+        "bestLap": "1:08.180",
+        "typicalLap": "1:11.845"
+      },
+      {
+        "label": "SUZUKI GSXR 125",
+        "riders": 2,
+        "entries": 8,
+        "bestLap": "1:18.130",
+        "typicalLap": "1:20.365"
+      }
+    ],
+    "darley-moor||darley-moor|OPEN SOLO CHAMPIONSHIP": [
+      {
+        "label": "BMW S1000RR 1000",
+        "riders": 7,
+        "entries": 24,
+        "bestLap": "55.250",
+        "typicalLap": "56.495"
+      },
+      {
+        "label": "YAMAHA R1 1000",
+        "riders": 4,
+        "entries": 15,
+        "bestLap": "57.290",
+        "typicalLap": "59.660"
+      },
+      {
+        "label": "HONDA CBR 1000",
+        "riders": 3,
+        "entries": 12,
+        "bestLap": "55.160",
+        "typicalLap": "56.030"
+      },
+      {
+        "label": "KAWASAKI ZX10R 1000",
+        "riders": 2,
+        "entries": 4,
+        "bestLap": "59.830",
+        "typicalLap": "1:05.360"
+      },
+      {
+        "label": "KAWASAKI ZX7R 750",
+        "riders": 2,
+        "entries": 4,
+        "bestLap": "1:02.630",
+        "typicalLap": "1:05.550"
+      },
+      {
+        "label": "SUZUKI GSXR 750",
+        "riders": 2,
+        "entries": 3,
+        "bestLap": "1:08.540",
+        "typicalLap": "1:09.360"
+      }
+    ],
+    "darley-moor||darley-moor|HONDA CB500 & SUZUKI BANDIT CHAMPIONSHIP": [
+      {
+        "label": "HONDA CB 500",
+        "riders": 21,
+        "entries": 48,
+        "bestLap": "1:05.100",
+        "typicalLap": "1:09.840"
+      },
+      {
+        "label": "SUZUKI BANDIT 600",
+        "riders": 2,
+        "entries": 5,
+        "bestLap": "1:05.340",
+        "typicalLap": "1:07.290"
+      }
+    ],
+    "darley-moor||darley-moor|HONDA CB 500 & SUZUKI BANDIT CHAMPIONSHIP": [
+      {
+        "label": "HONDA CB 500",
+        "riders": 10,
+        "entries": 34,
+        "bestLap": "1:05.310",
+        "typicalLap": "1:10.395"
+      },
+      {
+        "label": "SUZUKI BANDIT 600",
+        "riders": 2,
+        "entries": 8,
+        "bestLap": "1:05.880",
+        "typicalLap": "1:06.900"
+      }
+    ],
+    "darley-moor||darley-moor|OPEN SOLO (INC. GOLDEN SUPERBIKE) CHAMPIONSHIP": [
+      {
+        "label": "KAWASAKI ZX10R 1000",
+        "riders": 4,
+        "entries": 8,
+        "bestLap": "57.780",
+        "typicalLap": "1:00.265"
+      },
+      {
+        "label": "YAMAHA R1 1000",
+        "riders": 4,
+        "entries": 8,
+        "bestLap": "57.620",
+        "typicalLap": "1:03.305"
+      },
+      {
+        "label": "BMW S1000RR 1000",
+        "riders": 3,
+        "entries": 6,
+        "bestLap": "55.070",
+        "typicalLap": "55.890"
       }
     ],
     "mallory||emra|OPEN 600": [
