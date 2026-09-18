@@ -87,6 +87,9 @@ h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mut
 .entries{font-size:.75rem;color:var(--muted);white-space:nowrap}
 .btn{display:inline-block;background:var(--accent);color:var(--accent-ink);text-decoration:none;
   font-size:.8rem;font-weight:600;padding:.3rem .7rem;border-radius:6px}
+.btn--ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.btn--ghost:hover{color:var(--ink);border-color:var(--muted)}
+.yr{color:var(--muted);font-size:.85em}
 .empty{color:var(--muted);background:var(--panel);border:1px dashed var(--line);
   border-radius:var(--radius);padding:1.5rem;text-align:center}
 .is-example{opacity:.65;border-style:dashed}

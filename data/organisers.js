@@ -23,8 +23,22 @@ export const organisers = [
   { id: 'ng',            name: 'NG Road Racing',                          short: 'NG',       website: null,
     results: [{ provider: 'TSL Timing', url: 'https://www.tsl-timing.com/Results/ngroadracing/', note: 'results by season, 2002 onwards' }] },
   { id: 'bantam',        name: 'Bantam Racing Club',                      short: 'Bantam RC', website: null },
-  { id: 'crmc',          name: 'CRMC (Classic Racing Motorcycle Club)',   short: 'CRMC',     website: 'https://www.crmc.co.uk' },
-  // CRMC is NOT on TSL Timing — checked. Their results are elsewhere; add when found.
+  { id: 'crmc',          name: 'CRMC (Classic Racing Motorcycle Club)',   short: 'CRMC',     website: 'https://www.crmc.co.uk',
+    // Not on TSL. CRMC spread results across four providers over the years; all
+    // taken from crmc.co.uk/live-timing-results. Apex only goes back to 2026 —
+    // /CRMC/2025/... returns a blank page, so don't "fix" that into a link.
+    results: [
+      { provider: 'Motorsport Timing', years: '2017\u20132025', url: 'https://www.motorsport-timing.co.uk/championships/crmc/',
+        note: 'per-meeting results, the fullest archive' },
+      { provider: 'CRMC live timing & results', years: '2026 onwards', url: 'https://www.crmc.co.uk/live-timing-results/',
+        note: 'the club\u2019s own index; Apex has no browsable archive, so link here not to Apex directly' },
+      { provider: 'Championship standings', years: '2026', url: 'https://1drv.ms/x/c/ed53173064b266fc/IQBbppm4SKguR5bKi7byOI2IAQJDepK5hn9VytVSOJivP70',
+        note: 'spreadsheet' },
+      { provider: 'Championship standings', years: '2025', url: 'https://1drv.ms/x/c/ed53173064b266fc/EYfac5kmk9pLpawJyt8GGRUBFzshfTJ8p4pDpz2PQ42NXw',
+        note: 'spreadsheet' },
+      { provider: 'MyLaps Speedhive', years: '2005\u20132017', url: 'https://speedhive.mylaps.com/organizations/24046',
+        note: 'linked by CRMC; needs JavaScript, contents unverified' },
+    ] },
   { id: 'bhr',           name: 'BHR (British Historic Racing)',           short: 'BHR',      website: null },
   { id: 'cool-fab',      name: 'Cool FAB Racing',                         short: 'Cool FAB', website: null },
   { id: 'auto-66',       name: 'Auto 66 Club',                            short: 'Auto 66',  website: null },

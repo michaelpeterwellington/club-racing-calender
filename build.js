@@ -130,6 +130,7 @@ function meetingCard(m, { base }) {
     ${c?.type === 'road' ? '<span class="badge badge--road">roads</span>' : ''}
     ${note ? `<span class="entries">${esc(note)}</span>` : ''}
     ${m.entryUrl ? `<a class="btn js-out" href="${esc(m.entryUrl)}" rel="noopener">Enter</a>` : ''}
+    ${m.resultsUrl ? `<a class="btn btn--ghost js-out" href="${esc(m.resultsUrl)}" rel="noopener">Results</a>` : ''}
   </div>
 </article>`;
 }
@@ -343,7 +344,7 @@ ${o.note ? `<p class="clubnote">${esc(o.note)}</p>` : ''}
 ${(o.results ?? []).length ? `<div class="results-box">
   <h2>Past results</h2>
   <p>See how competitive this club\u2019s grids are before you enter \u2014 grid sizes, lap times and who turns up.</p>
-  <ul class="feeds">${o.results.map((r) => `<li><a href="${esc(r.url)}" rel="noopener" class="js-out">${esc(r.provider)}${r.note ? ` \u2014 ${esc(r.note)}` : ''}</a></li>`).join('')}</ul>
+  <ul class="feeds">${o.results.map((r) => `<li><a href="${esc(r.url)}" rel="noopener" class="js-out">${esc(r.provider)}${r.years ? ` <span class="yr">${esc(r.years)}</span>` : ''}${r.note ? ` \u2014 ${esc(r.note)}` : ''}</a></li>`).join('')}</ul>
 </div>` : ''}
 <p class="subscribe"><a href="../../feeds/organiser-${o.id}.ics">Subscribe to ${esc(o.short ?? o.name)} dates (.ics)</a></p>
 ${monthList(up, { base: '../../' })}
