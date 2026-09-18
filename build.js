@@ -1,4 +1,4 @@
-import { writeFileSync, mkdirSync, rmSync, cpSync, existsSync } from 'node:fs';
+import { writeFileSync, mkdirSync, rmSync, cpSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { circuits } from './data/circuits.js';
 import { organisers } from './data/organisers.js';
@@ -6,6 +6,12 @@ import { championships } from './data/championships.js';
 import { meetings } from './data/meetings.js';
 import { sponsors, circuitLinks, newsletter } from './data/sponsors.js';
 import { SITE } from './site.config.js';
+
+// Pace benchmarks from scraped results (scrape/analyse.mjs). Optional: the site
+// builds fine without them.
+let PACE = [];
+try { PACE = JSON.parse(readFileSync('data/pace.json', 'utf8')); }
+catch { console.log('  (no data/pace.json \u2014 skipping pace tables)'); }
 
 const OUT = 'dist';
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -90,6 +96,11 @@ function dateLong(m) {
   if (a.m === b.m) return `${a.d}\u2013${b.d} ${MONTH[a.m]} ${a.y}`;
   return `${a.d} ${MONTH[a.m]} \u2013 ${b.d} ${MONTH[b.m]} ${b.y}`;
 }
+const toSec = (t) => {
+  if (!t) return null;
+  const m = String(t).match(/^(?:(\d+):)?(\d+(?:\.\d+)?)$/);
+  return m ? Number((Number(m[1] ?? 0) * 60 + Number(m[2])).toFixed(3)) : null;
+};
 const shortRange = (m) => { const d = dateLabel(m); return `${d.big} ${d.small}`; };
 const monthKey = (m) => m.start.slice(0, 7);
 const monthName = (k) => { const [y, mo] = k.split('-'); return `${MONTH[+mo - 1]} ${y}`; };
@@ -159,6 +170,37 @@ function adBlock(s) {
 </aside>`;
 }
 const adSlot = (slot) => sponsors.filter((s) => s.slot === slot).map(adBlock).join('\n');
+
+function paceTable(circuitId) {
+  const rows = PACE.filter((p) => p.circuit === circuitId)
+    .sort((a, b) => (toSec(a.winningLap) ?? 1e9) - (toSec(b.winningLap) ?? 1e9));
+  if (!rows.length) return '';
+  const cfg = [...new Set(rows.map((r) => r.config).filter(Boolean))];
+  return `<section class="pace">
+  <h2>Pace here</h2>
+  <p class="pace-intro">From ${rows.reduce((n, r) => n + r.races, 0)} races in the 2026 season${cfg.length ? ` (${cfg.map(esc).join(', ')})` : ''}. Put your best lap in to see where it would have put you.</p>
+  <div class="pace-input">
+    <label for="mylap">Your best lap</label>
+    <input id="mylap" type="text" inputmode="decimal" placeholder="e.g. 1:38.5 or 55.0" autocomplete="off">
+    <button type="button" id="mylap-clear">Clear</button>
+  </div>
+  <div class="tablewrap"><table id="pacetable">
+    <thead><tr><th>Club</th><th>Class</th><th class="n">Field</th><th class="n">Win</th><th class="n">Podium</th><th class="n">National mark</th><th class="verdict-h">You</th></tr></thead>
+    <tbody>
+    ${rows.map((r) => `<tr data-win="${toSec(r.winningLap) ?? ''}" data-podium="${toSec(r.podiumLap) ?? ''}" data-mid="${toSec(r.midfieldLap) ?? ''}" data-nat="${toSec(r.nationalLap) ?? ''}" data-ratio="${r.avgToBest ?? ''}">
+      <td>${esc(r.clubName)}</td>
+      <td>${esc(r.className)}</td>
+      <td class="n">${r.typicalField || '\u2014'}</td>
+      <td class="n">${esc(r.winningLap ?? '\u2014')}</td>
+      <td class="n">${esc(r.podiumLap ?? '\u2014')}</td>
+      <td class="n">${esc(r.nationalLap ?? '\u2014')}</td>
+      <td class="verdict"></td>
+    </tr>`).join('')}
+    </tbody>
+  </table></div>
+  <p class="pace-note"><b>National mark</b> is 92.5% of the winner\u2019s race average speed, shown as the average lap you would need to hold \u2014 not a single fast lap. When you enter a best lap it is projected into a realistic race average using the best-to-average ratio measured in that class, so the comparison is like for like. Indicative only: the ACU\u2019s criteria, and how many results count, are theirs.</p>
+</section>`;
+}
 
 function newsletterBlock() {
   if (!newsletter.action) return '';
@@ -323,8 +365,11 @@ for (const c of usedCircuits) {
 <p class="lede">${esc(c.region)} \u00b7 ${c.type === 'road' ? 'Closed roads course' : 'Short circuit'} \u00b7 ${up.length} upcoming meeting${up.length === 1 ? '' : 's'}</p>
 <p class="subscribe"><a href="../../feeds/circuit-${c.id}.ics">Subscribe to ${esc(c.name)} dates (.ics)</a></p>
 ${links.map((l) => adBlock({ ...l, slot: 'inline' })).join('')}
+${paceTable(c.id)}
+${paceTable(c.id) ? '<h2>Meetings</h2>' : ''}
 ${monthList(up, { base: '../../' })}
-${list.length > up.length ? `<details class="past"><summary>Past meetings (${list.length - up.length})</summary>${monthList(list.filter((m) => (m.end ?? m.start) < TODAY), { base: '../../' })}</details>` : ''}`,
+${list.length > up.length ? `<details class="past"><summary>Past meetings (${list.length - up.length})</summary>${monthList(list.filter((m) => (m.end ?? m.start) < TODAY), { base: '../../' })}</details>` : ''}
+${paceTable(c.id) ? '<script src="../../pace.js" defer></script>' : ''}`,
   }));
   write(`feeds/circuit-${c.id}.ics`, ics(list, `${c.name} \u2014 race dates`));
 }
@@ -423,7 +468,7 @@ write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="htt
 write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${SITE.url}/sitemap.xml\n`);
 
 // static assets
-for (const f of ['style.css', 'filter.js']) if (existsSync(join('src', f))) cpSync(join('src', f), join(OUT, f));
+for (const f of ['style.css', 'filter.js', 'pace.js']) if (existsSync(join('src', f))) cpSync(join('src', f), join(OUT, f));
 
 console.log(`\u2713 built ${written.length + 2} files to ${OUT}/  (${all.length} meetings, ${upcoming.length} upcoming)`);
 if (hasExamples) console.log('  ! example data is still present in data/meetings.js');
