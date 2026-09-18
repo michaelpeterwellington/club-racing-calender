@@ -1,0 +1,129 @@
+:root{
+  --bg:#f7f7f5; --panel:#fff; --ink:#15161a; --muted:#61646e; --line:#e3e3df;
+  --accent:#c8102e; --accent-ink:#fff; --road:#1d6f42; --warn:#8a6100; --warn-bg:#fff6dd;
+  --radius:10px;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#111216; --panel:#191a20; --ink:#eceef2; --muted:#9a9eab; --line:#2a2c34;
+         --accent:#ff4d64; --accent-ink:#1a0a0d; --road:#4bbd7d; --warn:#ffd88a; --warn-bg:#2f2611; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-text-size-adjust:100%}
+a{color:inherit}
+.wrap{width:100%;max-width:60rem;margin:0 auto;padding-inline:1rem}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* header / footer */
+header.site{border-bottom:1px solid var(--line);background:var(--panel)}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  min-height:3.5rem;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:-.02em;text-decoration:none;font-size:1.05rem}
+header nav{display:flex;gap:1rem;font-size:.9rem}
+header nav a{color:var(--muted);text-decoration:none}
+header nav a:hover{color:var(--ink)}
+footer.site{margin-top:3.5rem;border-top:1px solid var(--line);background:var(--panel);
+  padding-block:1.5rem;font-size:.85rem;color:var(--muted)}
+footer.site p{margin:.4rem 0;max-width:46rem}
+
+.warnbar{background:var(--warn-bg);color:var(--warn);font-size:.85rem;padding-block:.6rem;
+  border-bottom:1px solid var(--line)}
+.warnbar code{font-size:.95em}
+
+/* hero + headings */
+main{padding-block:1.5rem 0}
+h1{font-size:clamp(1.5rem,4vw,2rem);line-height:1.2;letter-spacing:-.02em;margin:0 0 .4rem}
+.hero p{color:var(--muted);margin:0 0 1.25rem;max-width:40rem}
+.lede{color:var(--muted);margin:0 0 1.25rem}
+.crumbs{font-size:.85rem;color:var(--muted);margin-bottom:.75rem}
+.crumbs a{text-decoration:none}.crumbs a:hover{text-decoration:underline}
+.crumbs span{opacity:.5;margin-inline:.25rem}
+h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
+  margin:2rem 0 .6rem;font-weight:600}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem}
+.filters input[type=search],.filters select,.filters button{
+  font:inherit;font-size:.9rem;padding:.5rem .6rem;border:1px solid var(--line);
+  border-radius:8px;background:var(--panel);color:var(--ink);min-height:2.5rem}
+.filters input[type=search]{flex:1 1 14rem;min-width:0}
+.filters button{cursor:pointer;color:var(--muted)}
+.filters button:hover{color:var(--ink)}
+.chk{display:flex;align-items:center;gap:.4rem;font-size:.9rem;color:var(--muted);
+  padding:.5rem .6rem;border:1px solid var(--line);border-radius:8px;background:var(--panel);cursor:pointer}
+.count{font-size:.85rem;color:var(--muted);margin:0 0 1rem}
+
+/* meeting cards */
+.month h2{margin-top:1.75rem}
+.mtg{display:flex;gap:.9rem;align-items:flex-start;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--radius);padding:.8rem .9rem;margin-bottom:.5rem}
+.mtg-date{flex:0 0 3.4rem;text-align:center;line-height:1.15;padding-top:.1rem}
+.mtg-date b{display:block;font-size:1.15rem;letter-spacing:-.03em}
+.mtg-date span{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.mtg-main{flex:1 1 auto;min-width:0}
+.mtg-main h3{margin:0;font-size:1rem;font-weight:650;letter-spacing:-.01em}
+.mtg-main h3 a{text-decoration:none}
+.mtg-main h3 a:hover{text-decoration:underline}
+.cfg{display:inline-block;margin-left:.4rem;font-size:.7rem;font-weight:600;color:var(--muted);
+  border:1px solid var(--line);border-radius:5px;padding:.05rem .3rem;vertical-align:.1em}
+.mtg-org{margin:.15rem 0 0;font-size:.88rem;color:var(--muted)}
+.mtg-org a{text-decoration:none}.mtg-org a:hover{text-decoration:underline}
+.sep{opacity:.5}
+.mtg-champs{margin:.35rem 0 0;display:flex;flex-wrap:wrap;gap:.3rem}
+.mtg-champs span{font-size:.72rem;background:var(--bg);border:1px solid var(--line);
+  border-radius:5px;padding:.1rem .35rem;color:var(--muted)}
+.mtg-notes{margin:.35rem 0 0;font-size:.8rem;color:var(--muted)}
+.mtg-side{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:.3rem;text-align:right}
+.badge{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;font-weight:600;
+  border-radius:5px;padding:.15rem .4rem;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.badge--provisional{color:var(--warn);background:var(--warn-bg);border-color:transparent}
+.badge--cancelled{color:var(--accent);border-color:currentColor;text-decoration:line-through}
+.badge--full{color:var(--muted)}
+.badge--road{color:var(--road);border-color:currentColor}
+.badge--kind{background:var(--bg)}
+.entries{font-size:.75rem;color:var(--muted);white-space:nowrap}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);text-decoration:none;
+  font-size:.8rem;font-weight:600;padding:.3rem .7rem;border-radius:6px}
+.empty{color:var(--muted);background:var(--panel);border:1px dashed var(--line);
+  border-radius:var(--radius);padding:1.5rem;text-align:center}
+.is-example{opacity:.65;border-style:dashed}
+
+/* promos (phase 2) */
+.promo{position:relative;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);margin:1rem 0}
+.promo a{display:block;padding:.85rem .9rem;text-decoration:none}
+.promo b{display:block;font-size:.95rem}
+.promo span{display:block;font-size:.85rem;color:var(--muted);margin-top:.15rem}
+.promo-tag{position:absolute;top:.5rem;right:.6rem;font-size:.6rem;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 .25rem}
+
+/* newsletter (phase 2) */
+.signup{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.25rem;margin-top:2.5rem}
+.signup h2{margin-top:0}
+.signup p{margin:0 0 .75rem;color:var(--muted);font-size:.9rem}
+.signup form{display:flex;gap:.5rem;flex-wrap:wrap}
+.signup input{flex:1 1 14rem;font:inherit;font-size:.9rem;padding:.55rem .6rem;
+  border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.signup button{font:inherit;font-size:.9rem;font-weight:600;padding:.55rem 1rem;border:0;
+  border-radius:8px;background:var(--accent);color:var(--accent-ink);cursor:pointer}
+
+/* feeds + misc */
+ul.feeds{list-style:none;padding:0;margin:0;display:grid;gap:.4rem;
+  grid-template-columns:repeat(auto-fill,minmax(15rem,1fr))}
+ul.feeds a{display:block;background:var(--panel);border:1px solid var(--line);border-radius:8px;
+  padding:.6rem .75rem;text-decoration:none;font-size:.9rem}
+ul.feeds a:hover{border-color:var(--accent)}
+.subscribe{margin:1.5rem 0;font-size:.9rem}
+.subscribe a{color:var(--accent);font-weight:600}
+.past{margin-top:2rem;border-top:1px solid var(--line);padding-top:1rem}
+.past summary{cursor:pointer;color:var(--muted);font-size:.9rem}
+main p a{color:var(--accent)}
+
+@media (max-width:30rem){
+  .mtg{flex-wrap:wrap}
+  .mtg-side{flex:1 0 100%;flex-direction:row;align-items:center;justify-content:flex-start;
+    text-align:left;margin-top:.15rem;padding-left:4.3rem}
+}
