@@ -23,6 +23,7 @@ export const organisers = [
     results: [{ provider: 'TSL Timing', url: 'https://www.tsl-timing.com/Results/emra/', note: 'results by season, 2002 onwards' }] },
   { id: 'ng',            name: 'NG Road Racing',                          short: 'NG',       website: null,
     results: [{ provider: 'TSL Timing', url: 'https://www.tsl-timing.com/Results/ngroadracing/', note: 'results by season, 2002 onwards' }] },
+  { id: 'aintree',       name: 'Aintree Motor Cycle Racing Club',         short: 'Aintree MCRC', website: null },
   { id: 'bantam',        name: 'Bantam Racing Club',                      short: 'Bantam RC', website: null },
   { id: 'crmc',          name: 'CRMC (Classic Racing Motorcycle Club)',   short: 'CRMC',     website: 'https://www.crmc.co.uk',
     // Not on TSL. CRMC spread results across four providers over the years; all

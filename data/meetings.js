@@ -195,4 +195,31 @@ export const meetings = [
     round: '13 & 14',
     entriesClose: '2027-09-10',
     source: 'BHRC provisional 2027 dates' },
+
+  /* ---------------- Aintree MCRC 2027 ----------------
+     Source: Aintree Motor Cycle Racing Club 2027 race dates.
+     Every date checks out as a Saturday, with a Wednesday test day, and the
+     shape matches their 2026 ACU permits: a test day in early May then four
+     Saturday rounds.                                                        */
+  { id: 'aintree-2027-test', start: '2027-05-05',
+    circuit: 'aintree', organiser: 'aintree', status: 'confirmed',
+    name: 'AINTREE Test Day',
+    kind: 'test',
+    source: 'Aintree MCRC 2027 race dates' },
+  { id: 'aintree-2027-r1', start: '2027-05-15',
+    circuit: 'aintree', organiser: 'aintree', status: 'confirmed',
+    round: '1',
+    source: 'Aintree MCRC 2027 race dates' },
+  { id: 'aintree-2027-r2', start: '2027-06-12',
+    circuit: 'aintree', organiser: 'aintree', status: 'confirmed',
+    round: '2',
+    source: 'Aintree MCRC 2027 race dates' },
+  { id: 'aintree-2027-r3', start: '2027-07-10',
+    circuit: 'aintree', organiser: 'aintree', status: 'confirmed',
+    round: '3',
+    source: 'Aintree MCRC 2027 race dates' },
+  { id: 'aintree-2027-r4', start: '2027-09-18',
+    circuit: 'aintree', organiser: 'aintree', status: 'confirmed',
+    round: '4',
+    source: 'Aintree MCRC 2027 race dates' },
 ];

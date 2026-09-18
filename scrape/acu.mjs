@@ -136,6 +136,7 @@ if (process.argv.includes('--report')) {
   console.error('ORGANISER'.padEnd(46) + 'EVENTS  YEARS'.padEnd(22) + 'IN OUR LIST');
   for (const r of rows) {
     console.error('  ' + r.name.slice(0, 43).padEnd(44) + String(r.count).padStart(4) + '  ' +
-      (r.years.join(',') || '?').padEnd(20) + (r.have ?? '— MISSING'));
+      (r.years.join(',') || '?').padEnd(20) +
+      (r.have ?? (r.closed ? 'closed down' : r.oos ? `out of scope (${r.oos})` : '— TO GET')));
   }
 }

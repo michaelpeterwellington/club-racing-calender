@@ -27,4 +27,5 @@ export const outOfScope = [
   { name: 'NoraSport Supermoto',            match: ['supermoto'],        why: 'supermoto' },
   { name: 'Morgan Three Wheeler Club',      match: ['morgan'],           why: 'cars' },
   { name: 'BARC',                           match: ['barc'],             why: 'cars' },
+  { name: 'British Mini Bikes',             match: ['mini bikes', 'minibikes', 'bmb'], why: 'minibikes' },
 ];

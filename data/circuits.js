@@ -13,6 +13,7 @@ export const circuits = [
   { id: 'snetterton',    name: 'Snetterton',          region: 'East',          type: 'short', layouts: ['300', '200', '100'] },
   { id: 'donington',     name: 'Donington Park',      region: 'East Midlands', type: 'short', layouts: ['National', 'GP'] },
   { id: 'oulton',        name: 'Oulton Park',         region: 'North West',    type: 'short', layouts: ['International', 'Island', 'Fosters'] },
+  { id: 'aintree',       name: 'Aintree',             region: 'North West',    type: 'short' },
   { id: 'croft',         name: 'Croft',               region: 'North East',    type: 'short' },
   { id: 'mallory',       name: 'Mallory Park',        region: 'East Midlands', type: 'short' },
   { id: 'darley-moor',   name: 'Darley Moor',         region: 'East Midlands', type: 'short' },
