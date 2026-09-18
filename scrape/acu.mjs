@@ -78,6 +78,7 @@ process.stderr.write(`✓ data/acu-events.json: ${events.length} events\n`);
 
 if (process.argv.includes('--report')) {
   const { organisers } = await import('../data/organisers.js');
+  const { closedClubs, outOfScope } = await import('../data/closed-clubs.js');
   const rr = events.filter((e) => /Road Racing/i.test(e.type ?? ''));
   // Matching on squashed substrings is wrong: "ng" appears inside
   // "andreasracingassociation". Compare significant word tokens instead, and
@@ -119,10 +120,19 @@ if (process.argv.includes('--report')) {
     }).filter((x) => x.score > 0).sort((a, b) => b.score - a.score);
     const match = scored[0]?.k;
     const years = [...new Set(evs.map((e) => (e.start ?? '').slice(0, 4)).filter(Boolean))].sort();
-    return { name, count: evs.length, years, have: match?.short ?? match?.name ?? null };
+    const low = name.toLowerCase();
+    const closed = closedClubs.find((c) => c.match.some((f) => low.includes(f)));
+    const oos = outOfScope.find((c) => c.match.some((f) => low.includes(f)));
+    return { name, count: evs.length, years, have: match?.short ?? match?.name ?? null,
+      closed: closed?.name ?? null, oos: oos?.why ?? null };
   }).sort((a, b) => b.count - a.count);
 
-  console.error(`\nRoad racing events: ${rr.length}\n`);
+  const gaps = rows.filter((r) => !r.have && !r.closed && !r.oos);
+  console.error(`\nRoad racing events: ${rr.length}`);
+  console.error(`Organisers: ${rows.length} \u2014 ${rows.filter((r) => r.have).length} covered, ` +
+    `${rows.filter((r) => r.closed).length} closed, ${rows.filter((r) => r.oos).length} out of scope, ` +
+    `${gaps.length} to get\n`);
+  console.error('TO GET, biggest first: ' + gaps.slice(0, 8).map((g) => `${g.name.split(/ (?:Ltd|Club|LBG)/)[0]} (${g.count})`).join(', ') + '\n');
   console.error('ORGANISER'.padEnd(46) + 'EVENTS  YEARS'.padEnd(22) + 'IN OUR LIST');
   for (const r of rows) {
     console.error('  ' + r.name.slice(0, 43).padEnd(44) + String(r.count).padStart(4) + '  ' +
