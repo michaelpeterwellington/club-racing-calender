@@ -16,7 +16,7 @@ const BASE = 'https://www.tsl-timing.com';
 const UA = 'uk-race-calendar/0.1 (club racing calendar aggregator; contact via site)';
 const DELAY_MS = 1200;
 const CACHE = 'scrape/.cache';
-const CLUBS = { bmcrc: 'BEMSEE / BMCRC', nolimits: 'No Limits', emra: 'EMRA', ngroadracing: 'NG Road Racing' };
+const CLUBS = { bmcrc: 'BEMSEE', nolimits: 'No Limits', emra: 'EMRA', ngroadracing: 'NG Road Racing' };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let last = 0;
@@ -41,13 +41,15 @@ const decode = (s) => s.replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&
 
 export async function listEvents(club) {
   const html = await get(`${BASE}/Results/${club}/`);
-  const seen = new Set(), out = [];
-  for (const m of html.matchAll(/href="\/event\/(\d+)"[^>]*>([\s\S]{0,300}?)<\/a>/g)) {
-    if (seen.has(m[1])) continue;
-    seen.add(m[1]);
-    out.push({ id: m[1], title: decode(m[2].replace(/<[^>]*>/g, ' ')) });
+  // Each <a href="/event/ID"> wraps a whole card, so its closing tag is a long
+  // way off. Match the ids alone; the event page carries the title anyway.
+  const ids = [...new Set([...html.matchAll(/href="\/event\/(\d+)"/g)].map((m) => m[1]))];
+  const found = (html.match(/Found\s*<b>(\d+)<\/b>\s*events\s*in\s*<b>(\d{4})<\/b>/i) ?? []).slice(1);
+  if (found.length) process.stderr.write(`  page reports ${found[0]} events in ${found[1]}\n`);
+  if (found.length && Number(found[0]) !== ids.length) {
+    process.stderr.write(`  ! parsed ${ids.length} event links but page says ${found[0]} \u2014 check the selector\n`);
   }
-  return out;
+  return ids.map((id) => ({ id }));
 }
 
 // Every result PDF on an event page, with the link text that describes it.
@@ -93,9 +95,13 @@ process.stderr.write(`${CLUBS[club]}: ${events.length} event(s)\n`);
 const out = [];
 for (const e of events) out.push(await scrapeEvent(club, e.id));
 
+const races = out.reduce((n, e) => n + e.races.length, 0);
+if (!races) {
+  process.stderr.write(`\n! no races parsed for ${club} \u2014 refusing to overwrite an existing file\n`);
+  process.exit(1);
+}
 mkdirSync('data/results', { recursive: true });
 const file = `data/results/${club}-2026.json`;
 writeFileSync(file, JSON.stringify(out, null, 2));
-const races = out.reduce((n, e) => n + e.races.length, 0);
 const rows = out.reduce((n, e) => n + e.races.reduce((m, r) => m + r.rows.length, 0), 0);
 process.stderr.write(`\n✓ ${file}: ${out.length} event(s), ${races} races, ${rows} result rows\n`);

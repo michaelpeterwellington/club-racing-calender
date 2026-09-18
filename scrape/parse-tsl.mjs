@@ -78,12 +78,22 @@ export function parseResult(text) {
     // Right-anchored tail: ... [GAP DIFF] MPH BEST ON GRD [+/-]
     let tail = tailTokens(after.slice(m.index + m[0].length));
     if (cont) tail = tail.concat(tailTokens(cont.slice(entryAt)));
-    // Columns are [GAP DIFF] MPH BEST ON GRD [+/-]. GAP and DIFF come as a pair
-    // and are absent for the leader, so an odd token count means the trailing
-    // positions-gained column is present.
-    const delta = tail.length % 2 === 1 ? tail.pop() : null;
-    const grid = tail.pop(), onLap = tail.pop(), best = tail.pop(), mph = tail.pop();
-    const [gap, diff] = tail.length >= 2 ? tail.slice(-2) : [null, null];
+    // Columns are [GAP DIFF] MPH BEST ON GRD [+/-], but GAP/DIFF are absent for
+    // the leader and the trailing columns are sometimes missing on a truncated
+    // row, so counting from either end is unreliable. Anchor on the one
+    // unambiguous signature instead: MPH (1-2 decimals) immediately followed by
+    // BEST (a lap time, 3 decimals). Gaps also carry 3 decimals, so it is the
+    // adjacency that identifies them, not the shape of either alone.
+    const isMph = (t) => /^\d{1,3}\.\d{1,2}$/.test(t);
+    const isLap = (t) => /^\d{1,2}:\d{2}\.\d{3}$/.test(t) || /^\d{1,3}\.\d{3}$/.test(t);
+    let at = -1;
+    for (let k = tail.length - 1; k >= 1; k--) if (isLap(tail[k]) && isMph(tail[k - 1])) { at = k; break; }
+    const mph = at > 0 ? tail[at - 1] : null;
+    const best = at > 0 ? tail[at] : null;
+    const trailing = at > 0 ? tail.slice(at + 1) : [];
+    const [onLap = null, grid = null, delta = null] = trailing;
+    const before = at > 0 ? tail.slice(0, at - 1) : tail;
+    const [gap = null, diff = null] = before.length >= 2 ? before.slice(-2) : [];
     const unlap = (v) => (v && /Lap$/.test(v) ? v.replace(/Lap$/, ' lap') : v);
 
     rows.push({

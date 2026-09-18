@@ -3197,13 +3197,13 @@
             "team": "Sublime Designs",
             "laps": 10,
             "time": "9:12.425",
-            "gap": null,
-            "diff": null,
-            "mph": 32.901,
-            "best": "1.121",
-            "bestOnLap": null,
+            "gap": "32.901",
+            "diff": "1.121",
+            "mph": 78.71,
+            "best": "53.437",
+            "bestOnLap": 10,
             "grid": null,
-            "gained": 10
+            "gained": null
           },
           {
             "pos": 12,
@@ -7807,13 +7807,13 @@
             "team": null,
             "laps": 8,
             "time": "7:55.496",
-            "gap": null,
-            "diff": null,
-            "mph": null,
-            "best": "3.130",
-            "bestOnLap": null,
+            "gap": "1 lap",
+            "diff": "3.130",
+            "mph": 73.16,
+            "best": "57.147",
+            "bestOnLap": 8,
             "grid": null,
-            "gained": 8
+            "gained": null
           },
           {
             "pos": 29,
@@ -11577,13 +11577,13 @@
             "team": "D Scaffolding LTD",
             "laps": 12,
             "time": "10:25.941",
-            "gap": null,
-            "diff": null,
-            "mph": 34.846,
-            "best": "6.407",
-            "bestOnLap": null,
+            "gap": "34.846",
+            "diff": "6.407",
+            "mph": 83.36,
+            "best": "50.361",
+            "bestOnLap": 9,
             "grid": null,
-            "gained": 9
+            "gained": null
           },
           {
             "pos": 13,
