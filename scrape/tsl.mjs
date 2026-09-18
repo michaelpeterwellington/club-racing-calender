@@ -10,7 +10,7 @@
 import { mkdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
-import { parseResult, pdfToText } from './parse-tsl.mjs';
+import { parseResult, parseAll, pdfToText } from './parse-tsl.mjs';
 
 const BASE = 'https://www.tsl-timing.com';
 const UA = 'uk-race-calendar/0.1 (club racing calendar aggregator; contact via site)';
@@ -56,27 +56,45 @@ export async function listEvents(club) {
 export async function listResultPdfs(eventId) {
   const html = await get(`${BASE}/event/${eventId}`);
   const meetingTitle = decode((html.match(/<title>([\s\S]*?)<\/title>/) ?? [, ''])[1]).replace(/\s*::.*$/, '').replace(/^Event Details - /, '');
-  const out = [];
+  const out = [], books = [];
   for (const m of html.matchAll(/href="(\/file\/\?f=[^"]+\.pdf)"[^>]*>([\s\S]{0,80}?)<\/a>/g)) {
     const label = decode(m[2].replace(/<[^>]*>/g, ' '));
-    if (!/^Race \d+ Result$/i.test(label)) continue;        // skip grids, qualifying, PDF books, points
-    out.push({ url: BASE + m[1].replace(/&amp;/g, '&'), label, race: Number(label.match(/\d+/)[0]) });
+    const url = BASE + m[1].replace(/&amp;/g, '&');
+    if (/^Race \d+ Result$/i.test(label)) out.push({ url, label, race: Number(label.match(/\d+/)[0]) });
+    else if (/PDF Book/i.test(label)) books.push({ url, label });
   }
-  return { meetingTitle, pdfs: out };
+  return { meetingTitle, pdfs: out, books };
 }
 
+const RACE_SESSION = /^RACE\s*\d*\s*-?\s*CLASSIFICATION/i;
+
 async function scrapeEvent(club, eventId) {
-  const { meetingTitle, pdfs } = await listResultPdfs(eventId);
-  process.stderr.write(`  event ${eventId}: ${meetingTitle}\n    ${pdfs.length} race results\n`);
+  const { meetingTitle, pdfs, books } = await listResultPdfs(eventId);
   const races = [];
-  for (const p of pdfs) {
-    try {
-      const parsed = parseResult(pdfToText(await get(p.url, true)));
-      if (!parsed?.rows.length) { process.stderr.write(`    ! no rows: ${p.label}\n`); continue; }
-      races.push({ race: p.race, url: p.url, ...parsed });
-    } catch (e) {
-      process.stderr.write(`    ! ${p.label}: ${e.message}\n`);
+
+  if (pdfs.length) {
+    process.stderr.write(`  event ${eventId}: ${meetingTitle}\n    ${pdfs.length} race results\n`);
+    for (const p of pdfs) {
+      try {
+        const parsed = parseResult(pdfToText(await get(p.url, true)));
+        if (!parsed?.rows.length) { process.stderr.write(`    ! no rows: ${p.label}\n`); continue; }
+        races.push({ race: p.race, url: p.url, ...parsed });
+      } catch (e) { process.stderr.write(`    ! ${p.label}: ${e.message}\n`); }
     }
+  } else if (books.length) {
+    // Some clubs (EMRA) publish only a combined book per meeting rather than
+    // per-race sheets. Parse every section and keep the race classifications.
+    process.stderr.write(`  event ${eventId}: ${meetingTitle}\n    no per-race sheets \u2014 parsing ${books.length} PDF book(s)\n`);
+    for (const b of books) {
+      try {
+        const sections = parseAll(pdfToText(await get(b.url, true)));
+        const keep = sections.filter((x) => RACE_SESSION.test(x.session));
+        process.stderr.write(`    ${sections.length} sections, ${keep.length} race classifications\n`);
+        keep.forEach((x, n) => races.push({ race: Number((x.session.match(/\d+/) ?? [n + 1])[0]), url: b.url, ...x }));
+      } catch (e) { process.stderr.write(`    ! ${b.label}: ${e.message}\n`); }
+    }
+  } else {
+    process.stderr.write(`  event ${eventId}: ${meetingTitle}\n    no results published\n`);
   }
   return { club, clubName: CLUBS[club] ?? club, eventId, meetingTitle, races };
 }

@@ -11,6 +11,7 @@
 // which sessions count are ACU matters and are not modelled here.
 import { readFileSync, writeFileSync, readdirSync, mkdirSync } from 'node:fs';
 import { circuits } from '../data/circuits.js';
+import { layouts } from '../data/layouts.js';
 
 export const toSec = (t) => {
   if (!t) return null;
@@ -44,27 +45,53 @@ export function matchVenue(venue) {
 
 const SIDECAR = /sidecar/i;
 
+// Find a known circuit inside a free-text meeting title.
+export function venueFromTitle(title) {
+  const t = (title ?? '').toLowerCase();
+  for (const c of NAMES) {
+    const base = c.name.replace(/\s*\(.*\)$/, '').toLowerCase();
+    const i = t.indexOf(base);
+    if (i > -1) return (title ?? '').slice(i, i + base.length);
+  }
+  return null;
+}
+
 export function analyse() {
-  const groups = new Map();   // circuit|club|className -> stats accumulator
+  const groups = new Map();   // circuit|config|club|className -> stats accumulator
   const unmatched = new Set();
+  const needLayout = new Set();
 
   for (const f of readdirSync('data/results').filter((f) => f.endsWith('.json'))) {
     for (const ev of JSON.parse(readFileSync(`data/results/${f}`, 'utf8'))) {
       for (const race of ev.races) {
         if (SIDECAR.test(race.className)) continue;                // solos only
-        const venue = (race.meeting.split('@')[1] ?? '').trim();
-        const { circuit, config } = matchVenue(venue);
+        if (!race.className.trim()) continue;   // a group with no class name is not usable
+        // The PDF names its venue after an '@', but combined books don't, so
+        // fall back to finding a circuit name in the TSL event title.
+        let venue = (race.meeting.split('@')[1] ?? '').trim();
+        if (!venue || !matchVenue(venue).circuit) venue = venueFromTitle(ev.meetingTitle) ?? venue;
+        const m = matchVenue(venue);
+        const circuit = m.circuit;
         if (!circuit) { if (venue) unmatched.add(venue); continue; }
+        // Layout must be part of the group's identity. Lap times from different
+        // layouts of the same venue are not comparable and must never pool.
+        const config = m.config ?? layouts[`${ev.club}|${venue}`] ?? null;
+        const known = Boolean(m.config || layouts[`${ev.club}|${venue}`]);
+        // Only an ambiguity where the venue actually runs several layouts.
+        const multi = (circuits.find((c) => c.id === circuit)?.layouts ?? []).length > 1;
+        if (!known && multi) needLayout.add(`${ev.club}|${venue}`);
 
         const rows = race.rows.filter((r) => r.best && toSec(r.best));
         if (rows.length < 3) continue;
-        const key = `${circuit}|${ev.club}|${race.className}`;
+        const classKey = race.className.toUpperCase().replace(/\s+/g, ' ').trim();
+        const key = `${circuit}|${config ?? '?'}|${ev.club}|${classKey}`;
         if (!groups.has(key)) groups.set(key, {
-          circuit, config, club: ev.club, clubName: ev.clubName, className: race.className,
-          meetings: new Set(), riders: new Set(), races: 0,
+          circuit, config, layoutKnown: known || !multi, club: ev.club, clubName: ev.clubName, className: race.className,
+          meetings: new Set(), riders: new Set(), races: 0, names: new Map(),
           winnerBest: [], p3Best: [], fieldSizes: [], nationalLap: [], nationalMph: [], allLaps: [], avgToBest: [],
         });
         const g = groups.get(key);
+        g.names.set(race.className, (g.names.get(race.className) ?? 0) + 1);
         g.meetings.add(ev.meetingTitle);
         g.races++;
         for (const r of rows) {
@@ -94,7 +121,9 @@ export function analyse() {
   for (const g of groups.values()) {
     g.allLaps.sort((a, b) => a.sec - b.sec);
     out.push({
-      circuit: g.circuit, config: g.config, club: g.club, clubName: g.clubName, className: g.className,
+      circuit: g.circuit, config: g.config, layoutKnown: g.layoutKnown, club: g.club, clubName: g.clubName,
+      // display the spelling used most often across that class's sheets
+      className: [...g.names].sort((a, b) => b[1] - a[1])[0]?.[0] ?? g.className,
       meetings: g.meetings.size, races: g.races, riders: g.riders.size,
       typicalField: Math.round(median(g.fieldSizes) ?? 0),
       fastestLap: fmt(g.allLaps[0]?.sec), fastestBy: g.allLaps[0]?.name ?? null,
@@ -107,13 +136,17 @@ export function analyse() {
     });
   }
   out.sort((a, b) => a.circuit.localeCompare(b.circuit) || a.club.localeCompare(b.club) || a.className.localeCompare(b.className));
-  return { pace: out, unmatched: [...unmatched] };
+  return { pace: out, unmatched: [...unmatched], needLayout: [...needLayout] };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const { pace, unmatched } = analyse();
+  const { pace, unmatched, needLayout } = analyse();
   mkdirSync('data', { recursive: true });
   writeFileSync('data/pace.json', JSON.stringify(pace, null, 2));
   console.error(`✓ data/pace.json: ${pace.length} circuit/club/class groups`);
   if (unmatched.length) console.error(`  ! venues not matched to a circuit: ${unmatched.join(', ')}`);
+  if (needLayout.length) {
+    console.error(`  ! layout unconfirmed for ${needLayout.length} club/venue pair(s) \u2014 add to data/layouts.js:`);
+    for (const k of needLayout) console.error(`      '${k}': '?',`);
+  }
 }
