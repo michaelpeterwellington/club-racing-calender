@@ -79,7 +79,19 @@ process.stderr.write(`✓ data/acu-events.json: ${events.length} events\n`);
 if (process.argv.includes('--report')) {
   const { organisers } = await import('../data/organisers.js');
   const { closedClubs, outOfScope } = await import('../data/closed-clubs.js');
-  const rr = events.filter((e) => /Road Racing/i.test(e.type ?? ''));
+  // "Road Racing" is the ACU's umbrella for a lot we don't cover: hillclimbs,
+  // straight-line and twisty sprints, drag racing, pocket bikes, and
+  // admin-only entries that aren't meetings at all. The discipline field says
+  // which is which, so scope is decided on that rather than club by club —
+  // it's accurate, and it stays right as clubs change what they run.
+  const IN_SCOPE = /Short Circuit|Street Circuit|British Championship|International/i;
+  const rr = events.filter((e) => /Road Racing/i.test(e.type ?? '') && IN_SCOPE.test(e.discipline ?? ''));
+  const dropped = events.filter((e) => /Road Racing/i.test(e.type ?? '') && !IN_SCOPE.test(e.discipline ?? ''));
+  const why = {};
+  for (const e of dropped) {
+    const d = (e.discipline ?? 'unstated').replace(/^Road Racing - /, '').replace(/ - .*$/, '');
+    why[d] = (why[d] ?? 0) + 1;
+  }
   // Matching on squashed substrings is wrong: "ng" appears inside
   // "andreasracingassociation". Compare significant word tokens instead, and
   // carry explicit aliases for names that share no words at all (BMCRC/BEMSEE).
@@ -128,7 +140,8 @@ if (process.argv.includes('--report')) {
   }).sort((a, b) => b.count - a.count);
 
   const gaps = rows.filter((r) => !r.have && !r.closed && !r.oos);
-  console.error(`\nRoad racing events: ${rr.length}`);
+  console.error(`\nRoad race meetings in scope: ${rr.length} of ${rr.length + dropped.length}`);
+  console.error(`Excluded by discipline: ${Object.entries(why).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join(', ')}`);
   console.error(`Organisers: ${rows.length} \u2014 ${rows.filter((r) => r.have).length} covered, ` +
     `${rows.filter((r) => r.closed).length} closed, ${rows.filter((r) => r.oos).length} out of scope, ` +
     `${gaps.length} to get\n`);
