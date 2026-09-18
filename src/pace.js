@@ -32,7 +32,7 @@
       var entry = null;
       if (chosen) {
         var list = groups[tr.dataset.key] || [];
-        for (var i = 0; i < list.length; i++) if (list[i].label === chosen) { entry = list[i]; break; }
+        for (var i = 0; i < list.length; i++) if (list[i].key === chosen) { entry = list[i]; break; }
         if (bcell) bcell.textContent = entry ? entry.typicalLap + '  (' + entry.riders + ')' : '\u2014';
         if (!entry) tr.classList.add('no-bike'); else matched++;
       } else if (bcell) bcell.textContent = '';
@@ -63,9 +63,10 @@
     if (hint) {
       if (chosen) {
         hint.hidden = false;
+        var shown = bike.options[bike.selectedIndex].textContent.replace(/\s*\(\d+\)\s*$/, '');
         hint.textContent = matched
-          ? chosen + ' has raced in ' + matched + ' of these ' + rows.length + ' classes here. The rest are dimmed.'
-          : 'No results for a ' + chosen + ' at this circuit yet, so every class is shown.';
+          ? shown + ' has raced in ' + matched + ' of these ' + rows.length + ' classes here. The rest are dimmed.'
+          : 'No results for a ' + shown + ' at this circuit yet, so every class is shown.';
       } else hint.hidden = true;
     }
     try {

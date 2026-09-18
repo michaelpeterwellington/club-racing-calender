@@ -189,9 +189,14 @@ function paceTable(circuitId) {
   const cfg = [...new Set(rows.map((r) => r.config).filter(Boolean))];
   const gkey = (r) => `${r.circuit}|${r.config ?? ''}|${r.club}|${r.className.toUpperCase().replace(/\s+/g, ' ').trim()}`;
   // Only bikes that actually appear at this circuit are worth offering.
+  // Key on the canonical bike, not its printed name, so nothing can split.
   const here = new Map();
-  for (const r of rows) for (const b of BIKES.byGroup[gkey(r)] ?? []) here.set(b.label, (here.get(b.label) ?? 0) + b.riders);
-  const bikeOpts = [...here].sort((a, b) => b[1] - a[1]);
+  for (const r of rows) for (const b of BIKES.byGroup[gkey(r)] ?? []) {
+    const cur = here.get(b.key) ?? { label: b.label, riders: 0 };
+    cur.riders += b.riders;
+    here.set(b.key, cur);
+  }
+  const bikeOpts = [...here].sort((a, b) => b[1].riders - a[1].riders);
   const groupData = Object.fromEntries(rows.map((r) => [gkey(r), BIKES.byGroup[gkey(r)] ?? []]));
   return `<section class="pace">
   <h2>Pace here</h2>
@@ -202,7 +207,7 @@ function paceTable(circuitId) {
     ${bikeOpts.length ? `<label for="mybike">Your bike</label>
     <select id="mybike">
       <option value="">Any bike</option>
-      ${bikeOpts.map(([label, n]) => `<option value="${esc(label)}">${esc(label)} (${n})</option>`).join('')}
+      ${bikeOpts.map(([key, v]) => `<option value="${esc(key)}">${esc(v.label)} (${v.riders})</option>`).join('')}
     </select>` : ''}
     <button type="button" id="mylap-clear">Clear</button>
   </div>

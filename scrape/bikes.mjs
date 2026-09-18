@@ -120,10 +120,22 @@ function bestLabel(forms, make, cc) {
   return pick.replace(/\s+/g, ' ').trim() + (cc && !pick.includes(String(cc)) ? ` ${cc}` : '');
 }
 
+// One label per canonical bike, derived from every spelling seen anywhere —
+// not per class group. Labelling per group meant a class where riders wrote
+// "Honda 500" and one where they wrote "Honda CB500" produced two entries in
+// the picker for the same machine.
+const LABEL = new Map();
+for (const [key, o] of overall) LABEL.set(key, bestLabel(o.forms, o.make, o.cc));
+for (const [, bikes] of groups) {
+  for (const [key, e] of bikes) {
+    if (!LABEL.has(key)) LABEL.set(key, bestLabel(e.forms, e.make, e.cc));
+  }
+}
+
 const byGroup = {};
 for (const [key, bikes] of groups) {
-  const list = [...bikes].map(([, e]) => ({
-    label: bestLabel(e.forms, e.make, e.cc), riders: e.riders.size, entries: e.laps.length,
+  const list = [...bikes].map(([bikeKey, e]) => ({
+    key: bikeKey, label: LABEL.get(bikeKey), riders: e.riders.size, entries: e.laps.length,
     bestLap: e.laps.length ? fmt(Math.min(...e.laps)) : null,
     typicalLap: e.laps.length ? fmt(median(e.laps)) : null,
   })).filter((b) => b.riders >= 2).sort((a, b) => b.riders - a.riders);
@@ -131,7 +143,7 @@ for (const [key, bikes] of groups) {
 }
 
 const index = [...overall].map(([key, o]) => ({
-  label: bestLabel(o.forms, o.make, o.cc), key, make: o.make, cc: o.cc, riders: o.riders.size, entries: o.races,
+  label: LABEL.get(key), key, make: o.make, cc: o.cc, riders: o.riders.size, entries: o.races,
   spellings: [...o.forms].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([f, n]) => `${f} (${n})`),
   classes: [...o.classes].map((c) => ({ club: c.split('|')[0], className: c.split('|')[1] })),
 })).filter((b) => b.riders >= 3).sort((a, b) => b.riders - a.riders);
