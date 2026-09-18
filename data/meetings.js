@@ -11,6 +11,8 @@
 //   championships optional  — array of ids from data/championships.js
 //   status        'confirmed' | 'provisional' | 'full' | 'cancelled'
 //   entriesOpen   optional  — 'YYYY-MM-DD'
+//   entriesClose  optional  — 'YYYY-MM-DD'; the deadline, which is what riders
+//                 actually need. Shown as a countdown inside three weeks.
 //   entryUrl      optional
 //   notes         optional  — one line
 //   source        optional  — where it came from, so you can re-check it
@@ -143,4 +145,54 @@ export const meetings = [
     championships: ['nlr-sprint', 'nlr-endurance'], status: 'confirmed',
     source: 'NLR 2027 championship calendar graphic' },
 
+
+  /* ---------------- BHRC (British Historic Racing Club) 2027 ----------------
+     Source: BHRC provisional 2027 dates. The announcement lists venues as
+     scattered logos rather than against each round, so they are matched by
+     month against the 2026 season, which they reproduce exactly:
+       Apr Lydden Hill, May Cadwell, Jun Pembrey, Jul Darley Moor, Aug Anglesey,
+       Sep Cadwell \u2014 with Snetterton taking the one new slot, in March.
+     Confirm with the club before booking anything.                          */
+  { id: 'bhrc-2027-test', start: '2027-03-20',
+    circuit: null, organiser: 'bhr', status: 'provisional',
+    name: 'BHRC Test Day',
+    kind: 'test',
+    notes: 'Venue not stated in the announcement.',
+    source: 'BHRC provisional 2027 dates' },
+  { id: 'bhrc-2027-r1-2', start: '2027-03-26', end: '2027-03-27',
+    circuit: 'snetterton', config: '200', organiser: 'bhr', status: 'provisional',
+    round: '1 & 2',
+    entriesClose: '2027-03-12',
+    notes: 'Friday–Saturday, unlike the rest of the season. Snetterton is a new venue for BHRC.',
+    source: 'BHRC provisional 2027 dates' },
+  { id: 'bhrc-2027-r3-4', start: '2027-04-17', end: '2027-04-18',
+    circuit: 'lydden-hill', organiser: 'bhr', status: 'provisional',
+    round: '3 & 4',
+    entriesClose: '2027-04-08',
+    source: 'BHRC provisional 2027 dates' },
+  { id: 'bhrc-2027-r5-6', start: '2027-05-15', end: '2027-05-16',
+    circuit: 'cadwell', organiser: 'bhr', status: 'provisional',
+    round: '5 & 6',
+    entriesClose: '2027-05-01',
+    source: 'BHRC provisional 2027 dates' },
+  { id: 'bhrc-2027-r7-8', start: '2027-06-19', end: '2027-06-20',
+    circuit: 'pembrey', organiser: 'bhr', status: 'provisional',
+    round: '7 & 8',
+    entriesClose: '2027-06-05',
+    source: 'BHRC provisional 2027 dates' },
+  { id: 'bhrc-2027-r9-10', start: '2027-07-17', end: '2027-07-18',
+    circuit: 'darley-moor', organiser: 'bhr', status: 'provisional',
+    round: '9 & 10',
+    entriesClose: '2027-07-03',
+    source: 'BHRC provisional 2027 dates' },
+  { id: 'bhrc-2027-r11-12', start: '2027-08-14', end: '2027-08-15',
+    circuit: 'anglesey', organiser: 'bhr', status: 'provisional',
+    round: '11 & 12',
+    entriesClose: '2027-08-01',
+    source: 'BHRC provisional 2027 dates' },
+  { id: 'bhrc-2027-r13-14', start: '2027-09-25', end: '2027-09-26',
+    circuit: 'cadwell', organiser: 'bhr', status: 'provisional',
+    round: '13 & 14',
+    entriesClose: '2027-09-10',
+    source: 'BHRC provisional 2027 dates' },
 ];

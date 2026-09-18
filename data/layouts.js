@@ -32,6 +32,7 @@ export const layouts = {
   // (NG's modern bikes win in 69-77s); the International layout would put even
   // quick classics past 110s.
   'bhr|Anglesey': 'Coastal',
+  'bhr|Snetterton': '200',   // told directly; BHRC run the 200 layout
 
   // CRMC, inferred from winning pace against layouts named in the same data:
   //   Donington  79s  vs National 73-75s, GP 96-101s

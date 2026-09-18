@@ -85,6 +85,7 @@ h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mut
 .badge--road{color:var(--road);border-color:currentColor}
 .badge--kind{background:var(--bg)}
 .entries{font-size:.75rem;color:var(--muted);white-space:nowrap}
+.entries--soon{color:var(--accent);font-weight:650}
 .btn{display:inline-block;background:var(--accent);color:var(--accent-ink);text-decoration:none;
   font-size:.8rem;font-weight:600;padding:.3rem .7rem;border-radius:6px}
 .btn--ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}

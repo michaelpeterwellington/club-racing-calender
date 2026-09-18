@@ -163,7 +163,7 @@ for (const meet of meets) {
     } catch (e) { process.stderr.write(`    ! ${s.label}: ${e.message}\n`); }
   }
   process.stderr.write(`    ${races.length} with results\n`);
-  out.push({ club: 'bhr', clubName: 'British Historic Racing', eventId: mu.split('/').pop(),
+  out.push({ club: 'bhr', clubName: 'BHRC', eventId: mu.split('/').pop(),
     meetingTitle: `${meet.round || title} \u2014 ${meet.venue} (${meet.date})`, venue: meet.venue, races });
 }
 

@@ -108,12 +108,22 @@ const monthKey = (m) => m.start.slice(0, 7);
 const monthName = (k) => { const [y, mo] = k.split('-'); return `${MONTH[+mo - 1]} ${y}`; };
 
 /* ---------- components ---------- */
+const daysUntil = (d) => Math.round((Date.parse(d + 'T00:00:00Z') - Date.parse(TODAY + 'T00:00:00Z')) / 86400000);
+
 function entryNote(m) {
-  if (m.status === 'cancelled' || m.status === 'full') return '';
-  if (!m.entriesOpen) return '';
-  if (m.entriesOpen > TODAY) return `Entries open ${dateLong({ start: m.entriesOpen })}`;
-  if ((m.end ?? m.start) >= TODAY) return 'Entries open now';
-  return '';
+  if (m.status === 'cancelled' || m.status === 'full') return null;
+  const past = (m.end ?? m.start) < TODAY;
+  // A closing date is the one that costs you a round if you miss it, so it wins.
+  if (m.entriesClose && !past) {
+    const n = daysUntil(m.entriesClose);
+    if (n < 0) return { text: 'Entries closed', urgent: false };
+    if (n === 0) return { text: 'Entries close today', urgent: true };
+    if (n <= 21) return { text: `Entries close in ${n} day${n === 1 ? '' : 's'}`, urgent: true };
+    return { text: `Entries close ${dateLong({ start: m.entriesClose })}`, urgent: false };
+  }
+  if (!m.entriesOpen || past) return null;
+  if (m.entriesOpen > TODAY) return { text: `Entries open ${dateLong({ start: m.entriesOpen })}`, urgent: false };
+  return { text: 'Entries open now', urgent: false };
 }
 
 const KINDS = { test: 'test day', school: 'race school', marshal: 'marshal training' };
@@ -141,7 +151,7 @@ function meetingCard(m, { base }) {
     ${kind !== 'race' ? `<span class="badge badge--kind">${esc(KINDS[kind])}</span>` : ''}
     ${status !== 'confirmed' ? `<span class="badge badge--${esc(status)}">${esc(status)}</span>` : ''}
     ${c?.type === 'road' ? '<span class="badge badge--road">roads</span>' : ''}
-    ${note ? `<span class="entries">${esc(note)}</span>` : ''}
+    ${note ? `<span class="entries${note.urgent ? ' entries--soon' : ''}">${esc(note.text)}</span>` : ''}
     ${m.entryUrl ? `<a class="btn js-out" href="${esc(m.entryUrl)}" rel="noopener">Enter</a>` : ''}
   </div>
 </article>`;
@@ -347,7 +357,9 @@ function ics(list, name) {
     const c = m.circuit ? C[m.circuit] : null, o = O[m.organiser];
     const champs = (m.championships ?? []).map((id) => S[id]?.name ?? id);
     const desc = [o?.name, champs.length ? 'Championships: ' + champs.join(', ') : '', m.notes,
-      m.entriesOpen ? 'Entries open: ' + m.entriesOpen : '', m.status && m.status !== 'confirmed' ? 'Status: ' + m.status : '']
+      m.entriesOpen ? 'Entries open: ' + m.entriesOpen : '',
+      m.entriesClose ? 'Entries CLOSE: ' + m.entriesClose : '',
+      m.status && m.status !== 'confirmed' ? 'Status: ' + m.status : '']
       .filter(Boolean).join('\n');
     lines.push('BEGIN:VEVENT',
       `UID:${m.id}@${SITE.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
