@@ -196,7 +196,10 @@ function paceTable(circuitId) {
     cur.riders += b.riders;
     here.set(b.key, cur);
   }
-  const bikeOpts = [...here].sort((a, b) => b[1].riders - a[1].riders);
+  // Alphabetical: with a hundred options you are looking for your bike, not
+  // browsing. `numeric` keeps 500 before 1000 rather than sorting as text.
+  const bikeOpts = [...here].sort((a, b) =>
+    a[1].label.localeCompare(b[1].label, 'en', { numeric: true, sensitivity: 'base' }));
   const groupData = Object.fromEntries(rows.map((r) => [gkey(r), BIKES.byGroup[gkey(r)] ?? []]));
   return `<section class="pace">
   <h2>Pace here</h2>
