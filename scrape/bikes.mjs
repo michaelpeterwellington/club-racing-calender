@@ -14,6 +14,7 @@ import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { toSec, fmt, matchVenue, venueFromTitle } from './analyse.mjs';
 import { layouts } from '../data/layouts.js';
 import { circuits } from '../data/circuits.js';
+import { capacityOf, dontMerge } from '../data/bike-aliases.js';
 
 const MAKES = {
   KAWASAKI: ['KAWASAKI', 'KWAK'], YAMAHA: ['YAMAHA', 'YAM'], HONDA: ['HONDA'],
@@ -25,17 +26,48 @@ const MAKES = {
 const MAKE_OF = {};
 for (const [canon, alts] of Object.entries(MAKES)) for (const a of alts) MAKE_OF[a] = canon;
 
-// "NINJA400" -> "NINJA 400"; drops noise so variants land together.
+// Canonical identity is make + capacity, because that is what decides what a
+// bike can race. "Honda 500" and "Honda CB500" are the same machine and must
+// group together; "R6" is a 600 even though the only digit in it is a 6.
 export function normaliseBike(raw) {
   if (!raw) return null;
-  let s = raw.toUpperCase().replace(/[^A-Z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const s = raw.toUpperCase().replace(/[^A-Z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
   if (!s) return null;
-  s = s.replace(/([A-Z])(\d)/g, '$1 $2').replace(/(\d)([A-Z])/g, '$1 $2').replace(/\s+/g, ' ');
   const words = s.split(' ');
   const make = MAKE_OF[words[0]] ?? words[0];
-  const model = words.slice(1).filter((w) => !/^(RACING|RACE|CUP|SPEC|BIKE|MOTORCYCLE)$/.test(w)).join(' ').trim();
   if (!make || make.length < 2) return null;
-  return { make, model, label: model ? `${make} ${model}` : make };
+
+  const rest = words.slice(1).filter((w) => !/^(RACING|RACE|CUP|SPEC|BIKE|MOTORCYCLE|MOTO)$/.test(w));
+  const model = rest.join(' ');
+
+  // 1. an explicit, plausible capacity anywhere in the string
+  let cc = null;
+  for (const w of rest) {
+    const n = Number(w);
+    if (Number.isFinite(n) && n >= 49 && n <= 1400) { cc = n; break; }
+  }
+  // 2. otherwise a designator that encodes it ("R6", "ZX6R", "CB500")
+  if (cc == null) {
+    const squashed = rest.join('');
+    const keys = Object.keys(capacityOf).sort((a, b) => b.length - a.length);
+    for (const k of keys) {
+      if (rest.includes(k)) { cc = capacityOf[k]; break; }          // whole token
+      const i = squashed.indexOf(k);
+      // Only at a token boundary: "ER6" must not match the "R6" rule.
+      if (i === 0 || (i > 0 && /\d/.test(squashed[i - 1]))) { cc = capacityOf[k]; break; }
+    }
+  }
+  // 3. a designator glued to a number, e.g. "CBR600RR"
+  if (cc == null) {
+    const m = rest.join('').match(/(\d{3,4})/);
+    const n = m ? Number(m[1]) : null;
+    if (n && n >= 49 && n <= 1400) cc = n;
+  }
+
+  const family = (rest.find((w) => /^[A-Z]{2,}/.test(w)) ?? '').replace(/\d+/g, '');
+  const blocked = dontMerge.find(([mk, c, fam]) => mk === make && c === cc && family.startsWith(fam));
+  const key = cc ? `${make}|${cc}${blocked ? '|' + family : ''}` : `${make}|${model || '?'}`;
+  return { make, model, cc, key, raw: s };
 }
 
 const median = (a) => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y); const i = s.length >> 1; return s.length % 2 ? s[i] : (s[i - 1] + s[i]) / 2; };
@@ -64,12 +96,14 @@ for (const f of readdirSync('data/results').filter((f) => f.endsWith('.json'))) 
         const b = normaliseBike(r.bike);
         if (!b) continue;
         const sec = toSec(r.best);
-        if (!g.has(b.label)) g.set(b.label, { make: b.make, model: b.model, riders: new Set(), laps: [] });
-        const e = g.get(b.label);
+        if (!g.has(b.key)) g.set(b.key, { make: b.make, cc: b.cc, riders: new Set(), laps: [], forms: new Map() });
+        const e = g.get(b.key);
+        e.forms.set(b.raw, (e.forms.get(b.raw) ?? 0) + 1);
         e.riders.add(r.name);
         if (sec) e.laps.push(sec);
-        if (!overall.has(b.label)) overall.set(b.label, { make: b.make, model: b.model, riders: new Set(), races: 0, classes: new Set() });
-        const o = overall.get(b.label);
+        if (!overall.has(b.key)) overall.set(b.key, { make: b.make, cc: b.cc, riders: new Set(), races: 0, classes: new Set(), forms: new Map() });
+        const o = overall.get(b.key);
+        o.forms.set(b.raw, (o.forms.get(b.raw) ?? 0) + 1);
         o.riders.add(r.name); o.races++; o.classes.add(`${ev.club}|${race.className}`);
       }
     }
@@ -77,21 +111,35 @@ for (const f of readdirSync('data/results').filter((f) => f.endsWith('.json'))) 
 }
 
 // Per group, keep bikes with a real presence; a single entry proves nothing.
+// Prefer the commonest spelling that names a model, so a group of "Honda 500"
+// and "Honda CB500" is labelled with the informative one.
+function bestLabel(forms, make, cc) {
+  const ranked = [...forms].sort((a, b) => b[1] - a[1]);
+  const named = ranked.filter(([f]) => /[A-Z]{2,}/.test(f.replace(make, '').trim()));
+  const pick = (named[0] ?? ranked[0])?.[0] ?? make;
+  return pick.replace(/\s+/g, ' ').trim() + (cc && !pick.includes(String(cc)) ? ` ${cc}` : '');
+}
+
 const byGroup = {};
 for (const [key, bikes] of groups) {
-  const list = [...bikes].map(([label, e]) => ({
-    label, riders: e.riders.size, entries: e.laps.length,
+  const list = [...bikes].map(([, e]) => ({
+    label: bestLabel(e.forms, e.make, e.cc), riders: e.riders.size, entries: e.laps.length,
     bestLap: e.laps.length ? fmt(Math.min(...e.laps)) : null,
     typicalLap: e.laps.length ? fmt(median(e.laps)) : null,
   })).filter((b) => b.riders >= 2).sort((a, b) => b.riders - a.riders);
   if (list.length) byGroup[key] = list;
 }
 
-const index = [...overall].map(([label, o]) => ({
-  label, make: o.make, model: o.model, riders: o.riders.size, entries: o.races,
+const index = [...overall].map(([key, o]) => ({
+  label: bestLabel(o.forms, o.make, o.cc), key, make: o.make, cc: o.cc, riders: o.riders.size, entries: o.races,
+  spellings: [...o.forms].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([f, n]) => `${f} (${n})`),
   classes: [...o.classes].map((c) => ({ club: c.split('|')[0], className: c.split('|')[1] })),
 })).filter((b) => b.riders >= 3).sort((a, b) => b.riders - a.riders);
 
 writeFileSync('data/bikes.json', JSON.stringify({ index, byGroup }, null, 2));
 console.error(`✓ data/bikes.json: ${index.length} bikes (3+ riders), ${Object.keys(byGroup).length} circuit/class groups`);
 console.error(`  most raced: ${index.slice(0, 6).map((b) => `${b.label} (${b.riders})`).join(', ')}`);
+if (process.argv.includes('--review')) {
+  console.error('\n--- how entries are being grouped (edit data/bike-aliases.js to correct) ---');
+  for (const b of index.slice(0, 30)) console.error(`  ${b.label.padEnd(22)} ${String(b.riders).padStart(3)} riders  <- ${b.spellings.join(', ')}`);
+}

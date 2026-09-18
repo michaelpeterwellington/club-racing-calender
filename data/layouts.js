@@ -28,4 +28,17 @@ export const layouts = {
   // Coastal layout; the International layout is half a minute slower. Lower
   // confidence than the above — worth confirming with the club.
   'ngroadracing|Anglesey': 'Coastal',
+  // BHR's fastest lap there is 76.5s. On classic machinery that fits Coastal
+  // (NG's modern bikes win in 69-77s); the International layout would put even
+  // quick classics past 110s.
+  'bhr|Anglesey': 'Coastal',
+
+  // CRMC, inferred from winning pace against layouts named in the same data:
+  //   Donington  79s  vs National 73-75s, GP 96-101s
+  //   Anglesey   80s  vs Coastal 73-83s
+  //   Snetterton 82s  vs the 300 layout at 117-121s, so the short circuit —
+  //              and CRMC's own 2027 calendar says "Snetterton 200".
+  'crmc|Donington Park': 'National',
+  'crmc|Anglesey': 'Coastal',
+  'crmc|Snetterton': '200',
 };

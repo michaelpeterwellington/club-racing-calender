@@ -143,7 +143,6 @@ function meetingCard(m, { base }) {
     ${c?.type === 'road' ? '<span class="badge badge--road">roads</span>' : ''}
     ${note ? `<span class="entries">${esc(note)}</span>` : ''}
     ${m.entryUrl ? `<a class="btn js-out" href="${esc(m.entryUrl)}" rel="noopener">Enter</a>` : ''}
-    ${m.resultsUrl ? `<a class="btn btn--ghost js-out" href="${esc(m.resultsUrl)}" rel="noopener">Results</a>` : ''}
   </div>
 </article>`;
 }
@@ -420,15 +419,7 @@ ${accommodationBlock(c)}
 ${paceTable(c.id)}
 ${paceTable(c.id) ? '<h2>Meetings</h2>' : ''}
 ${monthList(up, { base: '../../' })}
-${(() => {
-  const past = list.filter((m) => (m.end ?? m.start) < TODAY);
-  const withResults = past.filter((m) => m.resultsUrl);
-  const rest = past.filter((m) => !m.resultsUrl);
-  // Results are the reason to visit a circuit page, so never bury them in a
-  // collapsed panel; only past meetings with nothing to show get folded away.
-  return (withResults.length ? `<h2>Results from previous meetings here</h2>${monthList(withResults, { base: '../../' })}` : '')
-    + (rest.length ? `<details class="past"><summary>Other past meetings (${rest.length})</summary>${monthList(rest, { base: '../../' })}</details>` : '');
-})()}
+${list.length > up.length ? `<details class="past"><summary>Past meetings (${list.length - up.length})</summary>${monthList(list.filter((m) => (m.end ?? m.start) < TODAY), { base: '../../' })}</details>` : ''}
 ${paceTable(c.id) ? '<script src="../../pace.js" defer></script>' : ''}`,
   }));
   write(`feeds/circuit-${c.id}.ics`, ics(list, `${c.name} \u2014 race dates`));

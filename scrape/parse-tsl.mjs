@@ -58,7 +58,7 @@ function schema(header) {
 }
 
 // "1 Lap" / "2 Laps" is one value, not two tokens.
-const tokens = (s) =>
+export const tokens = (s) =>
   s.replace(/(\d+)\s+Laps?\b/g, '$1Lap')
    .split(/\s+/)
    .filter((t) => /^-?[\d:.]+$/.test(t) || /^\d+Lap$/.test(t));
@@ -66,7 +66,7 @@ const tokens = (s) =>
 // Fit the observed tokens to the declared tail columns. GAP and DIFF are a pair
 // absent for the leader; trailing columns go missing on a truncated row. Try
 // the plausible shapes in order and take the first that type-checks.
-function fitTail(decl, vals) {
+export function fitTail(decl, vals) {
   const out = {};
   for (let cut = 0; cut <= 3; cut++) {
     for (const drop of [false, true]) {

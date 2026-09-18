@@ -14,6 +14,9 @@
 //   entryUrl      optional
 //   notes         optional  — one line
 //   source        optional  — where it came from, so you can re-check it
+//
+// This is a CALENDAR. Results don't belong here — they are scraped separately
+// into data/pace.json and shown in the pace table on each circuit page.
 
 export const meetings = [
   /* ---------------- BEMSEE / BMCRC 2027 ----------------
@@ -140,37 +143,4 @@ export const meetings = [
     championships: ['nlr-sprint', 'nlr-endurance'], status: 'confirmed',
     source: 'NLR 2027 championship calendar graphic' },
 
-  /* ---------------- CRMC 2026 (past season) ----------------
-     Dates and results links from crmc.co.uk/live-timing-results. Kept so the
-     circuit pages can show what happened here last time \u2014 entry counts per
-     class are the quickest read on how competitive a grid is. Delete if you'd
-     rather only carry the current season.                                    */
-  { id: 'crmc-2026-cadwell', start: '2026-04-04', end: '2026-04-05',
-    circuit: 'cadwell', organiser: 'crmc', status: 'confirmed',
-    resultsUrl: 'https://www.apex-timing.com/goracing/results.php?path=/CRMC/2026/cadwell/',
-    source: 'crmc.co.uk live timing & results page' },
-  { id: 'crmc-2026-pembrey', start: '2026-05-02', end: '2026-05-03',
-    circuit: 'pembrey', organiser: 'crmc', status: 'confirmed',
-    resultsUrl: 'https://www.apex-timing.com/goracing/results.php?path=/CRMC/2026/pembrey/',
-    source: 'crmc.co.uk live timing & results page' },
-  { id: 'crmc-2026-snetterton', start: '2026-05-30', end: '2026-05-31',
-    circuit: 'snetterton', organiser: 'crmc', status: 'confirmed',
-    resultsUrl: 'https://www.apex-timing.com/goracing/results.php?path=/CRMC/2026/snetterton/',
-    source: 'crmc.co.uk live timing & results page' },
-  { id: 'crmc-2026-brands', start: '2026-07-04', end: '2026-07-05',
-    circuit: 'brands-hatch', organiser: 'crmc', status: 'confirmed',
-    resultsUrl: 'https://www.apex-timing.com/goracing/results.php?path=/CRMC/2026/brandshatch/',
-    source: 'crmc.co.uk live timing & results page' },
-  { id: 'crmc-2026-donington', start: '2026-08-01', end: '2026-08-02',
-    circuit: 'donington', organiser: 'crmc', status: 'confirmed',
-    resultsUrl: 'https://www.apex-timing.com/goracing/results.php?path=/CRMC/2026/doningtonpark/',
-    source: 'crmc.co.uk live timing & results page' },
-  { id: 'crmc-2026-anglesey', start: '2026-08-29', end: '2026-08-30',
-    circuit: 'anglesey', organiser: 'crmc', status: 'confirmed',
-    resultsUrl: 'https://www.apex-timing.com/goracing/results.php?path=/CRMC/2026/anglesey/',
-    source: 'crmc.co.uk live timing & results page' },
-  { id: 'crmc-2026-mallory', start: '2026-09-19', end: '2026-09-20',
-    circuit: 'mallory', organiser: 'crmc', status: 'confirmed',
-    resultsUrl: 'https://www.apex-timing.com/goracing/results.php?path=/CRMC/2026/mallorypark/',
-    source: 'crmc.co.uk live timing & results page' },
 ];
