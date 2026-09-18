@@ -34,6 +34,24 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const parts = (d) => { const [y, m, dd] = d.split('-').map(Number); return { y, m: m - 1, d: dd }; };
+const DAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAY_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const dow = (d) => new Date(d + 'T12:00:00Z').getUTCDay();
+
+// 'Sun' for one day, 'Fri\u2013Sun' for a range. Ranges longer than a week
+// (TT, Manx GP) would read as nonsense, so they just get the start day onwards.
+function dayLabel(m) {
+  if (!m.end || m.end === m.start) return DAY[dow(m.start)];
+  const span = (Date.parse(m.end) - Date.parse(m.start)) / 86400000;
+  if (span >= 7) return DAY[dow(m.start)] + ' onwards';
+  return DAY[dow(m.start)] + '\u2013' + DAY[dow(m.end)];
+}
+// Every day the meeting covers, so searching 'friday' works.
+function daysCovered(m) {
+  const out = []; const end = m.end ?? m.start;
+  for (let d = m.start; d <= end && out.length < 16; d = plusDay(d)) out.push(DAY_FULL[dow(d)]);
+  return out;
+}
 
 function dateLabel(m) {
   const a = parts(m.start);
@@ -45,7 +63,7 @@ function dateLabel(m) {
 }
 function dateLong(m) {
   const a = parts(m.start);
-  if (!m.end || m.end === m.start) return `${a.d} ${MONTH[a.m]} ${a.y}`;
+  if (!m.end || m.end === m.start) return `${DAY[dow(m.start)]} ${a.d} ${MONTH[a.m]} ${a.y}`;
   const b = parts(m.end);
   if (a.m === b.m) return `${a.d}\u2013${b.d} ${MONTH[a.m]} ${a.y}`;
   return `${a.d} ${MONTH[a.m]} \u2013 ${b.d} ${MONTH[b.m]} ${b.y}`;
@@ -72,9 +90,9 @@ function meetingCard(m, { base }) {
   const status = m.status ?? 'confirmed';
   const kind = m.kind ?? 'race';
   const venue = c ? esc(c.name) : 'Venue TBC';
-  const search = [c?.name, m.config, o?.name, o?.short, m.name, ...champs, c?.region, KINDS[kind]].filter(Boolean).join(' ').toLowerCase();
+  const search = [c?.name, m.config, o?.name, o?.short, m.name, ...champs, c?.region, KINDS[kind], ...daysCovered(m)].filter(Boolean).join(' ').toLowerCase();
   return `<article class="mtg${m.example ? ' is-example' : ''}" data-search="${esc(search)}" data-circuit="${esc(m.circuit ?? '')}" data-organiser="${esc(m.organiser)}" data-type="${esc(c?.type ?? '')}" data-status="${esc(status)}" data-kind="${esc(kind)}">
-  <div class="mtg-date"><b>${esc(dl.big)}</b><span>${esc(dl.small)}</span></div>
+  <div class="mtg-date"><b>${esc(dl.big)}</b><span>${esc(dl.small)}</span><em>${esc(dayLabel(m))}</em></div>
   <div class="mtg-main">
     <h3>${c ? `<a href="${base}circuit/${m.circuit}/">${venue}</a>` : venue}${m.config ? `<span class="cfg">${esc(m.config)}</span>` : ''}</h3>
     <p class="mtg-org"><a href="${base}organiser/${m.organiser}/">${esc(o?.short ?? o?.name ?? m.organiser)}</a>${m.name ? ` <span class="sep">\u00b7</span> ${esc(m.name)}` : ''}</p>
