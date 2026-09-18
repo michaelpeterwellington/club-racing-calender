@@ -98,6 +98,11 @@ function dateLong(m) {
   if (a.m === b.m) return `${a.d}\u2013${b.d} ${MONTH[a.m]} ${a.y}`;
   return `${a.d} ${MONTH[a.m]} \u2013 ${b.d} ${MONTH[b.m]} ${b.y}`;
 }
+const fmt = (s) => {
+  if (s == null) return null;
+  const m = Math.floor(s / 60), r = s - m * 60;
+  return m ? `${m}:${r.toFixed(3).padStart(6, '0')}` : r.toFixed(3);
+};
 const toSec = (t) => {
   if (!t) return null;
   const m = String(t).match(/^(?:(\d+):)?(\d+(?:\.\d+)?)$/);
@@ -404,7 +409,13 @@ write('index.html', layout({
   jsonld: upcoming.slice(0, 60).map(eventLd),
   body: `<div class="hero">
   <h1>UK motorcycle racing calendar</h1>
-  <p>Every club and national road race meeting, from every organising club, in one place. ${upcoming.length} upcoming meeting${upcoming.length === 1 ? '' : 's'}${upcomingClashes.length ? `, including <a href="clashes/">${upcomingClashes.length} that clash</a>` : ''}.</p>
+  <p>Every club and national road race meeting, from every organising club, in one place \u2014 so you can plan a season without checking twenty websites.</p>
+  <div class="stats">
+    <div class="stat"><b>${upcoming.filter((m) => (m.kind ?? 'race') === 'race').length}</b><span>Race meetings</span></div>
+    <div class="stat"><b>${new Set(upcoming.map((m) => m.organiser)).size}</b><span>Clubs</span></div>
+    <div class="stat"><b>${new Set(upcoming.map((m) => m.circuit).filter(Boolean)).size}</b><span>Circuits</span></div>
+    ${upcomingClashes.length ? `<a class="stat stat--alert" href="clashes/" style="text-decoration:none"><b>${upcomingClashes.length}</b><span>Date clashes</span></a>` : ''}
+  </div>
 </div>
 <div class="filters">
   <input type="search" id="q" placeholder="Search circuit, club, series\u2026" aria-label="Search meetings">
@@ -432,7 +443,17 @@ for (const c of usedCircuits) {
     canonical: `/circuit/${c.id}/`, base: '../../', jsonld: up.slice(0, 40).map(eventLd),
     body: `<nav class="crumbs"><a href="../../">Calendar</a> <span>/</span> ${esc(c.name)}</nav>
 <h1>${esc(c.name)}</h1>
-<p class="lede">${esc(c.region)} \u00b7 ${c.type === 'road' ? 'Closed roads course' : 'Short circuit'} \u00b7 ${up.length} upcoming meeting${up.length === 1 ? '' : 's'}</p>
+<p class="lede">${esc(c.region)} \u00b7 ${c.type === 'road' ? 'Closed roads course' : 'Short circuit'}${(c.layouts ?? []).length ? ` \u00b7 ${c.layouts.map(esc).join(' / ')} layouts` : ''}</p>
+${(() => {
+  const pc = PACE.filter((p) => p.circuit === c.id);
+  const fastest = pc.map((p) => toSec(p.fastestLap)).filter(Boolean).sort((a, b) => a - b)[0];
+  return `<div class="stats">
+    <div class="stat"><b>${up.length}</b><span>Upcoming</span></div>
+    <div class="stat"><b>${new Set(all.filter((m) => m.circuit === c.id).map((m) => m.organiser)).size}</b><span>Clubs racing here</span></div>
+    ${pc.length ? `<div class="stat"><b>${pc.length}</b><span>Classes with data</span></div>` : ''}
+    ${fastest ? `<div class="stat"><b>${esc(fmt(fastest) ?? '')}</b><span>Fastest lap 2026</span></div>` : ''}
+  </div>`;
+})()}
 <p class="subscribe"><a href="../../feeds/circuit-${c.id}.ics">Subscribe to ${esc(c.name)} dates (.ics)</a></p>
 ${links.map((l) => adBlock({ ...l, slot: 'inline' })).join('')}
 ${accommodationBlock(c)}
