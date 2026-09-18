@@ -561,6 +561,7 @@ write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${SITE.url}/sitemap.xml\n
 
 // static assets
 for (const f of ['style.css', 'filter.js', 'pace.js']) if (existsSync(join('src', f))) cpSync(join('src', f), join(OUT, f));
+if (existsSync('src/fonts')) cpSync('src/fonts', join(OUT, 'fonts'), { recursive: true });
 
 console.log(`\u2713 built ${written.length + 2} files to ${OUT}/  (${all.length} meetings, ${upcoming.length} upcoming)`);
 if (hasExamples) console.log('  ! example data is still present in data/meetings.js');
