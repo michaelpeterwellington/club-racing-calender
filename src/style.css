@@ -1,5 +1,5 @@
 /* Self-hosted so no visitor request ever reaches a third party — the site
-   sets no cookies and contacts no one, and that stays true. 60KB total. */
+   sets no cookies and contacts no one, and that stays true. ~90KB total. */
 @font-face{font-family:'Barlow';src:url('fonts/barlow-400.woff2') format('woff2');
   font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'Barlow';src:url('fonts/barlow-600.woff2') format('woff2');
@@ -8,345 +8,511 @@
   font-weight:700;font-style:normal;font-display:swap}
 @font-face{font-family:'Barlow Condensed';src:url('fonts/barlow-condensed-700.woff2') format('woff2');
   font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Barlow Condensed';src:url('fonts/barlow-condensed-800.woff2') format('woff2');
+  font-weight:800;font-style:normal;font-display:swap}
+/* Variable file: one download covers 400 through 700. */
+@font-face{font-family:'JetBrains Mono';src:url('fonts/jetbrains-mono-var.woff2') format('woff2');
+  font-weight:400 700;font-style:normal;font-display:swap}
+
+/* =============================================================
+   UK Race Calendar
+   Design notes: this is a reference tool read in a paddock, so it
+   borrows from a timing screen — near-black ground, condensed
+   display caps for the things you scan, monospace for every piece
+   of metadata so columns line up, and one racing red used only
+   where it means something. Rows, not cards: a season is a list.
+   ============================================================= */
 
 :root{
   --sans:'Barlow',ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --display:'Barlow Condensed','Barlow',ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+
+  /* The sticky furniture's own heights, and how far down the page they cover.
+     Everything that sticks is positioned from these, so raising the type size
+     cannot leave a month heading parked under the filter bar. */
+  --head:3.6rem;
+  --filterbar:4.1rem;
+  --stick:var(--head);
+  /* Shared by the column headings and every meeting row, so they cannot drift. */
+  --cols:5.75rem minmax(0,1fr) 10.5rem 10.5rem 1.5rem;
 }
 
-/* =============================================================
-   UK Race Calendar
-   Design notes: this is a reference tool read in a paddock on a
-   phone, so it borrows from timing sheets — heavy weight contrast,
-   tabular numerals so lap times and dates align in columns, and a
-   single racing red used only where it means something.
-   ============================================================= */
-
+/* ---------- themes ----------
+   Dark sits on bare :root, so it is what you get with no stored choice and no
+   JavaScript — it is the site's own look, not a preference. theme.js resolves
+   the stored preference ('auto' | 'light' | 'dark') to a concrete value and
+   stamps data-theme on <html>, so only the light palette needs restating and
+   "auto" needs no media query of its own. */
 :root{
-  --bg:#eceae5;
-  --panel:#fff;
-  --panel-2:#f7f6f3;
-  --ink:#14151a;
-  --ink-2:#3d404a;
-  --muted:#71747e;
-  --line:#e4e4de;
-  --line-2:#d2d2ca;
-  --accent:#d0021b;
-  --accent-ink:#fff;
-  --accent-soft:#fdecee;
-  --good:#0a7a4b;
-  --good-soft:#e8f5ee;
-  --warn:#8a5a00;
-  --warn-soft:#fdf3dd;
-  --road:#1d6f42;
-  --shadow:0 1px 2px rgba(20,21,26,.05), 0 1px 3px rgba(20,21,26,.04);
-  --shadow-lg:0 2px 8px rgba(20,21,26,.07), 0 8px 24px rgba(20,21,26,.06);
-  --r:12px;
-  --r-sm:8px;
-  color-scheme:light dark;
+  --bg:#0d0d0d;
+  --bg-2:#111;
+  --panel:#161616;
+  --panel-2:#1a1a1a;
+  --hover:#1e1e1e;
+  --ink:#f0ede8;
+  --ink-2:#e4e1db;
+  --muted:#d0ccc5;
+  --line:#2a2a2a;
+  --line-2:#4a4a4a;
+  --accent:#ef3a52;
+  --accent-hi:#ff5a6e;
+  --accent-dim:#1a0a0d;
+  --good:#34d399;
+  --good-soft:rgba(52,211,153,.07);
+  --good-line:rgba(52,211,153,.35);
+  --warn:#fbbf24;
+  --warn-soft:#2a2211;
+  --bad:#ef4444;
+  /* The red the ticker and buttons are painted in, where the text on top is
+     always white — it stays the brand red in both themes. */
+  --brand:#c8102e;
+  --hero-panel:rgba(13,13,13,.94);
+  --hero-stripe:.055;
+  --hero-img:.5;
+  --bg-fade:rgba(13,13,13,0);
+  --mark-ring:transparent;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme:dark){
-  :root{
-    --bg:#07080b;
-    --panel:#15181f;
-    --panel-2:#1c2029;
-    --ink:#f0f2f6;
-    --ink-2:#c3c7d1;
-    --muted:#8f939f;
-    --line:#2b303c;
-    --line-2:#3c4353;
-    --accent:#ff3d54;
-    --accent-ink:#1a0407;
-    --accent-soft:#2a1116;
-    --good:#3ec98a;
-    --good-soft:#0f2a1e;
-    --warn:#f0c264;
-    --warn-soft:#2a2211;
-    --road:#3ec98a;
-    --shadow:0 1px 2px rgba(0,0,0,.4);
-    --shadow-lg:0 4px 20px rgba(0,0,0,.5);
-  }
+
+/* Paper rather than plain white: the same timing-sheet reading, printed. */
+:root[data-theme="light"]{
+  --bg:#f4f2ee;
+  --bg-2:#eceae4;
+  --panel:#fffefb;
+  --panel-2:#fffefb;
+  --hover:#e4e0d7;
+  --ink:#14151a;
+  --ink-2:#1c1e23;
+  --muted:#2b2d28;
+  --line:#dcd8cf;
+  --line-2:#aba69b;
+  --accent:#b80d28;
+  --accent-hi:#8c0a1e;
+  --accent-dim:#fbeaed;
+  --good:#097043;
+  --good-soft:rgba(9,112,67,.09);
+  --good-line:rgba(9,112,67,.32);
+  --warn:#7a5000;
+  --warn-soft:#fbf1d8;
+  --bad:#c0121f;
+  --brand:#c8102e;
+  --hero-panel:rgba(255,255,255,.95);
+  --hero-stripe:.05;
+  --hero-img:.85;
+  --bg-fade:rgba(244,242,238,0);
+  /* The flag mark's white stripe would vanish into the paper without this. */
+  --mark-ring:rgba(0,0,0,.2);
+  color-scheme:light;
 }
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0;background:var(--bg);color:var(--ink);
-  font:400 16.5px/1.5 var(--sans);
+  font:400 16px/1.55 var(--sans);
+  -webkit-font-smoothing:antialiased;
   font-feature-settings:"kern" 1;
-  text-rendering:optimizeLegibility;
 }
+body.has-filters{--stick:calc(var(--head) + var(--filterbar))}
 a{color:inherit}
-.wrap{width:100%;max-width:64rem;margin:0 auto;padding-inline:1.25rem}
+.wrap{width:100%;max-width:68rem;margin:0 auto;padding-inline:1.25rem}
+body.wide .wrap{max-width:82rem}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.num{font-variant-numeric:tabular-nums}
+.nowrap{white-space:nowrap}
+
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--line-2)}
+
+/* small-caps monospace label, used everywhere a value is annotated */
+.lbl,.listhead,.mtg-meta,.badge,.entries,.count,.crumbs,.stat span,
+.month-count,.tag{font-family:var(--mono);text-transform:uppercase;letter-spacing:.11em}
+
+/* ---------- ticker ---------- */
+.ticker{background:var(--brand);border-bottom:1px solid #9a0020;
+  overflow:hidden;white-space:nowrap;padding-block:.3rem}
+.ticker-run{display:inline-block;animation:ticker 90s linear infinite;will-change:transform}
+.ticker-run span{font-family:var(--mono);font-size:.8125rem;font-weight:500;color:#fff;
+  text-transform:uppercase;letter-spacing:.14em;margin-inline:1.6rem}
+.ticker-run i{font-style:normal;opacity:.4;margin-left:1.6rem}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* ---------- header ---------- */
 header.site{
-  background:var(--panel);border-bottom:1px solid var(--line);
-  position:sticky;top:0;z-index:50;
-  box-shadow:var(--shadow);
+  background:var(--bg);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:40;
 }
-header.site::before{content:"";display:block;height:3px;
-  background:linear-gradient(90deg,var(--accent) 0 28%,var(--ink) 28% 52%,var(--line-2) 52% 100%)}
-header.site .wrap{display:flex;align-items:center;justify-content:space-between;
-  gap:1rem;min-height:3.75rem;flex-wrap:wrap}
-.brand{
-  font-family:var(--display);font-weight:700;letter-spacing:.01em;text-transform:uppercase;
-  text-decoration:none;font-size:1.35rem;
-  display:inline-flex;align-items:center;gap:.5rem;
-}
-.brand::before{
-  content:"";width:.55rem;height:1.05rem;border-radius:2px;
-  background:var(--accent);transform:skewX(-12deg);
-}
-header nav{display:flex;gap:.35rem;font-size:.85rem;flex-wrap:wrap}
-header nav a{
-  color:var(--muted);text-decoration:none;padding:.35rem .6rem;border-radius:99px;
-  font-weight:550;transition:background .12s,color .12s;
-}
-header nav a:hover{color:var(--ink);background:var(--bg)}
+header.site .wrap{display:flex;align-items:center;gap:1.25rem;
+  min-height:var(--head);flex-wrap:wrap}
+.brand{display:inline-flex;align-items:center;gap:.7rem;text-decoration:none}
+/* Union flag stripes, read as a nationality mark rather than a logo. */
+.mark{display:flex;gap:1px;width:1.1rem;height:1.55rem;border-radius:2px;overflow:hidden;
+  flex:0 0 auto;box-shadow:inset 0 0 0 1px var(--mark-ring)}
+.mark i{flex:1}
+.mark i:nth-child(1){background:#012169}
+.mark i:nth-child(2){background:#fff}
+.mark i:nth-child(3){background:var(--brand)}
+.brand b{display:block;font-family:var(--display);font-weight:800;font-size:1.3rem;
+  text-transform:uppercase;letter-spacing:.14em;line-height:1}
+.brand-sub{display:block;font-family:var(--mono);font-size:.75rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.16em;margin-top:.22rem}
+header nav{display:flex;gap:.25rem;margin-left:auto;flex-wrap:wrap}
+header nav a{font-family:var(--mono);font-size:.8125rem;text-transform:uppercase;
+  letter-spacing:.14em;color:var(--muted);text-decoration:none;padding:.4rem .55rem;
+  transition:color .12s}
+header nav a:hover{color:var(--ink)}
+.headstats{display:flex;gap:1.35rem;font-family:var(--mono);font-size:.8125rem;
+  color:var(--muted);text-transform:uppercase;letter-spacing:.13em;
+  padding-left:1.35rem;border-left:1px solid var(--line)}
+.headstats b{color:var(--ink);font-weight:600}
+@media (max-width:60rem){.headstats{display:none}}
 
-.warnbar{background:var(--warn-soft);color:var(--warn);font-size:.85rem;
-  padding-block:.6rem;border-bottom:1px solid var(--line)}
+/* Theme selector. Starts hidden and theme.js reveals it, so a browser with no
+   JavaScript is never shown a control that cannot do anything. */
+.theme{display:flex;border:1px solid var(--line);flex:0 0 auto}
+.theme button{display:flex;align-items:center;justify-content:center;width:2.15rem;height:1.95rem;
+  padding:0;border:0;border-right:1px solid var(--line);background:transparent;
+  color:var(--muted);cursor:pointer;transition:color .12s,background .12s}
+.theme button:last-child{border-right:0}
+.theme button:hover{color:var(--ink);background:var(--hover)}
+.theme button[aria-pressed="true"]{color:var(--brand);background:var(--accent-dim)}
+:root[data-theme="light"] .theme button[aria-pressed="true"]{color:var(--accent)}
+.theme button:focus-visible{outline:1px solid var(--accent);outline-offset:-1px}
+.theme svg{width:1rem;height:1rem;display:block}
 
-/* ---------- headings ---------- */
+.warnbar{background:var(--warn-soft);color:var(--warn);border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:.875rem;letter-spacing:.06em;padding-block:.55rem}
+.warnbar code{color:var(--ink)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+  padding:2.75rem 0 2.25rem}
+/* A photograph, if one is configured, sits under the same gradient the stripes
+   use, so the heading stays readable whatever the picture is doing. */
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:center;opacity:var(--hero-img);z-index:0}
+/* Kerb stripes, barely there — texture, not decoration. */
+.hero::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(115deg,var(--brand) 0 2.5rem,transparent 2.5rem 5rem);
+  opacity:var(--hero-stripe)}
+/* The stripes are the stand-in for a photo, so they step aside when one exists.
+   Same specificity as the rule above, so it has to come after it. */
+.hero--img::before{opacity:0}
+.hero::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 140% at 15% 0%,transparent 0%,var(--bg) 78%)}
+/* With a photo the overlay's job changes. The radial above tints the whole band,
+   which just washes a picture out; this clears a solid bed under the heading and
+   then gets out of the way, so the right-hand side keeps its contrast.
+   Same specificity as the rule above, so it has to come after it. */
+.hero--img::after{background:
+  linear-gradient(90deg,var(--bg) 30%,var(--bg-fade) 74%),
+  linear-gradient(0deg,var(--bg) 1%,var(--bg-fade) 52%)}
+.hero .wrap{position:relative;z-index:1;display:flex;align-items:flex-end;
+  justify-content:space-between;gap:2rem;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(2.5rem,7vw,4.5rem);line-height:.9;letter-spacing:-.01em;margin:0}
+.hero p{font-family:var(--mono);font-size:.875rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.15em;margin:.85rem 0 0;max-width:50rem;line-height:1.7}
+.nextrace{border:1px solid var(--accent);background:var(--hero-panel);padding:.75rem .95rem;
+  text-decoration:none;flex:0 0 auto;transition:background .12s}
+.nextrace:hover{background:var(--accent-dim)}
+.nextrace .lbl{display:block;font-size:.75rem;color:var(--accent);margin-bottom:.35rem}
+.nextrace b{display:block;font-family:var(--display);font-weight:700;font-size:1.15rem;
+  text-transform:uppercase;letter-spacing:.03em;line-height:1.1}
+.nextrace em{display:block;font-style:normal;font-family:var(--mono);font-size:.8125rem;
+  color:var(--ink-2);margin-top:.25rem;letter-spacing:.06em}
+
+/* ---------- inner page headings ---------- */
 main{padding-block:2rem 0}
-h1{font-family:var(--display);font-size:clamp(2.25rem,6vw,3.75rem);line-height:.95;
-  letter-spacing:-.015em;font-weight:700;margin:0 0 .6rem;text-transform:uppercase}
-.hero{margin-bottom:2rem}
-.hero p{color:var(--ink-2);margin:0;max-width:44rem;font-size:1.05rem;line-height:1.5}
-.lede{color:var(--ink-2);margin:0 0 1.5rem;font-size:1rem;max-width:44rem}
-h2{font-family:var(--display);font-size:1.15rem;text-transform:uppercase;letter-spacing:.03em;
-  color:var(--ink);margin:2.5rem 0 .9rem;font-weight:700}
-.crumbs{font-size:.8rem;color:var(--muted);margin:0 0 1rem;font-weight:500}
+main.wrap>h1{font-size:clamp(2rem,5.5vw,3.25rem);margin-bottom:.5rem}
+.crumbs{font-size:.8125rem;color:var(--muted);margin:0 0 1.25rem}
 .crumbs a{text-decoration:none}
 .crumbs a:hover{color:var(--accent)}
-.crumbs span{opacity:.4;margin-inline:.4rem}
+.crumbs span{opacity:.4;margin-inline:.45rem}
+.lede{color:var(--ink-2);font-size:1.0625rem;margin:0 0 1.75rem;max-width:46rem}
+h2{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:1.7rem;
+  letter-spacing:.06em;margin:2.5rem 0 .9rem}
 
-/* ---------- hero stat strip ---------- */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));
-  gap:1px;background:var(--line);border:1px solid var(--line);
-  border-radius:var(--r);overflow:hidden;margin:1.75rem 0 0;box-shadow:var(--shadow)}
-.stats .stat:first-child{box-shadow:inset 4px 0 0 var(--accent)}
-.stat{background:var(--panel);padding:.85rem 1rem}
-.stat b{display:block;font-family:var(--display);font-size:2.6rem;font-weight:700;
-  letter-spacing:-.01em;line-height:.95;font-variant-numeric:tabular-nums}
-.stat span{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.09em;
-  color:var(--muted);margin-top:.15rem;font-weight:600}
+/* ---------- stat strip ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);margin:1.75rem 0 1.5rem}
+main>.stats:first-child{margin-top:0}
+.stat{background:var(--bg-2);padding:.9rem 1.1rem;text-decoration:none;display:block}
+.stat b{display:block;font-family:var(--display);font-weight:800;font-size:2.6rem;
+  line-height:.95;font-variant-numeric:tabular-nums}
+.stat span{display:block;font-size:.75rem;color:var(--muted);margin-top:.3rem}
+.stat--alert{box-shadow:inset 3px 0 0 var(--accent)}
 .stat--alert b{color:var(--accent)}
+a.stat:hover{background:var(--hover)}
 
 /* ---------- filters ---------- */
-.filters{display:flex;flex-wrap:wrap;gap:.45rem;margin:0 0 .75rem}
+.filters{position:sticky;top:var(--head);z-index:30;background:var(--bg-2);
+  border-bottom:1px solid var(--line);margin-bottom:0}
+.filters-in{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;padding-block:.55rem}
 .filters input[type=search],.filters select,.filters button{
-  font:inherit;font-size:.875rem;font-weight:500;padding:.55rem .7rem;
-  border:1px solid var(--line-2);border-radius:var(--r-sm);
-  background:var(--panel);color:var(--ink);min-height:2.6rem}
-.filters input[type=search]{flex:1 1 15rem;min-width:0}
-.filters input[type=search]:focus-visible,.filters select:focus-visible{
-  outline:2px solid var(--accent);outline-offset:1px}
-.filters button{cursor:pointer;color:var(--muted)}
-.filters button:hover{color:var(--ink);border-color:var(--muted)}
-.chk{display:flex;align-items:center;gap:.45rem;font-size:.875rem;font-weight:500;
-  color:var(--ink-2);padding:.55rem .75rem;border:1px solid var(--line-2);
-  border-radius:var(--r-sm);background:var(--panel);cursor:pointer;user-select:none}
-.chk:hover{border-color:var(--muted)}
-.chk input{accent-color:var(--accent);margin:0}
-.count{font-size:.8rem;color:var(--muted);margin:0 0 1.25rem;font-weight:500}
+  font-family:var(--mono);font-size:.8125rem;text-transform:uppercase;letter-spacing:.1em;
+  background:var(--panel-2);border:1px solid var(--line);color:var(--ink-2);
+  padding:.45rem .6rem;border-radius:0;min-height:2rem;appearance:none;cursor:pointer}
+.filters input[type=search]{flex:1 1 13rem;min-width:0;max-width:20rem;
+  text-transform:none;letter-spacing:.04em;cursor:text;color:var(--ink)}
+.filters input[type=search]::placeholder{color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.filters input:focus-visible,.filters select:focus-visible,.filters button:focus-visible,
+.chk:focus-within{outline:none;border-color:var(--accent)}
+.filters select:hover,.filters button:hover{border-color:var(--line-2);color:var(--ink)}
+.filters button{color:var(--accent)}
+.filters button:hover{color:var(--accent-hi);border-color:var(--accent)}
+.chk{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--mono);font-size:.8125rem;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--ink-2);background:var(--panel-2);
+  border:1px solid var(--line);padding:.45rem .6rem;min-height:2rem;cursor:pointer;user-select:none}
+.chk:hover{border-color:var(--line-2);color:var(--ink)}
+.chk input{accent-color:var(--accent);margin:0;width:.8rem;height:.8rem}
+.count{font-size:.8125rem;color:var(--muted);margin-left:auto;padding-left:1.25rem}
+
+/* ---------- list header ---------- */
+.listhead{display:none;font-size:.75rem;color:var(--muted);
+  border-bottom:1px solid var(--line);padding:.55rem .75rem}
+@media (min-width:60rem){.listhead{display:grid;gap:1rem;align-items:center;
+  grid-template-columns:var(--cols)}}
 
 /* ---------- month sections ---------- */
-.month{margin-bottom:.5rem}
-.month h2{
-  position:sticky;top:3.9rem;z-index:10;
-  display:flex;align-items:center;gap:.9rem;
-  background:linear-gradient(var(--bg) 72%,transparent);
-  padding:1.1rem 0 .6rem;margin:1.75rem 0 .7rem;
-  font-family:var(--display);font-size:1.6rem;letter-spacing:.005em;text-transform:uppercase;
-  color:var(--ink);font-weight:700;
-}
-.month h2::after{content:"";flex:1;height:1px;background:var(--line-2)}
+.month h2{position:sticky;top:var(--stick);z-index:20;display:flex;align-items:baseline;
+  gap:.85rem;background:var(--bg);border-bottom:1px solid var(--line);
+  padding:.65rem .75rem;margin:0;font-size:1.6rem;letter-spacing:.05em}
+.month h2 .yr{font-family:var(--mono);font-size:.8125rem;font-weight:400;color:var(--muted);
+  letter-spacing:.14em;text-transform:none}
+.month-count{margin-left:auto;font-size:.75rem;color:var(--muted)}
 
-/* ---------- meeting cards ---------- */
-.mtg{
-  display:flex;gap:.9rem;align-items:flex-start;
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
-  padding:.65rem .9rem .65rem .65rem;margin-bottom:.4rem;
-  box-shadow:var(--shadow);
-  transition:border-color .12s,box-shadow .12s,transform .12s;
-  position:relative;overflow:hidden;
-}
-.mtg:hover{border-color:var(--line-2);box-shadow:var(--shadow-lg)}
-.mtg::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent}
-.mtg:hover::before{background:var(--accent)}
+/* ---------- meeting rows ---------- */
+.mtg{border-bottom:1px solid var(--line)}
+.mtg>summary{display:grid;grid-template-columns:1fr auto;gap:.75rem 1rem;align-items:center;
+  padding:.65rem .75rem;cursor:pointer;list-style:none;transition:background .1s}
+.mtg>summary::-webkit-details-marker{display:none}
+.mtg>summary:hover{background:var(--hover)}
+.mtg>summary:focus-visible{outline:1px solid var(--accent);outline-offset:-1px}
+.mtg[open]>summary{background:var(--hover)}
+@media (min-width:60rem){.mtg>summary{grid-template-columns:var(--cols)}}
+.mtg--next>summary{background:var(--accent-dim);box-shadow:inset 2px 0 0 var(--accent)}
+.mtg--past{opacity:.4}
+.is-example>summary{opacity:.55}
 
-.mtg-date{
-  flex:0 0 3.9rem;text-align:center;padding:.3rem .2rem .35rem;
-  background:var(--panel-2);border:1px solid var(--line);border-radius:var(--r-sm);
-  align-self:flex-start;position:relative;overflow:hidden;
-}
-/* a small diagonal cue, the way a grid marker is painted on a circuit */
-.mtg-date::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
-  background:repeating-linear-gradient(135deg,var(--line-2) 0 3px,transparent 3px 6px)}
-.mtg-date b{display:block;font-family:var(--display);font-size:1.6rem;font-weight:700;
-  letter-spacing:-.01em;line-height:1;font-variant-numeric:tabular-nums}
-.mtg-date span{display:block;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;
-  color:var(--muted);font-weight:700;margin-top:.1rem}
-.mtg-date em{display:block;font-style:normal;font-size:.65rem;color:var(--muted);
-  margin-top:.2rem;padding-top:.2rem;border-top:1px solid var(--line);white-space:nowrap;font-weight:600}
+.mtg-date{font-family:var(--mono);font-size:.875rem;font-variant-numeric:tabular-nums;
+  grid-column:1;grid-row:1}
+.mtg-date b{font-weight:600;color:var(--ink)}
+.mtg-date span{color:var(--muted);margin-left:.3em}
+.mtg-date em{display:block;font-style:normal;font-size:.75rem;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;margin-top:.15rem}
 
-.mtg-main{flex:1 1 auto;min-width:0;padding-top:.1rem}
-.mtg-main h3{margin:0;font-family:var(--display);font-size:1.4rem;font-weight:700;
-  letter-spacing:.005em;line-height:1.1;text-transform:uppercase}
-.mtg-main h3 a{text-decoration:none}
-.mtg-main h3 a:hover{color:var(--accent)}
-.cfg{display:inline-block;margin-left:.45rem;font-size:.65rem;font-weight:700;
-  color:var(--muted);background:var(--bg);border:1px solid var(--line);
-  border-radius:4px;padding:.1rem .35rem;vertical-align:.15em;letter-spacing:.03em}
-.mtg-org{margin:.3rem 0 0;font-size:.8rem;color:var(--muted);font-weight:600;
-  text-transform:uppercase;letter-spacing:.06em}
-.mtg-org a{text-decoration:none;color:var(--accent);font-weight:700}
-.mtg-org a:hover{color:var(--accent)}
-.sep{opacity:.4;margin-inline:.1rem}
-.mtg-champs{margin:.35rem 0 0;display:flex;flex-wrap:wrap;gap:.25rem}
-.mtg-champs span{font-size:.7rem;background:var(--bg);border:1px solid var(--line);
-  border-radius:99px;padding:.15rem .5rem;color:var(--muted);font-weight:600}
-.mtg-notes{margin:.3rem 0 0;font-size:.78rem;color:var(--muted);line-height:1.4}
-.mtg-clash{margin:.35rem 0 0;font-size:.78rem;color:var(--accent);line-height:1.45;font-weight:500}
-.mtg-clash b{font-weight:700}
-.mtg-clash a{color:inherit;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
-.nowrap{white-space:nowrap}
+.mtg-main{min-width:0;grid-column:1;grid-row:2}
+.mtg-main h3{margin:0;font-family:var(--display);font-weight:700;font-size:1.1875rem;
+  line-height:1.15;text-transform:uppercase;letter-spacing:.04em;color:var(--ink)}
+.cfg{display:inline-block;margin-left:.4rem;font-family:var(--mono);font-size:.75rem;
+  font-weight:500;color:var(--muted);border:1px solid var(--line);padding:.05rem .3rem;
+  vertical-align:.15em;letter-spacing:.1em;text-transform:uppercase}
+.mtg-meta{display:block;font-size:.75rem;color:var(--muted);margin-top:.28rem;line-height:1.6}
+.mtg-meta .sep{opacity:.45;margin-inline:.35em}
+.mtg-flags{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.35rem}
+.tag{font-size:.75rem;color:var(--muted);border:1px solid var(--line);padding:.1rem .35rem}
+.tag--kind{color:var(--ink-2);border-color:var(--line-2)}
+.tag--road{color:var(--good);border-color:var(--good-line)}
+.tag--clash{color:var(--accent);border-color:rgba(200,16,46,.5)}
 
-.mtg-side{flex:0 0 auto;display:flex;flex-direction:row-reverse;align-items:center;
-  gap:.35rem;text-align:right;padding-top:.3rem;flex-wrap:wrap;justify-content:flex-start;
-  max-width:13rem}
-.badge{font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;font-weight:800;
-  border-radius:99px;padding:.2rem .5rem;border:1px solid var(--line-2);
-  color:var(--muted);white-space:nowrap;background:var(--panel-2)}
-.badge--provisional{color:var(--warn);background:var(--warn-soft);border-color:transparent}
-.badge--cancelled{color:var(--accent);background:var(--accent-soft);border-color:transparent}
+.mtg-club{font-size:.9375rem;color:var(--ink-2);min-width:0;grid-column:1;grid-row:3}
+.mtg-club a{text-decoration:none}
+.mtg-club a:hover{color:var(--accent)}
+
+.mtg-status{grid-column:1;grid-row:4;display:flex;flex-direction:column;gap:.2rem;align-items:flex-start}
+.badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:600;
+  color:var(--ink-2)}
+.badge::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.badge--confirmed{color:var(--good)}
+.badge--provisional{color:var(--warn)}
+.badge--cancelled{color:var(--bad)}
 .badge--full{color:var(--muted)}
-.badge--road{color:var(--road);background:var(--good-soft);border-color:transparent}
-.badge--kind{background:var(--bg)}
-.entries{font-size:.72rem;color:var(--muted);white-space:nowrap;font-weight:600}
-.entries--soon{color:var(--accent);font-weight:800}
-.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);
-  text-decoration:none;font-size:.78rem;font-weight:700;padding:.35rem .75rem;
-  border-radius:99px;letter-spacing:.01em}
-.btn:hover{filter:brightness(1.08)}
-.btn--ghost{background:transparent;color:var(--muted);border:1px solid var(--line-2)}
-.btn--ghost:hover{color:var(--ink);border-color:var(--muted);filter:none}
+.badge--open{color:var(--accent)}
+.entries{font-size:.75rem;color:var(--muted);letter-spacing:.08em}
+.entries--soon{color:var(--accent);font-weight:600}
 
-.empty{color:var(--muted);background:var(--panel);border:1px dashed var(--line-2);
-  border-radius:var(--r);padding:2.5rem 1.5rem;text-align:center;font-size:.95rem}
-.is-example{opacity:.6;border-style:dashed}
+.caret{color:var(--muted);font-size:.8125rem;transition:transform .15s;
+  justify-self:end;grid-column:2;grid-row:1}
+.mtg[open] .caret{transform:rotate(90deg);color:var(--accent)}
+@media (min-width:60rem){
+  .mtg-date{grid-column:1;grid-row:1}
+  .mtg-main{grid-column:2;grid-row:1}
+  .mtg-club{grid-column:3;grid-row:1}
+  .mtg-status{grid-column:4;grid-row:1}
+  .caret{grid-column:5;grid-row:1}
+}
+
+/* ---------- expanded detail ---------- */
+.mtg-more{background:var(--bg-2);border-top:1px solid var(--line);
+  padding:1rem .75rem 1.15rem;display:grid;gap:1.25rem;
+  grid-template-columns:repeat(auto-fit,minmax(13rem,1fr))}
+.mtg-more .lbl{display:block;font-size:.75rem;color:var(--muted);margin-bottom:.55rem}
+.dl{font-family:var(--mono);font-size:.875rem;color:var(--muted);margin:0;line-height:1.9}
+.dl b{font-weight:400}
+.dl i{font-style:normal;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:.3rem}
+.chips a,.chips span{font-family:var(--mono);font-size:.75rem;text-transform:uppercase;
+  letter-spacing:.1em;color:var(--ink-2);border:1px solid var(--line);padding:.25rem .45rem;
+  text-decoration:none}
+.chips a:hover{border-color:var(--accent);color:var(--accent)}
+.mtg-notes{margin:.7rem 0 0;font-size:.9375rem;color:var(--ink-2);line-height:1.5;grid-column:1/-1}
+.mtg-clash{margin:0;font-size:.9375rem;color:var(--ink-2);line-height:1.6;grid-column:1/-1;
+  border-top:1px solid var(--line);padding-top:.85rem}
+.mtg-clash b{font-family:var(--mono);font-size:.75rem;text-transform:uppercase;
+  letter-spacing:.11em;color:var(--accent);display:block;margin-bottom:.35rem}
+.mtg-clash a{color:var(--ink);text-decoration:underline;text-underline-offset:2px;
+  text-decoration-color:var(--line-2)}
+.mtg-clash a:hover{text-decoration-color:var(--accent)}
+.acts{display:flex;flex-direction:column;gap:.45rem;align-items:stretch}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  background:var(--brand);color:#fff;text-decoration:none;font-family:var(--display);
+  font-weight:700;font-size:1rem;text-transform:uppercase;letter-spacing:.14em;
+  padding:.5rem .9rem;transition:background .12s}
+.btn:hover{background:var(--accent-hi);color:#fff}
+.btn--ghost{background:transparent;border:1px solid var(--line);color:var(--ink-2);
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;padding:.5rem .9rem}
+.btn--ghost:hover{background:transparent;border-color:var(--line-2);color:var(--ink)}
+
+.empty{color:var(--muted);font-family:var(--mono);font-size:.875rem;text-transform:uppercase;
+  letter-spacing:.14em;text-align:center;padding:5rem 1.5rem;border-bottom:1px solid var(--line)}
+.subscribe{margin:1.75rem 0;font-family:var(--mono);font-size:.875rem;text-transform:uppercase;
+  letter-spacing:.12em}
+.subscribe a{color:var(--accent);text-decoration:none;border-bottom:1px solid currentColor;
+  padding-bottom:2px}
+.subscribe a:hover{color:var(--accent-hi);border-bottom-color:var(--accent-hi)}
+.past{margin-top:2.5rem}
+.past summary{cursor:pointer;font-family:var(--mono);font-size:.8125rem;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--muted);padding:.75rem 0;border-top:1px solid var(--line)}
+.past summary:hover{color:var(--ink)}
 
 /* ---------- pace ("timing board") ---------- */
-.pace{margin:0 0 2.5rem}
-.pace-intro{font-size:.9rem;color:var(--ink-2);margin:0 0 1rem;max-width:46rem;line-height:1.5}
-.pace-input{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.9rem;
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
-  padding:.85rem 1rem;box-shadow:var(--shadow)}
-.pace-input label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;
-  color:var(--muted)}
-.pace-input input,.pace-input select{font:inherit;font-size:.95rem;font-weight:600;
-  padding:.5rem .65rem;border:1px solid var(--line-2);border-radius:var(--r-sm);
-  background:var(--bg);color:var(--ink)}
-.pace-input input{width:9rem;font-variant-numeric:tabular-nums}
-.pace-input input:focus-visible,.pace-input select:focus-visible{
-  outline:2px solid var(--accent);outline-offset:1px}
-.pace-input select{max-width:15rem}
-.pace-input button{font:inherit;font-size:.8rem;font-weight:600;padding:.5rem .75rem;
-  border:1px solid var(--line-2);border-radius:var(--r-sm);background:transparent;
-  color:var(--muted);cursor:pointer}
-.pace-input button:hover{color:var(--ink)}
-.pace-hint{font-size:.82rem;color:var(--ink-2);margin:0 0 .9rem;font-weight:500}
+.pace{margin:0 0 3rem}
+.pace-intro{font-size:1rem;color:var(--ink-2);margin:0 0 1.1rem;max-width:46rem;line-height:1.55}
+.pace-input{display:flex;gap:.55rem;align-items:center;flex-wrap:wrap;margin-bottom:.9rem;
+  background:var(--bg-2);border:1px solid var(--line);padding:.85rem 1rem}
+.pace-input label{font-family:var(--mono);font-size:.75rem;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--muted)}
+.pace-input input,.pace-input select,.pace-input button{
+  font-family:var(--mono);font-size:.9375rem;background:var(--panel-2);border:1px solid var(--line);
+  color:var(--ink);padding:.45rem .6rem;border-radius:0;appearance:none}
+.pace-input input{width:8rem;font-variant-numeric:tabular-nums}
+.pace-input select{max-width:15rem;cursor:pointer}
+.pace-input button{cursor:pointer;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;
+  font-size:.75rem}
+.pace-input button:hover{color:var(--ink);border-color:var(--line-2)}
+.pace-input input:focus-visible,.pace-input select:focus-visible{outline:none;border-color:var(--accent)}
+.pace-hint{font-family:var(--mono);font-size:.875rem;color:var(--ink-2);margin:0 0 .9rem;line-height:1.6}
 
-.tablewrap{overflow:auto;-webkit-overflow-scrolling:touch;max-height:28rem;
-  border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
-  box-shadow:var(--shadow)}
-.tablewrap::-webkit-scrollbar{width:10px;height:10px}
-.tablewrap::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:5px}
-table#pacetable{border-collapse:separate;border-spacing:0;width:100%;font-size:.85rem;min-width:46rem}
-#pacetable th,#pacetable td{text-align:left;padding:.55rem .75rem;
+.tablewrap{overflow:auto;-webkit-overflow-scrolling:touch;max-height:30rem;
+  border:1px solid var(--line);background:var(--bg-2)}
+table#pacetable{border-collapse:separate;border-spacing:0;width:100%;
+  font-family:var(--mono);font-size:.9375rem;min-width:48rem}
+#pacetable th,#pacetable td{text-align:left;padding:.5rem .75rem;
   border-bottom:1px solid var(--line);white-space:nowrap}
-#pacetable th{font-size:.64rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);
-  font-weight:800;position:sticky;top:0;background:var(--panel-2);z-index:1;
+#pacetable th{font-size:.75rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);
+  font-weight:500;position:sticky;top:0;background:var(--panel);z-index:1;
   box-shadow:inset 0 -1px 0 var(--line)}
-#pacetable tbody tr:nth-child(even){background:var(--panel-2)}
-#pacetable tbody tr:hover{background:var(--bg)}
+#pacetable tbody tr:hover{background:var(--hover)}
 #pacetable td.n,#pacetable th.n{text-align:right;font-variant-numeric:tabular-nums}
-#pacetable td:nth-child(2){white-space:normal;min-width:15rem;font-weight:600}
-#pacetable td:nth-child(1){color:var(--muted);font-weight:600}
-#pacetable .verdict{font-weight:700;font-size:.8rem}
-#pacetable td.onbike{text-align:right;font-variant-numeric:tabular-nums;font-size:.8rem;color:var(--muted)}
-#pacetable tr.v-win{background:var(--good-soft)!important}
-#pacetable tr.v-win .verdict{color:var(--good)}
-#pacetable tr.v-podium .verdict{color:var(--good)}
+#pacetable td:nth-child(2){white-space:normal;min-width:14rem;color:var(--ink)}
+#pacetable td:nth-child(1){color:var(--muted)}
+#pacetable .verdict{font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:.875rem}
+#pacetable td.onbike{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+#pacetable tr.v-win{background:var(--good-soft)}
+#pacetable tr.v-win .verdict,#pacetable tr.v-podium .verdict{color:var(--good)}
 #pacetable tr.v-mid .verdict{color:var(--ink-2)}
-#pacetable tr.v-off .verdict{color:var(--muted);font-weight:500}
-#pacetable tr.no-bike{opacity:.35}
-.pace-note{font-size:.78rem;color:var(--muted);margin:1rem 0 0;max-width:48rem;line-height:1.6}
+#pacetable tr.v-off .verdict{color:var(--muted);font-weight:400}
+#pacetable tr.no-bike{opacity:.3}
+.pace-note{font-size:.9375rem;color:var(--muted);margin:1rem 0 0;max-width:48rem;line-height:1.7}
+.pace-note b{color:var(--ink-2)}
 
 /* ---------- promos, newsletter, feeds ---------- */
-.promo{position:relative;background:var(--panel);border:1px solid var(--line);
-  border-radius:var(--r);margin:1.25rem 0;box-shadow:var(--shadow)}
+.promo{position:relative;background:var(--bg-2);border:1px solid var(--line);margin:1.5rem 0}
 .promo a{display:block;padding:1rem 1.1rem;text-decoration:none}
-.promo b{display:block;font-size:1rem;font-weight:700;letter-spacing:-.01em}
-.promo span{display:block;font-size:.85rem;color:var(--muted);margin-top:.2rem}
-.promo-tag{position:absolute;top:.6rem;right:.7rem;font-size:.58rem;text-transform:uppercase;
-  letter-spacing:.1em;color:var(--muted);border:1px solid var(--line-2);border-radius:4px;
-  padding:.1rem .3rem;font-weight:700}
+.promo a:hover{background:var(--hover)}
+.promo b{display:block;font-family:var(--display);font-weight:700;font-size:1.15rem;
+  text-transform:uppercase;letter-spacing:.04em}
+.promo span{display:block;font-size:.9375rem;color:var(--muted);margin-top:.25rem}
+.promo-tag{position:absolute;top:.55rem;right:.7rem;font-family:var(--mono);font-size:.6875rem;
+  text-transform:uppercase;letter-spacing:.14em;color:var(--muted);border:1px solid var(--line);
+  padding:.1rem .3rem}
 .promo--stay a{padding-bottom:.5rem}
-.promo-disc{margin:0;padding:0 1.1rem .9rem;font-size:.72rem;color:var(--muted);line-height:1.5}
+.promo-disc{margin:0;padding:0 1.1rem .9rem;font-size:.875rem;color:var(--muted);line-height:1.55}
 
-.results-box{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
-  padding:1.25rem;margin:0 0 1.75rem;box-shadow:var(--shadow)}
+.results-box{background:var(--bg-2);border:1px solid var(--line);padding:1.25rem;margin:0 0 1.75rem}
 .results-box h2{margin-top:0}
-.results-box p{margin:0 0 .85rem;font-size:.875rem;color:var(--ink-2)}
-.clubnote{font-size:.85rem;color:var(--warn);background:var(--warn-soft);
-  border-radius:var(--r-sm);padding:.7rem .9rem;margin:0 0 1.5rem;font-weight:500}
+.results-box p{margin:0 0 .9rem;font-size:1rem;color:var(--ink-2)}
+.clubnote{font-size:.9375rem;color:var(--warn);background:var(--warn-soft);border-left:2px solid var(--warn);
+  padding:.7rem .9rem;margin:0 0 1.5rem}
 
-.signup{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
-  padding:1.5rem;margin-top:3rem;box-shadow:var(--shadow)}
+.signup{background:var(--bg-2);border:1px solid var(--line);padding:1.5rem;margin-top:3rem}
 .signup h2{margin-top:0}
-.signup p{margin:0 0 .9rem;color:var(--ink-2);font-size:.925rem}
-.signup form{display:flex;gap:.6rem;flex-wrap:wrap}
-.signup input{flex:1 1 15rem;font:inherit;font-size:.95rem;padding:.6rem .75rem;
-  border:1px solid var(--line-2);border-radius:var(--r-sm);background:var(--bg);color:var(--ink)}
-.signup button{font:inherit;font-size:.95rem;font-weight:700;padding:.6rem 1.25rem;border:0;
-  border-radius:var(--r-sm);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.signup p{margin:0 0 1rem;color:var(--ink-2);font-size:1rem;max-width:42rem}
+.signup form{display:flex;gap:.5rem;flex-wrap:wrap}
+.signup input{flex:1 1 15rem;font-family:var(--mono);font-size:.9375rem;padding:.6rem .75rem;
+  border:1px solid var(--line);background:var(--panel-2);color:var(--ink);border-radius:0}
+.signup input:focus-visible{outline:none;border-color:var(--accent)}
+.signup button{font-family:var(--display);font-weight:700;font-size:1rem;text-transform:uppercase;
+  letter-spacing:.14em;padding:.6rem 1.35rem;border:0;background:var(--brand);color:#fff;cursor:pointer}
+.signup button:hover{background:var(--accent-hi)}
 
+/* Bordered tiles rather than a 1px-gap grid: a part-filled last row would
+   otherwise leave the grid's own background showing as empty grey blocks. */
 ul.feeds{list-style:none;padding:0;margin:0;display:grid;gap:.5rem;
   grid-template-columns:repeat(auto-fill,minmax(16rem,1fr))}
-ul.feeds a{display:block;background:var(--panel);border:1px solid var(--line);
-  border-radius:var(--r-sm);padding:.7rem .85rem;text-decoration:none;font-size:.9rem;
-  font-weight:600;box-shadow:var(--shadow);transition:border-color .12s}
-ul.feeds a:hover{border-color:var(--accent);color:var(--accent)}
-.yr{color:var(--muted);font-size:.8em;font-weight:500}
-.subscribe{margin:1.75rem 0;font-size:.925rem}
-.subscribe a{color:var(--accent);font-weight:700;text-decoration:none;
-  border-bottom:2px solid var(--accent-soft);padding-bottom:1px}
-.subscribe a:hover{border-bottom-color:var(--accent)}
-.past{margin-top:2.5rem;border-top:1px solid var(--line);padding-top:1.25rem}
-.past summary{cursor:pointer;color:var(--muted);font-size:.9rem;font-weight:600}
-.past summary:hover{color:var(--ink)}
-main p a{color:var(--accent);font-weight:500}
+ul.feeds a{display:block;background:var(--bg-2);border:1px solid var(--line);
+  padding:.7rem .85rem;text-decoration:none;font-size:1rem;
+  transition:background .12s,border-color .12s;height:100%}
+ul.feeds a:hover{background:var(--hover);border-color:var(--accent);color:var(--accent)}
+.yr{color:var(--muted);font-size:.8em}
+main p a{color:var(--accent)}
+main p a:hover{color:var(--accent-hi)}
+main h2+p,main p{max-width:46rem}
 
 /* ---------- footer ---------- */
-footer.site{margin-top:4rem;border-top:1px solid var(--line);background:var(--panel);
-  padding-block:2rem;font-size:.85rem;color:var(--muted)}
-footer.site p{margin:.5rem 0;max-width:48rem;line-height:1.6}
-footer.site a{color:var(--ink-2);font-weight:600}
+footer.site{margin-top:4rem;border-top:1px solid var(--line);padding-block:2.5rem}
+footer.site .wrap{display:flex;gap:2rem;flex-wrap:wrap;justify-content:space-between}
+footer.site .foot-brand b{font-family:var(--display);font-weight:700;font-size:1.0625rem;
+  text-transform:uppercase;letter-spacing:.14em;display:block}
+footer.site p{font-family:var(--mono);font-size:.8125rem;color:var(--muted);line-height:1.8;
+  max-width:26rem;margin:.6rem 0 0;letter-spacing:.04em}
+footer.site a{color:var(--muted);text-decoration:none}
+footer.site a:hover{color:var(--accent)}
+footer.site .foot-links{display:flex;flex-direction:column;gap:.4rem}
+footer.site .foot-links a{font-family:var(--mono);font-size:.8125rem;text-transform:uppercase;
+  letter-spacing:.13em}
 
-/* ---------- narrow ---------- */
+/* ---------- narrow ----------
+   The row folds into three lines rather than six: when, what, and where with
+   who. Date and status share the top line because those are the two things you
+   check before you read the name at all. */
+@media (max-width:60rem){
+  .mtg>summary{grid-template-columns:1fr auto auto;column-gap:.75rem;row-gap:.35rem;
+    padding:.75rem .75rem .8rem;align-items:start}
+  .mtg-date{grid-column:1;grid-row:1}
+  .mtg-date em{display:inline;margin-top:0;margin-left:.5em}
+  .mtg-status{grid-column:2;grid-row:1;align-items:flex-end;text-align:right}
+  .caret{grid-column:3;grid-row:1;padding-top:.1rem}
+  .mtg-main{grid-column:1/-1;grid-row:2}
+  .mtg-club{grid-column:1/-1;grid-row:3;font-size:.875rem;
+    font-family:var(--mono);letter-spacing:.06em}
+  .mtg-more{grid-template-columns:1fr;gap:1rem}
+}
 @media (max-width:34rem){
   .wrap{padding-inline:1rem}
-  main{padding-block:1.5rem 0}
-  .mtg{flex-wrap:wrap;padding:.8rem .85rem}
-  .mtg-date{flex:0 0 3.9rem}
-  .mtg-side{flex:1 0 100%;flex-direction:row;align-items:center;justify-content:flex-start;
-    text-align:left;margin-top:.5rem;padding-left:4.9rem;flex-wrap:wrap}
-  .month h2{top:3.5rem}
-  .stat b{font-size:1.35rem}
+  /* Search is the control people actually reach for, so it gets its own row
+     rather than being squeezed to half a placeholder beside a select. */
+  .filters input[type=search]{flex:1 1 100%;max-width:none}
+  .hero{padding:2rem 0 1.75rem}
+  .headstats{display:none}
+  .stat b{font-size:1.9rem}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important}
+  .ticker-run{animation:none}
+}

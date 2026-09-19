@@ -33,8 +33,18 @@ for (const m of meetings) {
 const dupes = meetings.map((m) => m.id).filter((id, i, a) => a.indexOf(id) !== i);
 if (dupes.length) warn(`duplicate meeting ids: ${[...new Set(dupes)].join(', ')}`);
 
+// Venue codes are no longer printed anywhere, but they still feed the search
+// index, so a missing one costs a search term rather than breaking a layout.
+// Derive it quietly in that case.
+for (const c of circuits) {
+  if (!c.short) c.short = c.name.replace(/[^A-Za-z]/g, '').slice(0, 3).toUpperCase();
+}
+
 const all = [...meetings].sort((a, b) => a.start.localeCompare(b.start) || a.id.localeCompare(b.id));
 const upcoming = all.filter((m) => (m.end ?? m.start) >= TODAY);
+// The one the "next race" panel points at, and the one row highlighted in the
+// list: the soonest actual race, not a test day or a cancelled meeting.
+const nextUp = upcoming.find((m) => (m.kind ?? 'race') === 'race' && m.status !== 'cancelled') ?? null;
 const hasExamples = all.some((m) => m.example);
 
 /* ---------- clash detection ----------
@@ -110,7 +120,6 @@ const toSec = (t) => {
 };
 const shortRange = (m) => { const d = dateLabel(m); return `${d.big} ${d.small}`; };
 const monthKey = (m) => m.start.slice(0, 7);
-const monthName = (k) => { const [y, mo] = k.split('-'); return `${MONTH[+mo - 1]} ${y}`; };
 
 /* ---------- components ---------- */
 const daysUntil = (d) => Math.round((Date.parse(d + 'T00:00:00Z') - Date.parse(TODAY + 'T00:00:00Z')) / 86400000);
@@ -133,37 +142,90 @@ function entryNote(m) {
 
 const KINDS = { test: 'test day', school: 'race school', marshal: 'marshal training' };
 
-function meetingCard(m, { base }) {
+// The one word in the status column. A meeting can be several things at once \u2014
+// provisional AND closing on Friday \u2014 so this picks the one a rider would act
+// on, and the rest is spelled out when the row is opened.
+function statusChip(m, note) {
+  const status = m.status ?? 'confirmed';
+  if (status === 'cancelled') return { key: 'cancelled', label: 'Cancelled' };
+  if (status === 'full') return { key: 'full', label: 'Entries full' };
+  if (note?.urgent) return { key: 'open', label: note.text };
+  if (status === 'provisional') return { key: 'provisional', label: 'Provisional' };
+  if (m.entryUrl && note) return { key: 'open', label: 'Entries open' };
+  return { key: 'confirmed', label: 'Confirmed' };
+}
+
+// A row, not a card: the calendar reads as one list you scan down a column at a
+// time. <details> rather than a click handler so it still opens without JS.
+function meetingRow(m, { base, next }) {
   const c = m.circuit ? C[m.circuit] : null, o = O[m.organiser];
   const dl = dateLabel(m);
-  const champs = (m.championships ?? []).map((id) => S[id]?.name ?? id);
+  const champs = (m.championships ?? []).map((id) => ({ id, name: S[id]?.name ?? id, known: !!S[id] }));
   const note = entryNote(m);
   const status = m.status ?? 'confirmed';
   const kind = m.kind ?? 'race';
   const venue = c ? esc(c.name) : 'Venue TBC';
   const clash = clashMap.get(m.id) ?? [];
-  const search = [c?.name, m.config, o?.name, o?.short, m.name, ...champs, c?.region, KINDS[kind], ...daysCovered(m)].filter(Boolean).join(' ').toLowerCase();
-  return `<article class="mtg${m.example ? ' is-example' : ''}" data-search="${esc(search)}" data-circuit="${esc(m.circuit ?? '')}" data-organiser="${esc(m.organiser)}" data-type="${esc(c?.type ?? '')}" data-status="${esc(status)}" data-kind="${esc(kind)}" data-clash="${clash.length ? '1' : '0'}">
-  <div class="mtg-date"><b>${esc(dl.big)}</b><span>${esc(dl.small)}</span><em>${esc(dayLabel(m))}</em></div>
-  <div class="mtg-main">
-    <h3>${c ? `<a href="${base}circuit/${m.circuit}/">${venue}</a>` : venue}${m.config ? `<span class="cfg">${esc(m.config)}</span>` : ''}</h3>
-    <p class="mtg-org"><a href="${base}organiser/${m.organiser}/">${esc(o?.short ?? o?.name ?? m.organiser)}</a>${m.round ? ` <span class="sep">\u00b7</span> Round ${esc(m.round)}` : ''}${m.name ? ` <span class="sep">\u00b7</span> ${esc(m.name)}` : ''}</p>
-    ${champs.length ? `<p class="mtg-champs">${champs.map((n) => `<span>${esc(n)}</span>`).join('')}</p>` : ''}
+  const chip = statusChip(m, note);
+  const past = (m.end ?? m.start) < TODAY;
+  const club = esc(o?.short ?? o?.name ?? m.organiser);
+  const search = [c?.name, c?.short, m.config, o?.name, o?.short, m.name, ...champs.map((x) => x.name), c?.region, KINDS[kind], ...daysCovered(m)].filter(Boolean).join(' ').toLowerCase();
+  const sub = [
+    kind !== 'race' ? esc(KINDS[kind]) : null,
+    m.round ? `Round ${esc(m.round)}` : null,
+    m.name ? esc(m.name) : null,
+  ].filter(Boolean).join(' <span class="sep">\u00b7</span> ');
+  return `<details class="mtg${m.example ? ' is-example' : ''}${past ? ' mtg--past' : ''}${m.id === next ? ' mtg--next' : ''}" data-search="${esc(search)}" data-circuit="${esc(m.circuit ?? '')}" data-organiser="${esc(m.organiser)}" data-type="${esc(c?.type ?? '')}" data-status="${esc(status)}" data-kind="${esc(kind)}" data-clash="${clash.length ? '1' : '0'}">
+  <summary>
+    <div class="mtg-date"><b>${esc(dl.big)}</b><span>${esc(dl.small)}</span><em>${esc(dayLabel(m))}</em></div>
+    <div class="mtg-main">
+      <h3>${venue}${m.config ? `<span class="cfg">${esc(m.config)}</span>` : ''}</h3>
+      ${sub ? `<span class="mtg-meta">${sub}</span>` : ''}
+      ${clash.length || c?.type === 'road' || champs.length ? `<div class="mtg-flags">
+        ${clash.length ? '<span class="tag tag--clash">Clash</span>' : ''}
+        ${c?.type === 'road' ? '<span class="tag tag--road">Roads</span>' : ''}
+        ${champs.map((x) => `<span class="tag">${esc(x.name)}</span>`).join('')}
+      </div>` : ''}
+    </div>
+    <div class="mtg-club">${club}</div>
+    <div class="mtg-status">
+      <span class="badge badge--${chip.key}">${esc(chip.label)}</span>
+      ${note && !note.urgent ? `<span class="entries">${esc(note.text)}</span>` : ''}
+    </div>
+    <div class="caret" aria-hidden="true">\u25b6</div>
+  </summary>
+  <div class="mtg-more">
+    <div>
+      <span class="lbl">Details</span>
+      <p class="dl">
+        <b>Dates</b> <i>${esc(dateLong(m))}</i><br>
+        <b>Venue</b> <i>${venue}${m.config ? ' ' + esc(m.config) : ''}</i><br>
+        ${c ? `<b>Region</b> <i>${esc(c.region)}</i><br>` : ''}
+        <b>Club</b> <i>${esc(o?.name ?? m.organiser)}</i><br>
+        <b>Type</b> <i>${esc(KINDS[kind] ?? 'race meeting')}</i>${note ? `<br><b>Entries</b> <i class="${note.urgent ? 'entries--soon' : ''}">${esc(note.text)}</i>` : ''}
+      </p>
+    </div>
+    ${champs.length ? `<div>
+      <span class="lbl">Championships</span>
+      <div class="chips">${champs.map((x) => x.known ? `<a href="${base}championship/${x.id}/">${esc(x.name)}</a>` : `<span>${esc(x.name)}</span>`).join('')}</div>
+    </div>` : ''}
+    <div class="acts">
+      ${m.entryUrl && status !== 'cancelled' && status !== 'full' ? `<a class="btn js-out" href="${esc(m.entryUrl)}" rel="noopener">Enter \u2192</a>` : ''}
+      ${c ? `<a class="btn btn--ghost" href="${base}circuit/${m.circuit}/">${venue} dates</a>` : ''}
+      <a class="btn btn--ghost" href="${base}organiser/${m.organiser}/">${club} calendar</a>
+    </div>
     ${m.notes ? `<p class="mtg-notes">${esc(m.notes)}</p>` : ''}
-    ${clash.length ? `<p class="mtg-clash"><b>Clashes with</b> ${clash.map((x) => `<a href="${base}organiser/${x.organiser}/">${esc(O[x.organiser]?.short ?? x.organiser)}</a> at ${esc(x.circuit ? C[x.circuit].name : 'venue TBC')}${x.config ? ' ' + esc(x.config) : ''} <span class="nowrap">(${esc(shortRange(x))})</span>`).join(', ')}</p>` : ''}
+    ${clash.length ? `<p class="mtg-clash"><b>Clashes with</b>${clash.map((x) => `<a href="${base}organiser/${x.organiser}/">${esc(O[x.organiser]?.short ?? x.organiser)}</a> at ${esc(x.circuit ? C[x.circuit].name : 'venue TBC')}${x.config ? ' ' + esc(x.config) : ''} <span class="nowrap">(${esc(shortRange(x))})</span>`).join(', ')}</p>` : ''}
   </div>
-  <div class="mtg-side">
-    ${kind !== 'race' ? `<span class="badge badge--kind">${esc(KINDS[kind])}</span>` : ''}
-    ${status !== 'confirmed' ? `<span class="badge badge--${esc(status)}">${esc(status)}</span>` : ''}
-    ${c?.type === 'road' ? '<span class="badge badge--road">roads</span>' : ''}
-    ${note ? `<span class="entries${note.urgent ? ' entries--soon' : ''}">${esc(note.text)}</span>` : ''}
-    ${m.entryUrl ? `<a class="btn js-out" href="${esc(m.entryUrl)}" rel="noopener">Enter</a>` : ''}
-  </div>
-</article>`;
+</details>`;
 }
 
-function monthList(list, { base }) {
-  if (!list.length) return `<p class="empty">No meetings in the calendar yet. Add them in <code>data/meetings.js</code>.</p>`;
+// The column headings, which only earn their space once the row actually lays
+// out in columns \u2014 under 60rem the row stacks and these are hidden by CSS.
+const LISTHEAD = `<div class="listhead"><div>Date</div><div>Meeting</div><div>Club</div><div>Status</div><div></div></div>`;
+
+function monthList(list, { base, next = null }) {
+  if (!list.length) return `<p class="empty">No meetings in the calendar yet \u2014 add them in data/meetings.js</p>`;
   const groups = [];
   for (const m of list) {
     const k = monthKey(m);
@@ -171,10 +233,13 @@ function monthList(list, { base }) {
     groups.at(-1).items.push(m);
   }
   const inline = sponsors.filter((s) => s.slot === 'inline');
-  return groups.map((g, i) => `<section class="month" data-month="${g.k}">
-  <h2 id="m-${g.k}">${esc(monthName(g.k))}</h2>
-  ${g.items.map((m) => meetingCard(m, { base })).join('\n')}
-</section>${inline[i] ? adBlock(inline[i]) : ''}`).join('\n');
+  return groups.map((g, i) => {
+    const [y, mo] = g.k.split('-');
+    return `<section class="month" data-month="${g.k}">
+  <h2 id="m-${g.k}">${esc(MONTH[+mo - 1])}<span class="yr">${esc(y)}</span><span class="month-count" data-total="${g.items.length}">${g.items.length} meeting${g.items.length === 1 ? '' : 's'}</span></h2>
+  ${g.items.map((m) => meetingRow(m, { base, next })).join('\n')}
+</section>${inline[i] ? adBlock(inline[i]) : ''}`;
+  }).join('\n');
 }
 
 function adBlock(s) {
@@ -208,7 +273,7 @@ function paceTable(circuitId) {
   const groupData = Object.fromEntries(rows.map((r) => [gkey(r), BIKES.byGroup[gkey(r)] ?? []]));
   return `<section class="pace">
   <h2>Pace here</h2>
-  <p class="pace-intro">From ${rows.reduce((n, r) => n + r.races, 0)} races in the 2026 season${cfg.length ? ` (${cfg.map(esc).join(', ')})` : ''}. Put your best lap in to see where it would have put you.</p>
+  <p class="pace-intro">From ${rows.reduce((n, r) => n + r.races, 0)} races in the 2026 season${cfg.length ? ` (${cfg.map(esc).join(', ')})` : ''}. Put your best lap in to see where it would have put you \u2014 the classes you would go best in move to the top.</p>
   <div class="pace-input">
     <label for="mylap">Your best lap</label>
     <input id="mylap" type="text" inputmode="decimal" placeholder="e.g. 1:38.5 or 55.0" autocomplete="off">
@@ -236,7 +301,7 @@ function paceTable(circuitId) {
     </tbody>
   </table></div>
   <script type="application/json" id="bikedata">${JSON.stringify(groupData).replace(/</g, '\\u003c')}</script>
-  <p class="pace-note"><b>On your bike</b> is the pace of riders running the bike you picked, in that class at this circuit \u2014 usually a fairer target than the class as a whole, since one class often spans very different machinery. Classes where nobody raced your bike are dimmed. Which classes a bike is eligible for is taken from what riders actually entered, not from the regulations, so treat it as a guide and check the club\u2019s SRs.<br><br><b>National mark</b> is 92.5% of the winner\u2019s race average speed, shown as the average lap you would need to hold \u2014 not a single fast lap. When you enter a best lap it is projected into a realistic race average using the best-to-average ratio measured in that class, so the comparison is like for like. Indicative only: the ACU\u2019s criteria, and how many results count, are theirs.</p>
+  <p class="pace-note"><b>On your bike</b> is the pace of riders running the bike you picked, in that class at this circuit \u2014 usually a fairer target than the class as a whole, since one class often spans very different machinery. Classes where nobody raced your bike are dimmed and sink to the bottom. Which classes a bike is eligible for is taken from what riders actually entered, not from the regulations, so treat it as a guide and check the club\u2019s SRs.<br><br><b>National mark</b> is 92.5% of the winner\u2019s race average speed, shown as the average lap you would need to hold \u2014 not a single fast lap. When you enter a best lap it is projected into a realistic race average using the best-to-average ratio measured in that class, so the comparison is like for like. Indicative only: the ACU\u2019s criteria, and how many results count, are theirs.</p>
 </section>`;
 }
 
@@ -288,7 +353,45 @@ function newsletterBlock() {
 }
 
 /* ---------- page shell ---------- */
-function layout({ title, description, body, base, canonical, jsonld = [], wide = false }) {
+// A paddock timing screen scrolls the next few sessions across the top, so the
+// site does the same with the next few meetings. Duplicated once because the
+// animation translates by exactly -50% to loop seamlessly.
+function ticker() {
+  const items = upcoming.filter((m) => (m.kind ?? 'race') === 'race' && m.status !== 'cancelled').slice(0, 14);
+  if (!items.length) return '';
+  const run = items.map((m) => {
+    const o = O[m.organiser];
+    const where = m.circuit ? C[m.circuit].name : 'Venue TBC';
+    return `<span>${esc(shortRange(m))} · ${esc(where)} · ${esc(o?.short ?? o?.name ?? m.organiser)}<i>◆</i></span>`;
+  }).join('');
+  return `<div class="ticker" aria-hidden="true"><div class="ticker-run">${run}${run}</div></div>`;
+}
+
+// `main: false` lets a page lay itself out full-bleed (the home page's hero and
+// filter bar run edge to edge); everything else gets the standard centred column.
+// Auto / light / dark. The buttons carry no state in the HTML — theme.js sets
+// aria-pressed once it knows the stored preference — so every page can be served
+// from a cache without one theme's markup leaking into another visitor's page.
+const THEME_ICONS = {
+  auto: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="5.6"/><path d="M8 2.4a5.6 5.6 0 010 11.2z" fill="currentColor" stroke="none"/></svg>',
+  light: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.6M8 13.4V15M15 8h-1.6M2.6 8H1M12.9 3.1l-1.1 1.1M4.2 11.8l-1.1 1.1M12.9 12.9l-1.1-1.1M4.2 4.2L3.1 3.1"/></svg>',
+  dark: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 9.7A5.9 5.9 0 016.3 2.5a5.9 5.9 0 107.2 7.2z"/></svg>',
+};
+const THEME_LABELS = { auto: 'Match system', light: 'Light', dark: 'Dark' };
+
+function themeToggle() {
+  return `<div class="theme" role="group" aria-label="Colour theme" hidden>${
+    ['auto', 'light', 'dark'].map((t) =>
+      `<button type="button" data-theme-set="${t}" aria-pressed="false" title="${esc(THEME_LABELS[t])}">${THEME_ICONS[t]}<span class="vh">${esc(THEME_LABELS[t])} theme</span></button>`
+    ).join('')}</div>`;
+}
+
+// Runs before the first paint so a stored light preference never flashes dark.
+// Kept inline and tiny for that reason; theme.js does everything else.
+const THEME_BOOT = `<script>(function(){try{var p=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=p==='auto'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):p}catch(e){}})();</script>`;
+
+function layout({ title, description, body, base, canonical, jsonld = [], wide = false, filters = false, main = true }) {
+  const raceCount = upcoming.filter((m) => (m.kind ?? 'race') === 'race').length;
   return `<!doctype html>
 <html lang="en-GB">
 <head>
@@ -301,30 +404,49 @@ ${canonical ? `<link rel="canonical" href="${esc(SITE.url + canonical)}">` : ''}
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="${base}style.css">
+${THEME_BOOT}
 ${analyticsTag()}
 ${jsonld.length ? `<script type="application/ld+json">${JSON.stringify(jsonld.length === 1 ? jsonld[0] : jsonld)}</script>` : ''}
 </head>
-<body${wide ? ' class="wide"' : ''}>
+<body class="${[wide ? 'wide' : '', filters ? 'has-filters' : ''].filter(Boolean).join(' ')}">
 <a class="vh" href="#main">Skip to content</a>
+${ticker()}
 <header class="site">
   <div class="wrap">
-    <a class="brand" href="${base}">${esc(SITE.name)}</a>
-    <nav><a href="${base}clashes/">Clashes</a><a href="${base}feeds/">Calendar feeds</a><a href="${base}about/">About</a></nav>
+    <a class="brand" href="${base}">
+      <span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span><b>${esc(SITE.name)}</b><span class="brand-sub">UK motorcycle club racing</span></span>
+    </a>
+    <nav><a href="${base}clashes/">Clashes</a><a href="${base}feeds/">Feeds</a><a href="${base}about/">About</a></nav>
+    <div class="headstats">
+      <span><b>${raceCount}</b> Meetings</span>
+      <span><b>${new Set(upcoming.map((m) => m.organiser)).size}</b> Clubs</span>
+      <span><b>${new Set(upcoming.map((m) => m.circuit).filter(Boolean)).size}</b> Circuits</span>
+    </div>
+    ${themeToggle()}
   </div>
 </header>
-${hasExamples ? `<div class="warnbar"><div class="wrap">This site is showing <b>example data</b>. Delete the demo rows in <code>data/meetings.js</code>.</div></div>` : ''}
+${hasExamples ? `<div class="warnbar"><div class="wrap">This site is showing <b>example data</b> \u2014 delete the demo rows in <code>data/meetings.js</code></div></div>` : ''}
 ${adSlot('top') ? `<div class="wrap">${adSlot('top')}</div>` : ''}
-<main id="main" class="wrap">
-${body}
-</main>
+${main ? `<main id="main" class="wrap">\n${body}\n</main>` : body}
 ${newsletterBlock() ? `<div class="wrap">${newsletterBlock()}</div>` : ''}
 <footer class="site">
   <div class="wrap">
-    ${adSlot('footer')}
-    <p>${esc(SITE.name)} \u2014 an independent listing of UK motorcycle road race meetings. Always check with the organising club before travelling; dates change.</p>
-    <p><a href="${base}feeds/">Subscribe by calendar feed</a> \u00b7 <a href="${base}about/">About &amp; corrections</a></p>
+    <div class="foot-brand">
+      <b>${esc(SITE.name)}</b>
+      <p>An independent listing of UK motorcycle road race meetings, aggregated from the organising clubs\u2019 own calendars. Always check with the club before travelling \u2014 dates change.</p>
+    </div>
+    <div class="foot-links">
+      <a href="${base}">Calendar</a>
+      <a href="${base}clashes/">Date clashes</a>
+      <a href="${base}feeds/">Calendar feeds</a>
+      <a href="${base}about/">About &amp; corrections</a>
+    </div>
+    <p>\u00a9 ${new Date().getFullYear()} ${esc(SITE.name)}<br>Not affiliated with the ACU, MSUK, or any individual club</p>
   </div>
+  ${adSlot('footer') ? `<div class="wrap">${adSlot('footer')}</div>` : ''}
 </footer>
+<script src="${base}theme.js" defer></script>
 </body>
 </html>`;
 }
@@ -405,31 +527,46 @@ const usedOrgs = organisers.filter((o) => all.some((m) => m.organiser === o.id))
 write('index.html', layout({
   title: `${SITE.name} \u2014 UK motorcycle racing calendar`,
   description: 'Every UK motorcycle club and national road race meeting, from every organising club, in one calendar.',
-  canonical: '/', base: '', wide: true,
+  canonical: '/', base: '', wide: true, filters: true, main: false,
   jsonld: upcoming.slice(0, 60).map(eventLd),
-  body: `<div class="hero">
-  <h1>UK motorcycle racing calendar</h1>
-  <p>Every club and national road race meeting, from every organising club, in one place \u2014 so you can plan a season without checking twenty websites.</p>
-  <div class="stats">
-    <div class="stat"><b>${upcoming.filter((m) => (m.kind ?? 'race') === 'race').length}</b><span>Race meetings</span></div>
-    <div class="stat"><b>${new Set(upcoming.map((m) => m.organiser)).size}</b><span>Clubs</span></div>
-    <div class="stat"><b>${new Set(upcoming.map((m) => m.circuit).filter(Boolean)).size}</b><span>Circuits</span></div>
-    ${upcomingClashes.length ? `<a class="stat stat--alert" href="clashes/" style="text-decoration:none"><b>${upcomingClashes.length}</b><span>Date clashes</span></a>` : ''}
+  body: `<div class="hero${SITE.hero ? ' hero--img' : ''}">
+  ${SITE.hero ? `<img class="hero-img" src="${esc(SITE.hero.src)}" alt="${esc(SITE.hero.alt ?? '')}" decoding="async">` : ''}
+  <div class="wrap">
+    <div>
+      <h1>${esc(nextUp ? nextUp.start.slice(0, 4) : new Date().getFullYear())} racing calendar</h1>
+      <p>Every UK club and national road race meeting in one place</p>
+    </div>
+    ${nextUp ? `<a class="nextrace" href="#m-${monthKey(nextUp)}">
+      <span class="lbl">Next race</span>
+      <b>${esc(nextUp.circuit ? C[nextUp.circuit].name : 'Venue TBC')}</b>
+      <em>${esc(shortRange(nextUp))} \u00b7 ${esc(O[nextUp.organiser]?.short ?? nextUp.organiser)}</em>
+    </a>` : ''}
   </div>
 </div>
 <div class="filters">
-  <input type="search" id="q" placeholder="Search circuit, club, series\u2026" aria-label="Search meetings">
-  <select id="f-circuit" aria-label="Filter by circuit"><option value="">All circuits</option>${usedCircuits.map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select>
-  <select id="f-org" aria-label="Filter by club"><option value="">All clubs</option>${usedOrgs.map((o) => `<option value="${esc(o.id)}">${esc(o.short ?? o.name)}</option>`).join('')}</select>
-  <select id="f-type" aria-label="Filter by circuit type"><option value="">Circuits &amp; roads</option><option value="short">Short circuits</option><option value="road">Road races</option></select>
-  <label class="chk"><input type="checkbox" id="f-races"> Race meetings only</label>
-  <label class="chk"><input type="checkbox" id="f-clash"> Clashes only</label>
-  <button id="reset" type="button">Reset</button>
+  <div class="wrap filters-in">
+    <input type="search" id="q" placeholder="Search circuit or club\u2026" aria-label="Search meetings">
+    <select id="f-circuit" aria-label="Filter by circuit"><option value="">All circuits</option>${usedCircuits.map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select>
+    <select id="f-org" aria-label="Filter by club"><option value="">All clubs</option>${usedOrgs.map((o) => `<option value="${esc(o.id)}">${esc(o.short ?? o.name)}</option>`).join('')}</select>
+    <select id="f-type" aria-label="Filter by circuit type"><option value="">Circuits &amp; roads</option><option value="short">Short circuits</option><option value="road">Road races</option></select>
+    <label class="chk"><input type="checkbox" id="f-races"> Races only</label>
+    <label class="chk"><input type="checkbox" id="f-clash"> Clashes only</label>
+    <button id="reset" type="button">Reset \u00d7</button>
+    <p class="count" id="count" aria-live="polite"></p>
+  </div>
 </div>
-<p class="count" id="count" aria-live="polite"></p>
-<div id="list">${monthList(upcoming, { base: '' })}</div>
+<main id="main" class="wrap">
+<div class="stats">
+  <div class="stat"><b>${upcoming.filter((m) => (m.kind ?? 'race') === 'race').length}</b><span>Race meetings</span></div>
+  <div class="stat"><b>${new Set(upcoming.map((m) => m.organiser)).size}</b><span>Clubs</span></div>
+  <div class="stat"><b>${new Set(upcoming.map((m) => m.circuit).filter(Boolean)).size}</b><span>Circuits</span></div>
+  ${upcomingClashes.length ? `<a class="stat stat--alert" href="clashes/"><b>${upcomingClashes.length}</b><span>Date clashes</span></a>` : ''}
+</div>
+${LISTHEAD}
+<div id="list">${monthList(upcoming, { base: '', next: nextUp?.id ?? null })}</div>
 <p class="subscribe"><a href="feeds/">Add this calendar to your phone \u2192</a></p>
-<script src="filter.js" defer></script>`,
+<script src="filter.js" defer></script>
+</main>`,
 }));
 
 // circuit pages
@@ -459,6 +596,7 @@ ${links.map((l) => adBlock({ ...l, slot: 'inline' })).join('')}
 ${accommodationBlock(c)}
 ${paceTable(c.id)}
 ${paceTable(c.id) ? '<h2>Meetings</h2>' : ''}
+${up.length ? LISTHEAD : ''}
 ${monthList(up, { base: '../../' })}
 ${list.length > up.length ? `<details class="past"><summary>Past meetings (${list.length - up.length})</summary>${monthList(list.filter((m) => (m.end ?? m.start) < TODAY), { base: '../../' })}</details>` : ''}
 ${paceTable(c.id) ? '<script src="../../pace.js" defer></script>' : ''}`,
@@ -484,6 +622,7 @@ ${(o.results ?? []).length ? `<div class="results-box">
   <ul class="feeds">${o.results.map((r) => `<li><a href="${esc(r.url)}" rel="noopener" class="js-out">${esc(r.provider)}${r.years ? ` <span class="yr">${esc(r.years)}</span>` : ''}${r.note ? ` \u2014 ${esc(r.note)}` : ''}</a></li>`).join('')}</ul>
 </div>` : ''}
 <p class="subscribe"><a href="../../feeds/organiser-${o.id}.ics">Subscribe to ${esc(o.short ?? o.name)} dates (.ics)</a></p>
+${up.length ? LISTHEAD : ''}
 ${monthList(up, { base: '../../' })}
 ${list.length > up.length ? `<details class="past"><summary>Past meetings (${list.length - up.length})</summary>${monthList(list.filter((m) => (m.end ?? m.start) < TODAY), { base: '../../' })}</details>` : ''}`,
   }));
@@ -503,6 +642,7 @@ for (const s of championships) {
 <h1>${esc(s.name)}</h1>
 <p class="lede">${up.length} upcoming round${up.length === 1 ? '' : 's'}, run as part of other clubs\u2019 meetings.</p>
 <p class="subscribe"><a href="../../feeds/championship-${s.id}.ics">Subscribe to ${esc(s.name)} rounds (.ics)</a></p>
+${up.length ? LISTHEAD : ''}
 ${monthList(up, { base: '../../' })}`,
   }));
   write(`feeds/championship-${s.id}.ics`, ics(list, `${s.name} \u2014 rounds`));
@@ -535,7 +675,7 @@ write('clashes/index.html', layout({
   body: `<nav class="crumbs"><a href="../">Calendar</a> <span>/</span> Clashes</nav>
 <h1>Date clashes</h1>
 <p class="lede">Weekends where two clubs are running at once, so you have to pick. ${upcomingClashes.length} of ${upcoming.filter((m) => (m.kind ?? 'race') === 'race').length} upcoming race meetings clash with another club\u2019s.</p>
-${upcomingClashes.length ? monthList(upcomingClashes, { base: '../' }) : '<p class="empty">No clashes in the calendar. Add more clubs and that will change.</p>'}`,
+${upcomingClashes.length ? LISTHEAD + monthList(upcomingClashes, { base: '../' }) : '<p class="empty">No clashes in the calendar. Add more clubs and that will change.</p>'}`,
 }));
 
 // about
@@ -560,8 +700,10 @@ write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="htt
 write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${SITE.url}/sitemap.xml\n`);
 
 // static assets
-for (const f of ['style.css', 'filter.js', 'pace.js']) if (existsSync(join('src', f))) cpSync(join('src', f), join(OUT, f));
+for (const f of ['style.css', 'filter.js', 'pace.js', 'theme.js']) if (existsSync(join('src', f))) cpSync(join('src', f), join(OUT, f));
 if (existsSync('src/fonts')) cpSync('src/fonts', join(OUT, 'fonts'), { recursive: true });
+if (existsSync('src/img')) cpSync('src/img', join(OUT, 'img'), { recursive: true });
+if (SITE.hero && !existsSync(join('src', SITE.hero.src))) warn(`SITE.hero.src "${SITE.hero.src}" not found under src/`);
 
 console.log(`\u2713 built ${written.length + 2} files to ${OUT}/  (${all.length} meetings, ${upcoming.length} upcoming)`);
 if (hasExamples) console.log('  ! example data is still present in data/meetings.js');

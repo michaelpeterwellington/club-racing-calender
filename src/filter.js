@@ -7,14 +7,14 @@
   var fx = document.getElementById('f-clash');
   var reset = document.getElementById('reset');
   var count = document.getElementById('count');
-  var cards = [].slice.call(document.querySelectorAll('.mtg'));
+  var rows = [].slice.call(document.querySelectorAll('.mtg'));
   var months = [].slice.call(document.querySelectorAll('.month'));
-  var total = cards.length;
+  var total = rows.length;
 
   function apply() {
     var term = q.value.trim().toLowerCase();
     var shown = 0;
-    cards.forEach(function (el) {
+    rows.forEach(function (el) {
       var ok = (!term || el.dataset.search.indexOf(term) > -1)
         && (!fc.value || el.dataset.circuit === fc.value)
         && (!fo.value || el.dataset.organiser === fo.value)
@@ -25,11 +25,15 @@
       if (ok) shown++;
     });
     months.forEach(function (m) {
-      m.hidden = !m.querySelector('.mtg:not([hidden])');
+      var n = m.querySelectorAll('.mtg:not([hidden])').length;
+      m.hidden = !n;
+      // The month header carries its own count, so it has to track the filter.
+      var c = m.querySelector('.month-count');
+      if (c) c.textContent = n + (n === 1 ? ' meeting' : ' meetings');
     });
     count.textContent = shown === total
-      ? total + (total === 1 ? ' meeting' : ' meetings')
-      : 'Showing ' + shown + ' of ' + total;
+      ? total + (total === 1 ? ' result' : ' results')
+      : shown + ' of ' + total;
     try {
       var p = new URLSearchParams();
       if (term) p.set('q', term);
@@ -60,5 +64,14 @@
   reset.addEventListener('click', function () {
     q.value = ''; fc.value = ''; fo.value = ''; ft.value = ''; fr.checked = false; fx.checked = false; apply();
   });
+
+  // Opening a row leaves the previous one open too, which turns a scan into a
+  // scroll. One at a time reads like a timing screen drilling into a session.
+  document.addEventListener('toggle', function (e) {
+    var el = e.target;
+    if (!el.open || !el.classList.contains('mtg')) return;
+    rows.forEach(function (o) { if (o !== el) o.open = false; });
+  }, true);
+
   apply();
 })();
