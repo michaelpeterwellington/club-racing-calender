@@ -1,0 +1,43 @@
+name: Daily rebuild
+
+# The site compiles the build date into its HTML. `upcoming` is filtered against
+# it, entry-close countdowns are rendered from it, and the ticker and "next race"
+# panel are picked by it. Left alone the page does not merely go stale — a
+# countdown reading "Entries close in 5 days" stays frozen at five days and
+# becomes wrong. So something has to rebuild it even when nothing has changed.
+#
+# Nothing is built here: this asks Cloudflare Pages to run its own build, which
+# is the same one a push triggers. Set the repository secret CLOUDFLARE_DEPLOY_HOOK
+# to the hook URL from Pages → Settings → Builds & deployments → Deploy hooks.
+
+on:
+  schedule:
+    # 02:17 UTC. After the UTC date rolls over, so the countdowns are right for
+    # the day; well before anyone in the UK looks. The odd minute is deliberate —
+    # GitHub delays scheduled jobs when everyone piles onto the top of the hour.
+    - cron: '17 2 * * *'
+  workflow_dispatch: # so it can be triggered by hand to test
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Cloudflare Pages build
+        # Passed as an env var rather than interpolated into the script, so the
+        # secret is never written into a shell command line.
+        env:
+          HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::error::CLOUDFLARE_DEPLOY_HOOK is not set. Add it under" \
+                 "Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          code=$(curl -sS -X POST "$HOOK" -o /dev/null -w '%{http_code}')
+          echo "Cloudflare responded $code"
+          # A hook that has been deleted or rotated returns 4xx, and a silent
+          # failure here is exactly the rot this job exists to prevent.
+          case "$code" in
+            2*) echo "Build queued." ;;
+            *)  echo "::error::Deploy hook returned $code"; exit 1 ;;
+          esac

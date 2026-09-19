@@ -73,6 +73,27 @@ node build.js      # build to dist/
 npm run serve      # build, then serve at http://localhost:8080
 ```
 
+## Keeping it current
+
+The build compiles today's date into the HTML: `upcoming` is filtered against
+it, entry-close countdowns are rendered from it, and the ticker and "next race"
+panel are picked by it. So the site has to be rebuilt even when the data has not
+changed — otherwise past meetings linger and a countdown reading "Entries close
+in 5 days" stays frozen at five days, which is wrong rather than merely stale.
+
+`.github/workflows/daily-rebuild.yml` pokes a Cloudflare Pages deploy hook once
+a day. To wire it up:
+
+1. Cloudflare Pages → the project → Settings → Builds & deployments →
+   **Deploy hooks** → create one against the `main` branch, and copy the URL.
+2. GitHub → the repo → Settings → Secrets and variables → Actions →
+   **New repository secret**, named `CLOUDFLARE_DEPLOY_HOOK`, holding that URL.
+3. Actions → Daily rebuild → **Run workflow** to check it before trusting it.
+
+The hook URL is a password: anyone holding it can trigger builds, so it belongs
+in the secret and not in the workflow file. Note that GitHub suspends scheduled
+workflows on repositories with no activity for 60 days, and will email first.
+
 ## Deploying
 
 `dist/` is static. Cloudflare Pages or Netlify will host it free — build command
