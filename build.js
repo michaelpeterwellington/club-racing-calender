@@ -445,7 +445,7 @@ ${ticker()}
       <span class="mark" aria-hidden="true"><i></i><i></i><i></i></span>
       <span><b>${esc(SITE.name)}</b><span class="brand-sub">UK motorcycle club racing</span></span>
     </a>
-    <nav><a href="${base}clashes/">Clashes</a><a href="${base}feeds/">Feeds</a><a href="${base}about/">About</a></nav>
+    <nav><a href="${base}clubs/">Clubs</a><a href="${base}clashes/">Clashes</a><a href="${base}feeds/">Feeds</a><a href="${base}about/">About</a></nav>
     <div class="headstats">
       <span><b>${raceCount}</b> Meetings</span>
       <span><b>${new Set(upcoming.map((m) => m.organiser)).size}</b> Clubs</span>
@@ -551,7 +551,12 @@ rmSync(OUT, { recursive: true, force: true });
 
 // home
 const usedCircuits = circuits.filter((c) => all.some((m) => m.circuit === c.id));
+// Clubs that have published dates. Used where showing an empty one would be a
+// dead end — the calendar's own filter, for instance.
 const usedOrgs = organisers.filter((o) => all.some((m) => m.organiser === o.id));
+// Every club gets a page regardless. A club with nothing listed is the whole
+// reason someone searches for it, and a site that renders no page at all just
+// looks as though it has never heard of them.
 write('index.html', layout({
   title: `${SITE.name} \u2014 UK motorcycle racing calendar`,
   description: 'Every UK motorcycle club and national road race meeting, from every organising club, in one calendar.',
@@ -590,6 +595,20 @@ write('index.html', layout({
   <div class="stat"><b>${new Set(upcoming.map((m) => m.circuit).filter(Boolean)).size}</b><span>Circuits</span></div>
   ${upcomingClashes.length ? `<a class="stat stat--alert" href="clashes/"><b>${upcomingClashes.length}</b><span>Date clashes</span></a>` : ''}
 </div>
+${(() => {
+  const circuitsWithPace = usedCircuits.filter((c) => PACE.some((p) => p.circuit === c.id));
+  if (!circuitsWithPace.length) return '';
+  const classes = PACE.length, races = PACE.reduce((n, p) => n + p.races, 0);
+  return `<section class="pacepitch">
+  <div>
+    <h2>Would you be competitive?</h2>
+    <p>Put your best lap in and see where it would have put you \u2014 win, podium, midfield or
+    off the back \u2014 against ${classes} classes and ${races.toLocaleString('en-GB')} races of real
+    2026 results. Pick your bike and it compares you with riders on the same machine.</p>
+  </div>
+  <div class="chips">${circuitsWithPace.map((c) => `<a href="circuit/${c.id}/">${esc(c.name)}</a>`).join('')}</div>
+</section>`;
+})()}
 ${LISTHEAD}
 <div id="list">${monthList(upcoming, { base: '', next: nextUp?.id ?? null })}</div>
 <p class="subscribe"><a href="feeds/">Add this calendar to your phone \u2192</a></p>
@@ -633,23 +652,36 @@ ${paceTable(c.id) ? '<script src="../../pace.js" defer></script>' : ''}`,
 }
 
 // organiser pages
-for (const o of usedOrgs) {
+for (const o of organisers) {
   const list = all.filter((m) => m.organiser === o.id);
   const up = list.filter((m) => (m.end ?? m.start) >= TODAY);
+  const awaiting = list.length === 0;
   write(`organiser/${o.id}/index.html`, layout({
-    title: `${o.name} race calendar \u2014 ${SITE.name}`,
-    description: `${o.name} motorcycle race meeting dates. ${up.length} upcoming.`,
+    title: awaiting
+      ? `${o.name} 2027 race dates \u2014 ${SITE.name}`
+      : `${o.name} race calendar \u2014 ${SITE.name}`,
+    description: awaiting
+      ? `${o.name} have not published their 2027 race dates yet. They will be listed here as soon as they do.`
+      : `${o.name} motorcycle race meeting dates. ${up.length} upcoming.`,
     canonical: `/organiser/${o.id}/`, base: '../../', jsonld: up.slice(0, 40).map(eventLd),
     body: `<nav class="crumbs"><a href="../../">Calendar</a> <span>/</span> ${esc(o.short ?? o.name)}</nav>
 <h1>${esc(o.name)}</h1>
-<p class="lede">${up.length} upcoming meeting${up.length === 1 ? '' : 's'}${o.website ? ` \u00b7 <a href="${esc(o.website)}" rel="noopener" class="js-out">Club website</a>` : ''}</p>
+<p class="lede">${awaiting ? 'No dates published yet' : `${up.length} upcoming meeting${up.length === 1 ? '' : 's'}`}${o.website ? ` \u00b7 <a href="${esc(o.website)}" rel="noopener" class="js-out">Club website</a>` : ''}</p>
+${awaiting ? `<div class="awaiting">
+  <p><b>${esc(o.short ?? o.name)} have not published a 2027 calendar yet.</b> Most clubs
+  release their dates between autumn and the new year. Nothing is being held back here —
+  there is simply nothing to list.</p>
+  <p>Two ways to hear about it the moment there is: subscribe to the calendar feed below and
+  the dates appear in your phone on their own, or take the weekly email at the foot of this
+  page.</p>
+</div>` : ''}
 ${o.note ? `<p class="clubnote">${esc(o.note)}</p>` : ''}
 ${(o.results ?? []).length ? `<div class="results-box">
   <h2>Past results</h2>
   <p>See how competitive this club\u2019s grids are before you enter \u2014 grid sizes, lap times and who turns up.</p>
   <ul class="feeds">${o.results.map((r) => `<li><a href="${esc(r.url)}" rel="noopener" class="js-out">${esc(r.provider)}${r.years ? ` <span class="yr">${esc(r.years)}</span>` : ''}${r.note ? ` \u2014 ${esc(r.note)}` : ''}</a></li>`).join('')}</ul>
 </div>` : ''}
-<p class="subscribe"><a href="../../feeds/organiser-${o.id}.ics">Subscribe to ${esc(o.short ?? o.name)} dates (.ics)</a></p>
+<p class="subscribe"><a href="../../feeds/organiser-${o.id}.ics">${awaiting ? `Subscribe now and ${esc(o.short ?? o.name)} dates appear when published (.ics)` : `Subscribe to ${esc(o.short ?? o.name)} dates (.ics)`}</a></p>
 ${up.length ? LISTHEAD : ''}
 ${monthList(up, { base: '../../' })}
 ${list.length > up.length ? `<details class="past"><summary>Past meetings (${list.length - up.length})</summary>${monthList(list.filter((m) => (m.end ?? m.start) < TODAY), { base: '../../' })}</details>` : ''}`,
@@ -691,9 +723,33 @@ write('feeds/index.html', layout({
 <h2>By circuit</h2>
 <ul class="feeds">${usedCircuits.map((c) => `<li><a href="circuit-${c.id}.ics">${esc(c.name)}</a></li>`).join('')}</ul>
 <h2>By club</h2>
-<ul class="feeds">${usedOrgs.map((o) => `<li><a href="organiser-${o.id}.ics">${esc(o.name)}</a></li>`).join('')}</ul>
+<ul class="feeds">${organisers.map((o) => `<li><a href="organiser-${o.id}.ics">${esc(o.name)}${all.some((m) => m.organiser === o.id) ? '' : ' <span class="yr">awaiting dates</span>'}</a></li>`).join('')}</ul>
 ${usedChamps.length ? `<h2>By championship</h2>\n<ul class="feeds">${usedChamps.map((s) => `<li><a href="championship-${s.id}.ics">${esc(s.name)}</a></li>`).join('')}</ul>` : ''}`,
 }));
+
+// clubs index
+{
+  const published = organisers.filter((o) => all.some((m) => m.organiser === o.id));
+  const awaiting = organisers.filter((o) => !all.some((m) => m.organiser === o.id));
+  const card = (o) => {
+    const up = all.filter((m) => m.organiser === o.id && (m.end ?? m.start) >= TODAY).length;
+    return `<li><a href="../organiser/${o.id}/"><b>${esc(o.short ?? o.name)}</b><span>${
+      up ? `${up} upcoming meeting${up === 1 ? '' : 's'}` : 'No 2027 dates published yet'}</span></a></li>`;
+  };
+  write('clubs/index.html', layout({
+    title: `UK motorcycle racing clubs \u2014 ${SITE.name}`,
+    description: `Every UK club and national organiser running solo tarmac race meetings, and whether their ${new Date().getFullYear() + 1} dates are out yet.`,
+    canonical: '/clubs/', base: '../',
+    body: `<nav class="crumbs"><a href="../">Calendar</a> <span>/</span> Clubs</nav>
+<h1>Clubs</h1>
+<p class="lede">Every club and national organiser running solo tarmac race meetings in the UK \u2014 ${published.length} with dates out, ${awaiting.length} still to publish.</p>
+<h2>Dates published</h2>
+<ul class="clublist">${published.map(card).join('')}</ul>
+<h2>Awaiting ${esc(String(new Date().getFullYear() + 1))} dates</h2>
+<p>Listed so you can see they are covered. Each has a calendar feed you can subscribe to now, which fills itself the moment the club publishes.</p>
+<ul class="clublist">${awaiting.map(card).join('')}</ul>`,
+  }));
+}
 
 // clashes
 write('clashes/index.html', layout({

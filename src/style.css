@@ -33,9 +33,12 @@
   /* The sticky furniture's own heights, and how far down the page they cover.
      Everything that sticks is positioned from these, so raising the type size
      cannot leave a month heading parked under the filter bar. */
+  /* --head is the header's minimum height. --head-actual is what it really
+     measures once wrapped, filled in by theme.js; the fallback keeps this
+     sane without JavaScript. Never write a measurement into --head itself. */
   --head:3.6rem;
   --filterbar:4.1rem;
-  --stick:var(--head);
+  --stick:var(--head-actual,var(--head));
   /* Shared by the column headings and every meeting row, so they cannot drift. */
   --cols:5.75rem minmax(0,1fr) 10.5rem 10.5rem 1.5rem;
 }
@@ -116,7 +119,7 @@ body{
   -webkit-font-smoothing:antialiased;
   font-feature-settings:"kern" 1;
 }
-body.has-filters{--stick:calc(var(--head) + var(--filterbar))}
+body.has-filters{--stick:calc(var(--head-actual,var(--head)) + var(--filterbar-actual,var(--filterbar)))}
 a{color:inherit}
 .wrap{width:100%;max-width:68rem;margin:0 auto;padding-inline:1.25rem}
 body.wide .wrap{max-width:82rem}
@@ -146,7 +149,7 @@ header.site{
   background:var(--bg);border-bottom:1px solid var(--line);
   position:sticky;top:0;z-index:40;
 }
-header.site .wrap{display:flex;align-items:center;gap:1.25rem;
+header.site .wrap{display:flex;align-items:center;gap:1rem;
   min-height:var(--head);flex-wrap:wrap}
 .brand{display:inline-flex;align-items:center;gap:.7rem;text-decoration:none}
 /* Union flag stripes, read as a nationality mark rather than a logo. */
@@ -160,16 +163,19 @@ header.site .wrap{display:flex;align-items:center;gap:1.25rem;
   text-transform:uppercase;letter-spacing:.14em;line-height:1}
 .brand-sub{display:block;font-family:var(--mono);font-size:.75rem;color:var(--muted);
   text-transform:uppercase;letter-spacing:.16em;margin-top:.22rem}
-header nav{display:flex;gap:.25rem;margin-left:auto;flex-wrap:wrap}
+/* One row, always. Letting it wrap a second time made the header's height
+   unpredictable, and everything sticky is positioned from that height. */
+header nav{display:flex;gap:.25rem;margin-left:auto;flex-wrap:nowrap}
 header nav a{font-family:var(--mono);font-size:.8125rem;text-transform:uppercase;
-  letter-spacing:.14em;color:var(--muted);text-decoration:none;padding:.4rem .55rem;
+  letter-spacing:.11em;color:var(--muted);text-decoration:none;padding:.4rem .45rem;
   transition:color .12s}
 header nav a:hover{color:var(--ink)}
-.headstats{display:flex;gap:1.35rem;font-family:var(--mono);font-size:.8125rem;
-  color:var(--muted);text-transform:uppercase;letter-spacing:.13em;
-  padding-left:1.35rem;border-left:1px solid var(--line)}
+.headstats{display:flex;gap:1.1rem;font-family:var(--mono);font-size:.8125rem;
+  color:var(--muted);text-transform:uppercase;letter-spacing:.1em;
+  padding-left:1.1rem;border-left:1px solid var(--line)}
 .headstats b{color:var(--ink);font-weight:600}
-@media (max-width:60rem){.headstats{display:none}}
+@media (max-width:78rem){.headstats{display:none}}
+@media (min-width:78rem){body.wide .headstats{display:flex}}
 
 /* Theme selector. Starts hidden and theme.js reveals it, so a browser with no
    JavaScript is never shown a control that cannot do anything. */
@@ -250,7 +256,7 @@ main>.stats:first-child{margin-top:0}
 a.stat:hover{background:var(--hover)}
 
 /* ---------- filters ---------- */
-.filters{position:sticky;top:var(--head);z-index:30;background:var(--bg-2);
+.filters{position:sticky;top:var(--head-actual,var(--head));z-index:30;background:var(--bg-2);
   border-bottom:1px solid var(--line);margin-bottom:0}
 .filters-in{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;padding-block:.55rem}
 .filters input[type=search],.filters select,.filters button{
@@ -452,6 +458,31 @@ table#pacetable{border-collapse:separate;border-spacing:0;width:100%;
 .pace-note{font-size:.9375rem;color:var(--muted);margin:1rem 0 0;max-width:48rem;line-height:1.7}
 .pace-note b{color:var(--ink-2)}
 
+/* ---------- clubs awaiting dates, and the pace pitch ---------- */
+.awaiting{background:var(--bg-2);border-left:3px solid var(--warn);padding:1rem 1.25rem;
+  margin:0 0 1.75rem}
+.awaiting p{margin:0 0 .7rem;font-size:.9375rem;color:var(--ink-2);line-height:1.55;max-width:46rem}
+.awaiting p:last-child{margin-bottom:0}
+
+.clublist{list-style:none;padding:0;margin:0 0 1rem;display:grid;gap:.5rem;
+  grid-template-columns:repeat(auto-fill,minmax(15rem,1fr))}
+.clublist a{display:block;background:var(--bg-2);border:1px solid var(--line);
+  padding:.8rem .9rem;text-decoration:none;height:100%;
+  transition:background .12s,border-color .12s}
+.clublist a:hover{background:var(--hover);border-color:var(--accent)}
+.clublist b{display:block;font-family:var(--display);font-weight:700;font-size:1.15rem;
+  text-transform:uppercase;letter-spacing:.04em}
+.clublist span{display:block;font-family:var(--mono);font-size:.75rem;color:var(--muted);
+  margin-top:.25rem;letter-spacing:.04em}
+
+/* The differentiator, given its own billing above the calendar. */
+.pacepitch{background:var(--bg-2);border:1px solid var(--line);border-left:3px solid var(--accent);
+  padding:1.25rem 1.4rem;margin:0 0 1.5rem;display:grid;gap:1rem}
+@media (min-width:60rem){.pacepitch{grid-template-columns:1fr 20rem;gap:2rem;align-items:center}}
+.pacepitch h2{margin:0 0 .5rem;font-size:1.5rem}
+.pacepitch p{margin:0;font-size:.9375rem;color:var(--ink-2);line-height:1.55;max-width:44rem}
+.pacepitch .chips{align-content:center}
+
 /* ---------- promos, newsletter, feeds ---------- */
 .promo{position:relative;background:var(--bg-2);border:1px solid var(--line);margin:1.5rem 0}
 .promo a{display:block;padding:1rem 1.1rem;text-decoration:none}
@@ -523,6 +554,14 @@ footer.site .foot-links{display:flex;flex-direction:column;gap:.4rem}
 footer.site .foot-links a{font-family:var(--mono);font-size:.8125rem;text-transform:uppercase;
   letter-spacing:.13em}
 
+/* Wrapped onto three rows a filter bar is 186px tall, and pinning that under a
+   142px header leaves half a phone screen of furniture. It scrolls away instead,
+   and theme.js reports its height as nothing once it stops sticking. */
+@media (max-width:60rem){
+  .filters{position:static}
+  body.has-filters{--stick:var(--head-actual,var(--head))}
+}
+
 /* ---------- narrow ----------
    The row folds into three lines rather than six: when, what, and where with
    who. Date and status share the top line because those are the two things you
@@ -533,6 +572,10 @@ footer.site .foot-links a{font-family:var(--mono);font-size:.8125rem;text-transf
   .mtg-date{grid-column:1;grid-row:1}
   .mtg-date em{display:inline;margin-top:0;margin-left:.5em}
   .mtg-status{grid-column:2;grid-row:1;align-items:flex-end;text-align:right}
+  /* A full closing date in the top row squeezes the date column to nothing.
+     The badge still says Provisional, and the date itself is in the panel. */
+  .mtg-status .entries{display:none}
+  .mtg-date{white-space:nowrap}
   .caret{grid-column:3;grid-row:1;padding-top:.1rem}
   .mtg-main{grid-column:1/-1;grid-row:2}
   .mtg-club{grid-column:1/-1;grid-row:3;font-size:.875rem;
