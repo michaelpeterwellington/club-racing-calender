@@ -152,13 +152,12 @@ header.site{
 header.site .wrap{display:flex;align-items:center;gap:1rem;
   min-height:var(--head);flex-wrap:wrap}
 .brand{display:inline-flex;align-items:center;gap:.7rem;text-decoration:none}
-/* Union flag stripes, read as a nationality mark rather than a logo. */
-.mark{display:flex;gap:1px;width:1.1rem;height:1.55rem;border-radius:2px;overflow:hidden;
-  flex:0 0 auto;box-shadow:inset 0 0 0 1px var(--mark-ring)}
-.mark i{flex:1}
-.mark i:nth-child(1){background:#012169}
-.mark i:nth-child(2){background:#fff}
-.mark i:nth-child(3){background:var(--brand)}
+/* An actual Union flag. It was three vertical stripes, which is the French
+   tricolour — a poor look on a site whose first word is UK. Drawn rather than
+   striped because the diagonals are the whole point, and 2:1 because that is
+   the flag's proportion; portrait made it unrecognisable as well as wrong. */
+.mark{width:2.1rem;height:1.05rem;border-radius:1px;flex:0 0 auto;display:block;
+  box-shadow:inset 0 0 0 1px var(--mark-ring)}
 .brand b{display:block;font-family:var(--display);font-weight:800;font-size:1.3rem;
   text-transform:uppercase;letter-spacing:.14em;line-height:1}
 .brand-sub{display:block;font-family:var(--mono);font-size:.75rem;color:var(--muted);
