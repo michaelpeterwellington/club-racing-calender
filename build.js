@@ -339,15 +339,27 @@ function accommodationBlock(c) {
 </aside>`;
 }
 
+// Posts straight to the mailing-list provider: no JavaScript, and nothing about
+// the subscriber ever touches this site, which keeps it a pile of static files
+// with no personal data of its own to leak.
 function newsletterBlock() {
   if (!newsletter.action) return '';
+  const field = newsletter.field || 'email';
   return `<section class="signup">
-  <h2>Weekly email</h2>
-  <p>${esc(newsletter.pitch)}</p>
-  <form action="${esc(newsletter.action)}" method="post">
+  <div>
+    <h2>Never miss an entry deadline</h2>
+    <p>${esc(newsletter.pitch)}</p>
+  </div>
+  <form action="${esc(newsletter.action)}" method="post" target="_blank" rel="noopener">
     <label class="vh" for="nl-email">Email address</label>
-    <input id="nl-email" type="email" name="email" placeholder="you@example.com" required>
+    <input id="nl-email" type="email" name="${esc(field)}" placeholder="you@example.com"
+           autocomplete="email" required>
+${Object.entries(newsletter.hidden ?? {}).map(([k, v]) =>
+  `    <input type="hidden" name="${esc(k)}" value="${esc(v)}">`).join('\n')}
+${newsletter.honeypot ? `    <input class="vh" type="text" name="${esc(newsletter.honeypot)}" value=""
+           tabindex="-1" autocomplete="off" aria-hidden="true">` : ''}
     <button type="submit">Subscribe</button>
+    <p class="signup-note">${esc(newsletter.smallprint ?? '')}</p>
   </form>
 </section>`;
 }

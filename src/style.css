@@ -452,16 +452,28 @@ table#pacetable{border-collapse:separate;border-spacing:0;width:100%;
 .clubnote{font-size:.9375rem;color:var(--warn);background:var(--warn-soft);border-left:2px solid var(--warn);
   padding:.7rem .9rem;margin:0 0 1.5rem}
 
-.signup{background:var(--bg-2);border:1px solid var(--line);padding:1.5rem;margin-top:3rem}
+.signup{background:var(--bg-2);border:1px solid var(--line);padding:1.5rem;margin-top:3rem;
+  display:grid;gap:1.25rem;align-items:start}
+@media (min-width:52rem){.signup{grid-template-columns:1fr 22rem;gap:2.5rem}}
+/* The deadline is the whole pitch, so it gets the accent rule down the side. */
+.signup{border-left:3px solid var(--accent)}
 .signup h2{margin-top:0}
 .signup p{margin:0 0 1rem;color:var(--ink-2);font-size:1rem;max-width:42rem}
 .signup form{display:flex;gap:.5rem;flex-wrap:wrap}
-.signup input{flex:1 1 15rem;font-family:var(--mono);font-size:.9375rem;padding:.6rem .75rem;
+/* Scoped to the real field: a bare `.signup input` also caught the honeypot and
+   beat .vh on specificity, sizing the trap up into a visible box. */
+.signup input[type=email]{flex:1 1 15rem;font-family:var(--mono);font-size:.9375rem;padding:.6rem .75rem;
   border:1px solid var(--line);background:var(--panel-2);color:var(--ink);border-radius:0}
-.signup input:focus-visible{outline:none;border-color:var(--accent)}
+.signup input[type=email]:focus-visible{outline:none;border-color:var(--accent)}
 .signup button{font-family:var(--display);font-weight:700;font-size:1rem;text-transform:uppercase;
   letter-spacing:.14em;padding:.6rem 1.35rem;border:0;background:var(--brand);color:#fff;cursor:pointer}
 .signup button:hover{background:var(--accent-hi)}
+/* The spam trap has to be in the DOM and submittable but never seen. .vh clips
+   it, but an input keeps its default border and padding under border-box, so
+   those go too and it collapses to nothing. */
+.signup input.vh{padding:0;border:0;min-width:0}
+.signup-note{flex:1 0 100%;margin:.15rem 0 0;font-family:var(--mono);font-size:.75rem;
+  line-height:1.6;color:var(--muted);letter-spacing:.04em;max-width:none}
 
 /* Bordered tiles rather than a 1px-gap grid: a part-filled last row would
    otherwise leave the grid's own background showing as empty grey blocks. */

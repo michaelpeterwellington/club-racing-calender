@@ -19,9 +19,50 @@ export const circuitLinks = {
 // Set to a form action URL (Buttondown, Mailchimp, Beehiiv...) to switch the
 // newsletter block on. null = block is hidden entirely.
 export const newsletter = {
+  // Where the form posts. Any service that accepts a plain HTML form post will
+  // do — Buttondown, MailerLite, Kit, Mailchimp, a self-hosted Listmonk. Leave
+  // null and the block is hidden everywhere, which is the current state.
   action: null,
-  pitch: 'A short email each week: what’s racing, and whose entries just opened.',
+
+  // The field name the service expects the address in. Most want 'email';
+  // Brevo and Mailchimp want 'EMAIL'. Get this wrong and every signup is
+  // silently lost, so check it against their embed code rather than assuming.
+  field: 'email',
+
+  // Any other inputs the provider's own embed code carries. Copy them from
+  // there rather than guessing — a made-up name fails silently.
+  hidden: {},
+
+  // A field real people never see and bots fill in anyway; submissions with it
+  // filled are dropped. Only set it if the provider expects one, by the name it
+  // expects. Brevo calls it 'email_address_check'.
+  honeypot: null,
+
+  // Why anyone would hand over an address. Deadlines are the honest answer: a
+  // rider who misses one loses a round, and nobody else sends that reminder.
+  pitch: 'One email a week through the season: whose entries close next, and which '
+    + 'clubs have just published their dates. Nothing else.',
+
+  // Shown under the form. You need a lawful basis to email people and they need
+  // to know what they are in for before they consent, not after.
+  smallprint: 'Race dates and deadlines only. Unsubscribe in one click.',
+
+  // Where the rider lands after signing up is a setting in the provider's own
+  // dashboard, not something this form can carry — the field name for it differs
+  // between services, so guessing one here would just silently do nothing.
 };
+
+/* Brevo, for reference. Create the form under Contacts → Forms, then open its
+   share/embed code and copy the values out of it — do not trust these blind, as
+   Brevo has changed the shape of the embed before:
+
+     action:   'https://sibforms.com/serve/<your-form-id>',
+     field:    'EMAIL',
+     hidden:   { locale: 'en' },
+     honeypot: 'email_address_check',
+
+   Double opt-in is worth switching on in Brevo as well: it gives you a record
+   of consent, which is what makes the list lawful to mail.                     */
 
 // Accommodation affiliate, shown on circuit pages. Circuits are rural and most
 // meetings are a weekend, so this is the one affiliate link that is genuinely

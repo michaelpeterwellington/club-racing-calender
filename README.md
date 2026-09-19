@@ -73,6 +73,28 @@ node build.js      # build to dist/
 npm run serve      # build, then serve at http://localhost:8080
 ```
 
+## Mailing list
+
+The signup block is hidden until `newsletter.action` is set in
+`data/sponsors.js`. It posts straight to the mailing-list provider, so nothing
+about a subscriber ever touches this site — which is what keeps it a pile of
+static files with no personal data of its own to look after.
+
+For Brevo: Contacts → Forms, create the form, then open its embed code and copy
+the values across. At the time of writing that means
+
+```js
+action:   'https://sibforms.com/serve/<your-form-id>',
+field:    'EMAIL',
+hidden:   { locale: 'en' },
+honeypot: 'email_address_check',
+```
+
+but read them out of the embed rather than trusting the above, because a wrong
+field name loses every signup silently. Turn on double opt-in while you are
+there: it gives you a record of consent, which is what makes the list lawful to
+mail.
+
 ## Keeping it current
 
 The build compiles today's date into the HTML: `upcoming` is filtered against
