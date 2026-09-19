@@ -1,7 +1,14 @@
 export const SITE = {
   name: 'UK Race Calendar',
-  // Used for canonical URLs, sitemap and iCal UIDs. Change when you pick a domain.
-  url: 'https://example.com',
+  // Used for canonical URLs and the sitemap. Change when you pick a domain.
+  url: 'https://club-racing-calender.pages.dev',
+
+  // iCal UIDs are built from this, NOT from `url`. A UID identifies an event
+  // for the life of a subscription: change it and every calendar that has
+  // subscribed treats every meeting as brand new, duplicating the lot. So it is
+  // deliberately a fixed identifier rather than the current hostname — moving
+  // the site to a custom domain must not touch it. It never needs to resolve.
+  uidDomain: 'club-racing-calender.pages.dev',
   contact: null, // e.g. 'hello@yourdomain.co.uk' — shown on the About page
 
   // Optional photograph behind the home page hero. Put the file in src/img/ and

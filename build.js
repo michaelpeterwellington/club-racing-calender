@@ -497,7 +497,7 @@ function ics(list, name) {
       m.status && m.status !== 'confirmed' ? 'Status: ' + m.status : '']
       .filter(Boolean).join('\n');
     lines.push('BEGIN:VEVENT',
-      `UID:${m.id}@${SITE.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
+      `UID:${m.id}@${SITE.uidDomain ?? SITE.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
       `DTSTAMP:${stamp}`,
       `DTSTART;VALUE=DATE:${m.start.replace(/-/g, '')}`,
       `DTEND;VALUE=DATE:${plusDay(m.end ?? m.start).replace(/-/g, '')}`,
