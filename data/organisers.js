@@ -14,7 +14,6 @@ export const organisers = [
   { id: 'no-limits',     name: 'No Limits Racing',                        short: 'No Limits', website: null,
     note: 'No Limits publish their calendar with the caveat that all dates and venues are subject to change.',
     results: [{ provider: 'TSL Timing', url: 'https://www.tsl-timing.com/Results/nolimits/', note: 'results by season, 2002 onwards' }] },
-  { id: 'msvr',          name: 'MSVR / Club MSV',                         short: 'MSVR',     website: 'https://www.msvr.co.uk' },
   // Wirral 100 Motor Club: closed down, so not listed.
   // Derby Phoenix MCRC: closed down, so not listed. Absent from the ACU's
   // 2026 permit list too, which corroborates it.
@@ -24,7 +23,6 @@ export const organisers = [
   { id: 'ng',            name: 'NG Road Racing',                          short: 'NG',       website: null,
     results: [{ provider: 'TSL Timing', url: 'https://www.tsl-timing.com/Results/ngroadracing/', note: 'results by season, 2002 onwards' }] },
   { id: 'aintree',       name: 'Aintree Motor Cycle Racing Club',         short: 'Aintree MCRC', website: null },
-  { id: 'bantam',        name: 'Bantam Racing Club',                      short: 'Bantam RC', website: null },
   { id: 'crmc',          name: 'CRMC (Classic Racing Motorcycle Club)',   short: 'CRMC',     website: 'https://www.crmc.co.uk',
     // Not on TSL. CRMC spread results across four providers over the years; all
     // taken from crmc.co.uk/live-timing-results. Apex only goes back to 2026 —
@@ -44,10 +42,8 @@ export const organisers = [
   { id: 'bhr',           name: 'British Historic Racing Club (BHRC)',     short: 'BHRC',     website: null,
     results: [{ provider: 'The Results Live', years: '2016\u20132026', url: 'https://www.theresultslive.co.uk/british-historic-racing-club',
       note: 'per-session results by season' }] },
-  { id: 'cool-fab',      name: 'Cool FAB Racing',                         short: 'Cool FAB', website: null },
   { id: 'auto-66',       name: 'Auto 66 Club',                            short: 'Auto 66',  website: null },
   { id: 'southern-100',  name: 'Southern 100 Racing',                     short: 'Southern 100', website: null },
-  { id: 'acu-events',    name: 'ACU Events (TT / Manx GP)',               short: 'ACU Events', website: null },
   { id: 'mcui-ulster',   name: 'MCUI Ulster Centre clubs',                short: 'MCUI Ulster', website: null },
   { id: 'melville',      name: 'Melville Motor Club',                     short: 'Melville', website: null },
   { id: 'east-fife',     name: 'East Fife Motor Club',                    short: 'East Fife', website: null },
