@@ -7,7 +7,11 @@
   try { groups = JSON.parse((document.getElementById('bikedata') || {}).textContent || '{}'); } catch (e) {}
   var table = document.getElementById('pacetable');
   if (!input || !table) return;
+  var tbody = table.querySelector('tbody');
   var rows = [].slice.call(table.querySelectorAll('tbody tr'));
+  // The published order is fastest class first. Remember it so clearing the
+  // form puts the table back exactly as it was served.
+  rows.forEach(function (tr, i) { tr.dataset.ord = i; });
 
   // "1:38.5", "98.5", "1.38.5" all mean the same thing to a rider.
   function toSec(v) {
@@ -18,6 +22,46 @@
     return parseInt(m[1], 10) * 60 + parseFloat(m[2]);
   }
   var f2 = function (n) { return (n < 0 ? '-' : '+') + Math.abs(n).toFixed(2) + 's'; };
+
+  // How well the lap went in this class, best first. Mirrors the verdict classes
+  // so the ranking can never disagree with the colour on the row.
+  function tier(tr) {
+    if (tr.classList.contains('v-win')) return 0;
+    if (tr.classList.contains('v-podium')) return 1;
+    if (tr.classList.contains('v-mid')) return 2;
+    if (tr.classList.contains('v-off')) return 3;
+    return 4;
+  }
+
+  // The point of the table is "where would I be competitive", and that answer is
+  // useless at the bottom of thirty rows. Once a lap or a bike is entered the
+  // classes the rider would go best in come to the top; clearing puts it back.
+  function reorder(you) {
+    var order = rows.slice();
+    if (!you && !(bike && bike.value)) {
+      order.sort(function (a, b) { return a.dataset.ord - b.dataset.ord; });
+    } else {
+      order.sort(function (a, b) {
+        // A class nobody has raced your bike in tells you nothing, so it sinks
+        // below every class that does have a comparison.
+        var an = a.classList.contains('no-bike') ? 1 : 0;
+        var bn = b.classList.contains('no-bike') ? 1 : 0;
+        if (an !== bn) return an - bn;
+        var at = tier(a), bt = tier(b);
+        if (at !== bt) return at - bt;
+        // Same verdict: closest to the winning lap first, measured either side.
+        // Winning a class by forty seconds is not a race you want to enter, so
+        // the tightest class you could still win leads, not the softest.
+        var am = you ? Math.abs(you - parseFloat(a.dataset.win)) : NaN;
+        var bm = you ? Math.abs(you - parseFloat(b.dataset.win)) : NaN;
+        if (isNaN(am)) am = Infinity;
+        if (isNaN(bm)) bm = Infinity;
+        if (am !== bm) return am - bm;
+        return a.dataset.ord - b.dataset.ord;
+      });
+    }
+    order.forEach(function (tr) { tbody.appendChild(tr); });
+  }
 
   function apply() {
     var you = toSec(input.value);
@@ -60,6 +104,8 @@
       cell.textContent = label;
       tr.classList.add(cls);
     });
+    // After the verdicts exist, not before — the ranking reads them off the rows.
+    reorder(you);
     if (hint) {
       if (chosen) {
         hint.hidden = false;
