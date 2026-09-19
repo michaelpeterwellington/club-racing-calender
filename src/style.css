@@ -285,7 +285,12 @@ a.stat:hover{background:var(--hover)}
 .month>summary{position:sticky;top:var(--stick);z-index:20;display:flex;align-items:baseline;
   gap:.85rem;background:var(--bg);border-bottom:1px solid var(--line);
   padding:.65rem .75rem;cursor:pointer;list-style:none;transition:background .1s}
+/* Killing the native marker takes all three: list-style for Firefox, the
+   -webkit- pseudo for older Safari, and ::marker for current Safari. Chrome
+   drops it once the summary is a flex or grid container, which is why it only
+   showed up on mobile — doubled next to our own caret. */
 .month>summary::-webkit-details-marker{display:none}
+.month>summary::marker{content:'';font-size:0}
 .month>summary:hover{background:var(--hover)}
 .month>summary:focus-visible{outline:1px solid var(--accent);outline-offset:-1px}
 .month>summary h2{margin:0;font-family:var(--display);font-weight:800;text-transform:uppercase;
@@ -304,6 +309,7 @@ a.stat:hover{background:var(--hover)}
 .mtg>summary{display:grid;grid-template-columns:1fr auto;gap:.75rem 1rem;align-items:center;
   padding:.65rem .75rem;cursor:pointer;list-style:none;transition:background .1s}
 .mtg>summary::-webkit-details-marker{display:none}
+.mtg>summary::marker{content:'';font-size:0}
 .mtg>summary:hover{background:var(--hover)}
 .mtg>summary:focus-visible{outline:1px solid var(--accent);outline-offset:-1px}
 .mtg[open]>summary{background:var(--hover)}
