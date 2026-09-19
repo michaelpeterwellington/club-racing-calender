@@ -63,8 +63,8 @@ hero: { src: 'img/hero.webp', alt: 'Four riders cranked over through a corner' }
 
 Wide and landscape works best — it is cropped to a band about 1600x280. The
 build copies `src/img/` to `dist/img/` and warns if the file named is missing.
-Keep it self-hosted: hotlinking a stock library would be the only third-party
-request the whole site makes, and the site's promise is that it contacts nobody.
+Keep it self-hosted. Apart from Cloudflare's analytics beacon the site makes no
+third-party requests, and hotlinking a stock library would add one for nothing.
 
 ## Commands
 

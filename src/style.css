@@ -1,5 +1,7 @@
-/* Self-hosted so no visitor request ever reaches a third party — the site
-   sets no cookies and contacts no one, and that stays true. ~90KB total. */
+/* Fonts and the hero photograph are self-hosted rather than pulled from Google
+   or a stock library, so the site's only third-party request is Cloudflare's
+   analytics beacon, which is injected at the edge and sets no cookies. Keep it
+   that way: no cookies means no consent banner. ~90KB of fonts. */
 @font-face{font-family:'Barlow';src:url('fonts/barlow-400.woff2') format('woff2');
   font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:'Barlow';src:url('fonts/barlow-600.woff2') format('woff2');

@@ -13,8 +13,8 @@ export const SITE = {
 
   // Optional photograph behind the home page hero. Put the file in src/img/ and
   // name it here; leave null and the hero keeps its plain kerb-stripe treatment.
-  // Self-hosted on purpose — hotlinking a stock library would be the only
-  // third-party request the whole site makes. Landscape and wide works best:
+  // Self-hosted on purpose: apart from the analytics beacon the site makes no
+  // third-party requests, and a stock library would add one. Wide works best:
   // it is cropped to a band roughly 1600x280 and sits well behind the heading.
   // Unsplash (unsplash.com/photos/1489731007795), free to use commercially
   // with no attribution required. Downscaled and re-encoded to 104KB — it
@@ -25,6 +25,11 @@ export const SITE = {
   // personal data, so they need no consent banner under PECR — which is the
   // whole point of choosing them over Google Analytics. Leave provider null and
   // no script is emitted at all.
+  //
+  // NOTE: this site currently runs Cloudflare Web Analytics by AUTO-INJECTION,
+  // enabled on the Pages project rather than configured here. That is why the
+  // beacon appears in the HTML while `provider` below is still null. Setting
+  // provider: 'cloudflare' as well would load the beacon twice and double-count.
   //
   //   plausible  — domain: 'yourdomain.co.uk'                    (~£7/mo, or self-host free)
   //   fathom     — siteId: 'ABCDEFGH'                            (~£12/mo)
