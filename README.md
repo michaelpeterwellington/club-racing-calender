@@ -51,6 +51,21 @@ separate things with separate pages. Circuit layouts are *not* separate venues �
 - `/feeds/*.ics` — subscribable calendar feeds, per circuit, club and championship
 - `sitemap.xml`, `robots.txt`, and schema.org `SportsEvent` JSON-LD on every page
 
+## Hero image
+
+The home page hero runs a plain kerb-stripe treatment by default. To put a
+photograph behind it, drop the file in `src/img/` and name it in
+`site.config.js`:
+
+```js
+hero: { src: 'img/hero.webp', alt: 'Four riders cranked over through a corner' },
+```
+
+Wide and landscape works best — it is cropped to a band about 1600x280. The
+build copies `src/img/` to `dist/img/` and warns if the file named is missing.
+Keep it self-hosted: hotlinking a stock library would be the only third-party
+request the whole site makes, and the site's promise is that it contacts nobody.
+
 ## Commands
 
 ```sh
