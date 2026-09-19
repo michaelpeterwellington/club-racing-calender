@@ -342,7 +342,7 @@ function accommodationBlock(c) {
 // Posts straight to the mailing-list provider: no JavaScript, and nothing about
 // the subscriber ever touches this site, which keeps it a pile of static files
 // with no personal data of its own to leak.
-function newsletterBlock() {
+function newsletterBlock(base) {
   if (!newsletter.action) return '';
   const field = newsletter.field || 'email';
   return `<section class="signup">
@@ -359,9 +359,10 @@ ${Object.entries(newsletter.hidden ?? {}).map(([k, v]) =>
 ${newsletter.honeypot ? `    <input class="vh" type="text" name="${esc(newsletter.honeypot)}" value=""
            tabindex="-1" autocomplete="off" aria-hidden="true">` : ''}
     <button type="submit">Subscribe</button>
-    <p class="signup-note">${esc(newsletter.smallprint ?? '')}</p>
+    <p class="signup-note" aria-live="polite">${esc(newsletter.smallprint ?? '')}</p>
   </form>
-</section>`;
+</section>
+<script src="${base}signup.js" defer></script>`;
 }
 
 /* ---------- page shell ---------- */
@@ -404,6 +405,7 @@ const THEME_BOOT = `<script>(function(){try{var p=localStorage.getItem('theme')|
 
 function layout({ title, description, body, base, canonical, jsonld = [], wide = false, filters = false, main = true }) {
   const raceCount = upcoming.filter((m) => (m.kind ?? 'race') === 'race').length;
+  const signup = newsletterBlock(base);
   return `<!doctype html>
 <html lang="en-GB">
 <head>
@@ -441,7 +443,7 @@ ${ticker()}
 ${hasExamples ? `<div class="warnbar"><div class="wrap">This site is showing <b>example data</b> \u2014 delete the demo rows in <code>data/meetings.js</code></div></div>` : ''}
 ${adSlot('top') ? `<div class="wrap">${adSlot('top')}</div>` : ''}
 ${main ? `<main id="main" class="wrap">\n${body}\n</main>` : body}
-${newsletterBlock() ? `<div class="wrap">${newsletterBlock()}</div>` : ''}
+${signup ? `<div class="wrap">${signup}</div>` : ''}
 <footer class="site">
   <div class="wrap">
     <div class="foot-brand">
@@ -712,7 +714,7 @@ write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="htt
 write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${SITE.url}/sitemap.xml\n`);
 
 // static assets
-for (const f of ['style.css', 'filter.js', 'pace.js', 'theme.js']) if (existsSync(join('src', f))) cpSync(join('src', f), join(OUT, f));
+for (const f of ['style.css', 'filter.js', 'pace.js', 'theme.js', 'signup.js']) if (existsSync(join('src', f))) cpSync(join('src', f), join(OUT, f));
 if (existsSync('src/fonts')) cpSync('src/fonts', join(OUT, 'fonts'), { recursive: true });
 if (existsSync('src/img')) cpSync('src/img', join(OUT, 'img'), { recursive: true });
 if (SITE.hero && !existsSync(join('src', SITE.hero.src))) warn(`SITE.hero.src "${SITE.hero.src}" not found under src/`);
