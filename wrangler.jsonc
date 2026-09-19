@@ -1,0 +1,16 @@
+{
+  // Serves dist/ as static assets. There is no server-side code: the whole
+  // site is files on disk, so this Worker exists only to hand them out.
+  //
+  // Cloudflare's Workers build flow asks for two commands:
+  //   Build command   node build.js
+  //   Deploy command  npx wrangler deploy
+  //
+  // The Pages flow asks for a build command and an output directory (dist)
+  // instead, and ignores this file entirely.
+  "name": "club-racing-calender",
+  "compatibility_date": "2026-09-19",
+  "assets": {
+    "directory": "./dist"
+  }
+}
