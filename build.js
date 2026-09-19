@@ -232,13 +232,27 @@ function monthList(list, { base, next = null }) {
     if (!groups.length || groups.at(-1).k !== k) groups.push({ k, items: [] });
     groups.at(-1).items.push(m);
   }
+  // A full season is a very long page, so the months fold up and you pick one.
+  // Two or three months is short enough to read straight through, and folding it
+  // would just add a click to reach what is already on screen.
+  const collapsible = groups.length > 3;
+  // Landing on a page of nothing but closed headings is no use either, so the
+  // month holding the next race is already open — which is the one you came for.
+  const openKey = (next && list.find((m) => m.id === next)) ? monthKey(list.find((m) => m.id === next))
+    : groups[0].k;
   const inline = sponsors.filter((s) => s.slot === 'inline');
   return groups.map((g, i) => {
     const [y, mo] = g.k.split('-');
-    return `<section class="month" data-month="${g.k}">
-  <h2 id="m-${g.k}">${esc(MONTH[+mo - 1])}<span class="yr">${esc(y)}</span><span class="month-count" data-total="${g.items.length}">${g.items.length} meeting${g.items.length === 1 ? '' : 's'}</span></h2>
+    const open = !collapsible || g.k === openKey;
+    return `<details class="month" data-month="${g.k}"${open ? ' open' : ''}>
+  <summary>
+    <span class="month-caret" aria-hidden="true">\u25b6</span>
+    <h2 id="m-${g.k}">${esc(MONTH[+mo - 1])}</h2>
+    <span class="yr">${esc(y)}</span>
+    <span class="month-count">${g.items.length} meeting${g.items.length === 1 ? '' : 's'}</span>
+  </summary>
   ${g.items.map((m) => meetingRow(m, { base, next })).join('\n')}
-</section>${inline[i] ? adBlock(inline[i]) : ''}`;
+</details>${inline[i] ? adBlock(inline[i]) : ''}`;
   }).join('\n');
 }
 

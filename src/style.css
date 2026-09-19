@@ -278,11 +278,24 @@ a.stat:hover{background:var(--hover)}
 @media (min-width:60rem){.listhead{display:grid;gap:1rem;align-items:center;
   grid-template-columns:var(--cols)}}
 
-/* ---------- month sections ---------- */
-.month h2{position:sticky;top:var(--stick);z-index:20;display:flex;align-items:baseline;
+/* ---------- month sections ----------
+   A <details> per month, so a whole season folds down to a list of months you
+   can open one at a time. Works without JavaScript; filter.js only overrides
+   which are open while a filter is running. */
+.month>summary{position:sticky;top:var(--stick);z-index:20;display:flex;align-items:baseline;
   gap:.85rem;background:var(--bg);border-bottom:1px solid var(--line);
-  padding:.65rem .75rem;margin:0;font-size:1.6rem;letter-spacing:.05em}
-.month h2 .yr{font-family:var(--mono);font-size:.8125rem;font-weight:400;color:var(--muted);
+  padding:.65rem .75rem;cursor:pointer;list-style:none;transition:background .1s}
+.month>summary::-webkit-details-marker{display:none}
+.month>summary:hover{background:var(--hover)}
+.month>summary:focus-visible{outline:1px solid var(--accent);outline-offset:-1px}
+.month>summary h2{margin:0;font-family:var(--display);font-weight:800;text-transform:uppercase;
+  font-size:1.6rem;letter-spacing:.05em}
+/* On the left, where a disclosure triangle belongs: it opens a section, unlike
+   the row carets on the right, which reveal detail in place. */
+.month-caret{align-self:center;font-size:.6875rem;color:var(--muted);
+  transition:transform .15s;flex:0 0 auto}
+.month[open]>summary .month-caret{transform:rotate(90deg);color:var(--accent)}
+.month>summary .yr{font-family:var(--mono);font-size:.8125rem;font-weight:400;color:var(--muted);
   letter-spacing:.14em;text-transform:none}
 .month-count{margin-left:auto;font-size:.75rem;color:var(--muted)}
 

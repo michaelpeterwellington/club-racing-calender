@@ -10,9 +10,13 @@
   var rows = [].slice.call(document.querySelectorAll('.mtg'));
   var months = [].slice.call(document.querySelectorAll('.month'));
   var total = rows.length;
+  // Which months the page was served with open, so clearing a filter puts them
+  // back rather than leaving the whole season expanded.
+  months.forEach(function (m) { m.dataset.defaultOpen = m.open ? '1' : '0'; });
 
   function apply() {
     var term = q.value.trim().toLowerCase();
+    var filtering = !!(term || fc.value || fo.value || ft.value || fr.checked || fx.checked);
     var shown = 0;
     rows.forEach(function (el) {
       var ok = (!term || el.dataset.search.indexOf(term) > -1)
@@ -27,6 +31,9 @@
     months.forEach(function (m) {
       var n = m.querySelectorAll('.mtg:not([hidden])').length;
       m.hidden = !n;
+      // A match hidden inside a closed month reads as no match at all, so a
+      // running filter opens every month that has one.
+      m.open = filtering ? true : m.dataset.defaultOpen === '1';
       // The month header carries its own count, so it has to track the filter.
       var c = m.querySelector('.month-count');
       if (c) c.textContent = n + (n === 1 ? ' meeting' : ' meetings');
