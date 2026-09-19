@@ -22,21 +22,22 @@ export const newsletter = {
   // Where the form posts. Any service that accepts a plain HTML form post will
   // do — Buttondown, MailerLite, Kit, Mailchimp, a self-hosted Listmonk. Leave
   // null and the block is hidden everywhere, which is the current state.
-  action: null,
+  action: 'https://c31e5155.sibforms.com/serve/MUIFAERs3uZgTWNfv4XcB3vTghraVlEkYkDQgLAW_-Wtr6K8NvQBJKeqayQx4a9ycxSPDgTNZ4KhXCCpCauikZHmC03AAwFQpabQPgGxG9EVjk-yrwNXlnISOaUwY0CaOwbOcaGdjLDxhcz45sJ6sG-jtExgxrD-KBHX5WhlfRARL1ltdzfCWkUWdEk34aM8EmMrBY4h4r4ieg6ICg==',
+
 
   // The field name the service expects the address in. Most want 'email';
   // Brevo and Mailchimp want 'EMAIL'. Get this wrong and every signup is
   // silently lost, so check it against their embed code rather than assuming.
-  field: 'email',
+  field: 'EMAIL',
 
   // Any other inputs the provider's own embed code carries. Copy them from
   // there rather than guessing — a made-up name fails silently.
-  hidden: {},
+  hidden: { locale: 'en' },
 
   // A field real people never see and bots fill in anyway; submissions with it
   // filled are dropped. Only set it if the provider expects one, by the name it
   // expects. Brevo calls it 'email_address_check'.
-  honeypot: null,
+  honeypot: 'email_address_check',
 
   // Why anyone would hand over an address. Deadlines are the honest answer: a
   // rider who misses one loses a round, and nobody else sends that reminder.
