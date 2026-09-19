@@ -785,6 +785,25 @@ write('about/index.html', layout({
 <p>Solo tarmac racing \u2014 short circuits and closed roads. No off-road, no sidecars.</p>`,
 }));
 
+// 404. Without this file Cloudflare Pages answers an unknown path by serving the
+// home page with a 200, which tells a crawler the page exists and is a duplicate
+// of the front page, and tells a visitor nothing at all. Not linked from
+// anywhere, and excluded from the sitemap because that only collects index.html.
+write('404.html', layout({
+  title: `Page not found \u2014 ${SITE.name}`,
+  description: 'That page does not exist.',
+  base: '/', canonical: null,
+  body: `<h1>Not found</h1>
+<p class="lede">That page does not exist. It may have been a club or circuit that has since
+come off the calendar, or a mistyped address.</p>
+<ul class="clublist">
+  <li><a href="/"><b>The calendar</b><span>Every meeting, by month</span></a></li>
+  <li><a href="/clubs/"><b>Clubs</b><span>Who runs what, and who has published</span></a></li>
+  <li><a href="/feeds/"><b>Calendar feeds</b><span>Subscribe by circuit, club or series</span></a></li>
+  <li><a href="/clashes/"><b>Date clashes</b><span>Weekends where you have to choose</span></a></li>
+</ul>`,
+}));
+
 // sitemap + robots
 const pages = written.filter((p) => p.endsWith('index.html')).map((p) => '/' + p.replace(/index\.html$/, ''));
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map((p) => `<url><loc>${SITE.url}${p}</loc><lastmod>${TODAY}</lastmod></url>`).join('\n')}\n</urlset>\n`);
