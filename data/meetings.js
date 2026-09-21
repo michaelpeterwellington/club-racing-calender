@@ -222,4 +222,12 @@ export const meetings = [
     circuit: 'aintree', organiser: 'aintree', status: 'confirmed',
     round: '4',
     source: 'Aintree MCRC 2027 race dates' },
+
+  /* ---------------- Southern 100 2027 ----------------
+     Billown, Isle of Man. Monday to Thursday, as the road races always are —
+     not a weekend meeting.                                                   */
+  { id: 'southern-100-2027', start: '2027-07-12', end: '2027-07-15',
+    circuit: 'billown', organiser: 'southern-100', status: 'confirmed',
+    name: 'Southern 100 Road Races',
+    source: 'Southern 100 Racing announcement' },
 ];
