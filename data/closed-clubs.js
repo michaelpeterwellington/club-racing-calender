@@ -13,6 +13,7 @@ export const closedClubs = [
   { name: 'Wirral 100 Motor Club',         match: ['wirral'] },
   { name: 'Derby Phoenix MCRC',            match: ['derby phoenix', 'phoenix'] },
   { name: 'Tonfanau Racing Association',   match: ['tonfanau'] },
+  { name: 'East Fife Motor Club',          match: ['east fife', 'eastfife'] },
 ];
 
 // Organisers that hold ACU road-race permits but run something this site does

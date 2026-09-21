@@ -46,5 +46,4 @@ export const organisers = [
   { id: 'southern-100',  name: 'Southern 100 Racing',                     short: 'Southern 100', website: null },
   { id: 'mcui-ulster',   name: 'MCUI Ulster Centre clubs',                short: 'MCUI Ulster', website: null },
   { id: 'melville',      name: 'Melville Motor Club',                     short: 'Melville', website: null },
-  { id: 'east-fife',     name: 'East Fife Motor Club',                    short: 'East Fife', website: null },
 ];
