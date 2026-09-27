@@ -14,10 +14,64 @@
   // back rather than leaving the whole season expanded.
   months.forEach(function (m) { m.dataset.defaultOpen = m.open ? '1' : '0'; });
 
+  // The headline figures describe the calendar you are looking at, so they are
+  // recounted from the visible rows rather than left showing the whole season
+  // while the list underneath shows one club. Every number comes off data
+  // attributes already on each row, so there is nothing to keep in step.
+  var statEls = {
+    meetings: document.getElementById('stat-meetings'),
+    clubs: document.getElementById('stat-clubs'),
+    circuits: document.getElementById('stat-circuits'),
+    clashes: document.getElementById('stat-clashes')
+  };
+  // The header carries the same three figures. Leaving those static would put
+  // two different answers to the same question on screen at once. Only this
+  // page has a filter, and only this page loads this script, so the counts stay
+  // site-wide everywhere else.
+  var headEls = {
+    meetings: document.querySelector('.hs-meetings'),
+    clubs: document.querySelector('.hs-clubs'),
+    circuits: document.querySelector('.hs-circuits')
+  };
+  var LABELS = {
+    meetings: ['Race meeting', 'Race meetings'], clubs: ['Club', 'Clubs'],
+    circuits: ['Circuit', 'Circuits'], clashes: ['Date clash', 'Date clashes']
+  };
+  var HEAD_LABELS = {
+    meetings: ['Meeting', 'Meetings'], clubs: ['Club', 'Clubs'], circuits: ['Circuit', 'Circuits']
+  };
+  function stats(vis) {
+    var races = 0, clashes = 0, clubs = {}, circuits = {};
+    for (var i = 0; i < vis.length; i++) {
+      var d = vis[i].dataset;
+      if (d.kind === 'race') races++;
+      if (d.clash === '1') clashes++;
+      if (d.organiser) clubs[d.organiser] = 1;
+      // A meeting with no venue yet would otherwise count as a circuit.
+      if (d.circuit) circuits[d.circuit] = 1;
+    }
+    var n = { meetings: races, clubs: Object.keys(clubs).length,
+              circuits: Object.keys(circuits).length, clashes: clashes };
+    // Filtering to one club is a normal thing to do, and "1 Clubs" reads as a
+    // bug. The labels move with the number.
+    for (var k in statEls) if (statEls[k]) {
+      statEls[k].textContent = n[k];
+      var lab = statEls[k].nextElementSibling;
+      if (lab && LABELS[k]) lab.textContent = LABELS[k][n[k] === 1 ? 0 : 1];
+    }
+    for (var h in headEls) if (headEls[h]) {
+      headEls[h].textContent = n[h];
+      // The header's label is a bare text node beside the number, not an element.
+      var t = headEls[h].nextSibling;
+      if (t && HEAD_LABELS[h]) t.textContent = ' ' + HEAD_LABELS[h][n[h] === 1 ? 0 : 1];
+    }
+  }
+
   function apply() {
     var term = q.value.trim().toLowerCase();
     var filtering = !!(term || fc.value || fo.value || ft.value || fr.checked || fx.checked);
     var shown = 0;
+    var vis = [];
     rows.forEach(function (el) {
       var ok = (!term || el.dataset.search.indexOf(term) > -1)
         && (!fc.value || el.dataset.circuit === fc.value)
@@ -26,7 +80,7 @@
         && (!fr.checked || el.dataset.kind === 'race')
         && (!fx.checked || el.dataset.clash === '1');
       el.hidden = !ok;
-      if (ok) shown++;
+      if (ok) { shown++; vis.push(el); }
     });
     months.forEach(function (m) {
       var n = m.querySelectorAll('.mtg:not([hidden])').length;
@@ -41,6 +95,7 @@
     count.textContent = shown === total
       ? total + (total === 1 ? ' result' : ' results')
       : shown + ' of ' + total;
+    stats(vis);
     try {
       var p = new URLSearchParams();
       if (term) p.set('q', term);

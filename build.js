@@ -454,9 +454,9 @@ ${ticker()}
     </a>
     <nav><a href="${base}clubs/">Clubs</a><a href="${base}clashes/">Clashes</a><a href="${base}feeds/">Feeds</a><a href="${base}about/">About</a></nav>
     <div class="headstats">
-      <span><b>${raceCount}</b> Meetings</span>
-      <span><b>${new Set(upcoming.map((m) => m.organiser)).size}</b> Clubs</span>
-      <span><b>${new Set(upcoming.map((m) => m.circuit).filter(Boolean)).size}</b> Circuits</span>
+      <span><b class="hs-meetings">${raceCount}</b> Meetings</span>
+      <span><b class="hs-clubs">${new Set(upcoming.map((m) => m.organiser)).size}</b> Clubs</span>
+      <span><b class="hs-circuits">${new Set(upcoming.map((m) => m.circuit).filter(Boolean)).size}</b> Circuits</span>
     </div>
     ${themeToggle()}
   </div>
@@ -620,11 +620,11 @@ write('index.html', layout({
   </div>
 </div>
 <main id="main" class="wrap">
-<div class="stats">
-  <div class="stat"><b>${upcoming.filter((m) => (m.kind ?? 'race') === 'race').length}</b><span>Race meetings</span></div>
-  <div class="stat"><b>${new Set(upcoming.map((m) => m.organiser)).size}</b><span>Clubs</span></div>
-  <div class="stat"><b>${new Set(upcoming.map((m) => m.circuit).filter(Boolean)).size}</b><span>Circuits</span></div>
-  ${upcomingClashes.length ? `<a class="stat stat--alert" href="clashes/"><b>${upcomingClashes.length}</b><span>Date clashes</span></a>` : ''}
+<div class="stats" id="stats">
+  <div class="stat"><b id="stat-meetings">${upcoming.filter((m) => (m.kind ?? 'race') === 'race').length}</b><span>Race meetings</span></div>
+  <div class="stat"><b id="stat-clubs">${new Set(upcoming.map((m) => m.organiser)).size}</b><span>Clubs</span></div>
+  <div class="stat"><b id="stat-circuits">${new Set(upcoming.map((m) => m.circuit).filter(Boolean)).size}</b><span>Circuits</span></div>
+  ${upcomingClashes.length ? `<a class="stat stat--alert" href="clashes/"><b id="stat-clashes">${upcomingClashes.length}</b><span>Date clashes</span></a>` : ''}
 </div>
 ${(() => {
   const circuitsWithPace = usedCircuits.filter((c) => PACE.some((p) => p.circuit === c.id));
