@@ -631,6 +631,27 @@ footer.site .foot-links a{font-family:var(--mono);font-size:.8125rem;text-transf
   body.has-filters{--stick:var(--head-actual,var(--head))}
 }
 
+/* ---------- phone: calendar first ----------
+   On a phone the hero, filter bar, stat strip and pace pitch stacked up to
+   about 1300px before a single date appeared — more than a screen and a half of
+   preamble on the page whose job is to show you when people are racing. The
+   pitch is promotional, so it goes after the calendar rather than in front of
+   it, and the stats compress to one row. */
+@media (max-width:52rem){
+  body.has-filters main{display:flex;flex-direction:column}
+  body.has-filters .stats{order:1}
+  body.has-filters .listhead{order:2}
+  body.has-filters #list{order:3}
+  body.has-filters .pacepitch{order:4;margin-top:2rem}
+  body.has-filters .subscribe{order:5}
+
+  .stats{grid-template-columns:repeat(4,1fr);margin-bottom:1rem}
+  .stat{padding:.55rem .5rem}
+  .stat b{font-size:1.5rem}
+  .stat span{font-size:.625rem;letter-spacing:.06em}
+  .hero{padding:1.75rem 0 1.5rem}
+}
+
 /* ---------- narrow ----------
    The row folds into three lines rather than six: when, what, and where with
    who. Date and status share the top line because those are the two things you
@@ -651,12 +672,25 @@ footer.site .foot-links a{font-family:var(--mono);font-size:.8125rem;text-transf
     font-family:var(--mono);letter-spacing:.06em}
   .mtg-more{grid-template-columns:1fr;gap:1rem}
 }
+/* Five nav items at full tracking are wider than a 320px screen, and the nav is
+   nowrap so the header's height stays predictable — which means it pushes the
+   page instead of folding. Tighter type on the smallest screens rather than
+   letting it overflow or reintroducing an unpredictable second row. */
+@media (max-width:23rem){
+  header nav a{font-size:.75rem;letter-spacing:.06em;padding:.4rem .3rem}
+}
+
 @media (max-width:34rem){
   .wrap{padding-inline:1rem}
   /* Search is the control people actually reach for, so it gets its own row
      rather than being squeezed to half a placeholder beside a select. */
   .filters input[type=search]{flex:1 1 100%;max-width:none}
-  .hero{padding:2rem 0 1.75rem}
+  /* Tighter than the 52rem rule above, which this would otherwise override. */
+  .hero{padding:1.25rem 0 1.1rem}
+  .hero .wrap{gap:1rem}
+  /* Wide tracking costs a whole extra line on a 360px screen, which is the
+     difference between seeing a race date on load and not. */
+  .hero p{margin-top:.5rem;line-height:1.5;letter-spacing:.07em;font-size:.8125rem}
   .headstats{display:none}
   .stat b{font-size:1.9rem}
 }
