@@ -356,17 +356,15 @@ function accommodationBlock(c) {
 // Posts straight to the mailing-list provider: no JavaScript, and nothing about
 // the subscriber ever touches this site, which keeps it a pile of static files
 // with no personal data of its own to leak.
-function newsletterBlock(base) {
-  if (!newsletter.action) return '';
+// The form itself, with a suffix on the ids so the planner can carry its own
+// copy without colliding with the one in the footer. Duplicate ids would break
+// the label association and give signup.js two elements answering to one name.
+function signupForm(suffix) {
   const field = newsletter.field || 'email';
-  return `<section class="signup">
-  <div>
-    <h2>Never miss an entry deadline</h2>
-    <p>${esc(newsletter.pitch)}</p>
-  </div>
-  <form action="${esc(newsletter.action)}" method="post" target="_blank" rel="noopener">
-    <label class="vh" for="nl-email">Email address</label>
-    <input id="nl-email" type="email" name="${esc(field)}" placeholder="you@example.com"
+  const id = 'nl-email' + (suffix ? '-' + suffix : '');
+  return `<form action="${esc(newsletter.action)}" method="post" target="_blank" rel="noopener">
+    <label class="vh" for="${id}">Email address</label>
+    <input id="${id}" type="email" name="${esc(field)}" placeholder="you@example.com"
            autocomplete="email" required>
 ${Object.entries(newsletter.hidden ?? {}).map(([k, v]) =>
   `    <input type="hidden" name="${esc(k)}" value="${esc(v)}">`).join('\n')}
@@ -374,7 +372,35 @@ ${newsletter.honeypot ? `    <input class="vh" type="text" name="${esc(newslette
            tabindex="-1" autocomplete="off" aria-hidden="true">` : ''}
     <button type="submit">Subscribe</button>
     <p class="signup-note" aria-live="polite">${esc(newsletter.smallprint ?? '')}</p>
-  </form>
+  </form>`;
+}
+
+function newsletterBlock(base) {
+  if (!newsletter.action) return '';
+  return `<section class="signup">
+  <div>
+    <h2>Never miss an entry deadline</h2>
+    <p>${esc(newsletter.pitch)}</p>
+  </div>
+  ${signupForm('')}
+</section>
+<script src="${base}signup.js" defer></script>`;
+}
+
+// Shown on the planner once something is picked. A rider who has just chosen a
+// season has the problem this solves — the file they are about to download
+// cannot follow a club moving a date — so the offer is specific and timely
+// rather than a generic "weekly email" at the foot of the page.
+function planPrompt(base) {
+  if (!newsletter.action) return '';
+  return `<section class="signup signup--plan" id="plan-signup" hidden>
+  <div>
+    <h2>Tell me if these dates move</h2>
+    <p>The file you download is a snapshot. Clubs do move meetings, especially early in the
+    season, and your phone will not know. Leave an address and you will hear when one of
+    them changes \u2014 plus which clubs have just published.</p>
+  </div>
+  ${signupForm('plan')}
 </section>
 <script src="${base}signup.js" defer></script>`;
 }
@@ -417,9 +443,9 @@ function themeToggle() {
 // Kept inline and tiny for that reason; theme.js does everything else.
 const THEME_BOOT = `<script>(function(){try{var p=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=p==='auto'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):p}catch(e){}})();</script>`;
 
-function layout({ title, description, body, base, canonical, jsonld = [], wide = false, filters = false, main = true }) {
+function layout({ title, description, body, base, canonical, jsonld = [], wide = false, filters = false, main = true, signup = true }) {
   const raceCount = upcoming.filter((m) => (m.kind ?? 'race') === 'race').length;
-  const signup = newsletterBlock(base);
+  const signupBlock = signup ? newsletterBlock(base) : '';
   return `<!doctype html>
 <html lang="en-GB">
 <head>
@@ -464,7 +490,7 @@ ${ticker()}
 ${hasExamples ? `<div class="warnbar"><div class="wrap">This site is showing <b>example data</b> \u2014 delete the demo rows in <code>data/meetings.js</code></div></div>` : ''}
 ${adSlot('top') ? `<div class="wrap">${adSlot('top')}</div>` : ''}
 ${main ? `<main id="main" class="wrap">\n${body}\n</main>` : body}
-${signup ? `<div class="wrap">${signup}</div>` : ''}
+${signupBlock ? `<div class="wrap">${signupBlock}</div>` : ''}
 <footer class="site">
   <div class="wrap">
     <div class="foot-brand">
@@ -800,7 +826,7 @@ ${usedChamps.length ? `<h2>By championship</h2>\n<ul class="feeds">${usedChamps.
   write('plan/index.html', layout({
     title: `Plan your 2027 season \u2014 ${SITE.name}`,
     description: 'Pick the meetings you intend to enter and take them away as a calendar file, with a warning on any two that fall on the same weekend.',
-    canonical: '/plan/', base: '../', wide: true,
+    canonical: '/plan/', base: '../', wide: true, signup: false,
     body: `<nav class="crumbs"><a href="../">Calendar</a> <span>/</span> Plan your season</nav>
 <h1>Plan your season</h1>
 <p class="lede">Tick the meetings you intend to enter. Your picks are kept in this browser \u2014 nothing is
@@ -822,6 +848,7 @@ ${groups.map((g) => {
 moves a meeting after you have imported it, your phone will not know \u2014 the per-circuit and per-club
 feeds on the <a href="../feeds/">feeds page</a> do stay up to date, because they are live addresses
 rather than a file.</p>
+${planPrompt('../')}
 <script type="application/json" id="plandata">${JSON.stringify(payload).replace(/</g, '\\u003c')}</script>
 <script src="../plan.js" defer></script>`,
   }));

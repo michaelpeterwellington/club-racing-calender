@@ -5,6 +5,7 @@
   var dl = document.getElementById('plan-dl');
   var clear = document.getElementById('plan-clear');
   var warn = document.getElementById('plan-warn');
+  var prompt = document.getElementById('plan-signup');
   if (!list || !dl) return;
 
   var data = {};
@@ -35,6 +36,8 @@
       : 'Nothing picked yet';
     dl.disabled = !n;
     clear.disabled = !n;
+    // Only worth asking once there is a plan to go stale.
+    if (prompt) prompt.hidden = !n;
 
     // A clash only matters if both sides are in the plan. Warning about every
     // meeting that clashes with something would flag nearly the whole calendar.

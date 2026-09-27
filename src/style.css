@@ -546,6 +546,9 @@ table#pacetable{border-collapse:separate;border-spacing:0;width:100%;
   .pick-club{grid-column:2;text-align:left;font-family:var(--mono);font-size:.75rem}
 }
 
+/* The planner's own ask, which only appears once a season has been picked. */
+.signup--plan{margin-top:2.5rem;border-left:3px solid var(--accent)}
+
 /* ---------- promos, newsletter, feeds ---------- */
 .promo{position:relative;background:var(--bg-2);border:1px solid var(--line);margin:1.5rem 0}
 .promo a{display:block;padding:1rem 1.1rem;text-decoration:none}
