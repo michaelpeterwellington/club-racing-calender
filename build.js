@@ -211,6 +211,7 @@ function meetingRow(m, { base, next }) {
     </div>` : ''}
     <div class="acts">
       ${m.entryUrl && status !== 'cancelled' && status !== 'full' ? `<a class="btn js-out" href="${esc(m.entryUrl)}" rel="noopener">Enter \u2192</a>` : ''}
+      <a class="btn btn--ghost" href="${base}meeting/${m.id}/">This meeting \u2014 full details</a>
       ${c ? `<a class="btn btn--ghost" href="${base}circuit/${m.circuit}/">${venue} dates</a>` : ''}
       <a class="btn btn--ghost" href="${base}organiser/${m.organiser}/">${club} calendar</a>
     </div>
@@ -776,7 +777,89 @@ ${monthList(up, { base: '../../' })}`,
   write(`feeds/championship-${s.id}.ics`, ics(list, `${s.name} \u2014 rounds`));
 }
 
-// feeds index
+// meeting pages
+// One URL per meeting. Keyed on the meeting id rather than a prettier slug
+// built from the date and venue: this is the address people link to and search
+// engines rank, and the id is the one thing guaranteed not to move if a club
+// changes a venue. It is already what the iCal UIDs are built from.
+for (const m of all) {
+  const c = m.circuit ? C[m.circuit] : null, o = O[m.organiser];
+  const champs = (m.championships ?? []).map((id) => ({ id, name: S[id]?.name ?? id, known: !!S[id] }));
+  const note = entryNote(m);
+  const chip = statusChip(m, note);
+  const kind = m.kind ?? 'race';
+  const clash = clashMap.get(m.id) ?? [];
+  const venue = c ? esc(c.name) : 'Venue TBC';
+  const club = esc(o?.short ?? o?.name ?? m.organiser);
+  const title = `${c ? c.name + (m.config ? ' ' + m.config : '') : 'Venue TBC'} \u2014 ${o?.short ?? o?.name ?? m.organiser}`;
+  const pace = c ? PACE.filter((x) => x.circuit === c.id) : [];
+  write(`meeting/${m.id}/index.html`, layout({
+    title: `${title}, ${dateLong(m)} \u2014 ${SITE.name}`,
+    description: `${KINDS[kind] ? KINDS[kind][0].toUpperCase() + KINDS[kind].slice(1) : 'Motorcycle race meeting'} at ${c ? c.name : 'a venue to be confirmed'} on ${dateLong(m)}, run by ${o?.name ?? m.organiser}.`,
+    canonical: `/meeting/${m.id}/`, base: '../../',
+    jsonld: [eventLd(m), {
+      '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Calendar', item: SITE.url + '/' },
+        ...(c ? [{ '@type': 'ListItem', position: 2, name: c.name, item: `${SITE.url}/circuit/${c.id}/` }] : []),
+        { '@type': 'ListItem', position: c ? 3 : 2, name: title, item: `${SITE.url}/meeting/${m.id}/` },
+      ],
+    }],
+    body: `<nav class="crumbs"><a href="../../">Calendar</a> <span>/</span> ${
+      c ? `<a href="../../circuit/${c.id}/">${venue}</a> <span>/</span> ` : ''}${esc(dateLong(m))}</nav>
+<h1>${venue}${m.config ? ` <span class="cfg">${esc(m.config)}</span>` : ''}</h1>
+<p class="lede">${esc(dateLong(m))} \u00b7 ${esc(dayLabel(m))} \u00b7 run by <a href="../../organiser/${m.organiser}/">${esc(o?.name ?? m.organiser)}</a></p>
+
+<div class="stats">
+  <div class="stat"><b>${esc(shortRange(m))}</b><span>${esc(dayLabel(m))}</span></div>
+  <div class="stat"><b>${club}</b><span>Organiser</span></div>
+  ${c ? `<div class="stat"><b>${esc(c.short)}</b><span>${esc(c.region)}</span></div>` : ''}
+  <div class="stat${chip.key === 'cancelled' ? ' stat--alert' : ''}"><b>${esc(chip.label)}</b><span>Status</span></div>
+</div>
+
+${m.notes ? `<p class="clubnote">${esc(m.notes)}</p>` : ''}
+
+<h2>Details</h2>
+<p class="dl">
+  <b>Dates</b> <i>${esc(dateLong(m))}</i><br>
+  <b>Venue</b> <i>${c ? `<a href="../../circuit/${c.id}/">${venue}</a>${m.config ? ' ' + esc(m.config) : ''}` : 'To be confirmed'}</i><br>
+  ${c ? `<b>Region</b> <i>${esc(c.region)}</i><br>` : ''}
+  <b>Club</b> <i><a href="../../organiser/${m.organiser}/">${esc(o?.name ?? m.organiser)}</a></i><br>
+  <b>Type</b> <i>${esc(KINDS[kind] ?? 'race meeting')}</i>${m.round ? `<br><b>Round</b> <i>${esc(m.round)}</i>` : ''}${
+    note ? `<br><b>Entries</b> <i${note.urgent ? ' class="entries--soon"' : ''}>${esc(note.text)}</i>` : ''}
+</p>
+
+${champs.length ? `<h2>Championships</h2>
+<div class="chips">${champs.map((x) => x.known
+  ? `<a href="../../championship/${x.id}/">${esc(x.name)}</a>`
+  : `<span>${esc(x.name)}</span>`).join('')}</div>` : ''}
+
+${clash.length ? `<h2>Also racing that weekend</h2>
+<p>${clash.length === 1 ? 'Another club is' : `${clash.length} other clubs are`} running at the same
+time, so entering this one rules ${clash.length === 1 ? 'it' : 'them'} out.</p>
+<ul class="clublist">${clash.map((x) => `<li><a href="../../meeting/${x.id}/"><b>${
+  esc(x.circuit ? C[x.circuit].name : 'Venue TBC')}</b><span>${esc(O[x.organiser]?.short ?? x.organiser)} \u00b7 ${esc(shortRange(x))}</span></a></li>`).join('')}</ul>` : ''}
+
+<div class="acts acts--row">
+  ${m.entryUrl && m.status !== 'cancelled' && m.status !== 'full'
+    ? `<a class="btn js-out" href="${esc(m.entryUrl)}" rel="noopener">Enter \u2192</a>` : ''}
+  <a class="btn btn--ghost" href="../../meeting/${m.id}.ics">Add to calendar</a>
+  ${c ? `<a class="btn btn--ghost" href="../../circuit/${c.id}/">All ${venue} dates</a>` : ''}
+  <a class="btn btn--ghost" href="../../plan/">Plan a season</a>
+</div>
+
+${pace.length ? `<h2>Pace here</h2>
+<p>${pace.length} classes of 2026 results were recorded at ${venue}. Put your best lap in on the
+<a href="../../circuit/${c.id}/">${venue} page</a> to see where it would have put you.</p>` : ''}
+
+<p class="pace-note">Dates are taken from the organising club and checked, but they are not official.
+Confirm with ${club} before booking travel.${m.source ? ` Source: ${esc(m.source)}.` : ''}</p>`,
+  }));
+  const ev = veventLines(m);
+  if (ev) write(`meeting/${m.id}.ics`, [...icsHeader(title), ...ev, 'END:VCALENDAR'].join('\r\n') + '\r\n');
+}
+
+// feeds index// feeds index
 const usedChamps = championships.filter((s) => all.some((m) => (m.championships ?? []).includes(s.id)));
 write('feeds/all.ics', ics(all, `${SITE.name} \u2014 all meetings`));
 write('feeds/index.html', layout({

@@ -417,6 +417,9 @@ a.stat:hover{background:var(--hover)}
   text-decoration-color:var(--line-2)}
 .mtg-clash a:hover{text-decoration-color:var(--accent)}
 .acts{display:flex;flex-direction:column;gap:.45rem;align-items:stretch}
+/* On a meeting's own page the actions sit in a row, not a sidebar column. */
+.acts--row{flex-direction:row;flex-wrap:wrap;align-items:center;margin:1.75rem 0}
+.acts--row .btn{flex:0 0 auto}
 
 /* ---------- buttons ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
