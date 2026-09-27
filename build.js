@@ -452,7 +452,7 @@ ${ticker()}
       </svg>
       <span><b>${esc(SITE.name)}</b><span class="brand-sub">UK motorcycle club racing</span></span>
     </a>
-    <nav><a href="${base}clubs/">Clubs</a><a href="${base}clashes/">Clashes</a><a href="${base}feeds/">Feeds</a><a href="${base}about/">About</a></nav>
+    <nav><a href="${base}plan/">Plan</a><a href="${base}clubs/">Clubs</a><a href="${base}clashes/">Clashes</a><a href="${base}feeds/">Feeds</a><a href="${base}about/">About</a></nav>
     <div class="headstats">
       <span><b class="hs-meetings">${raceCount}</b> Meetings</span>
       <span><b class="hs-clubs">${new Set(upcoming.map((m) => m.organiser)).size}</b> Clubs</span>
@@ -519,31 +519,42 @@ const icsEsc = (s) => String(s ?? '').replace(/\\/g, '\\\\').replace(/;/g, '\;')
 const plusDay = (d) => { const t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + 1); return t.toISOString().slice(0, 10); };
 const stamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
+// One VEVENT. Split out so the season planner can ship the very same blocks to
+// the browser and let it concatenate a calendar from the ones you picked —
+// escaping and line folding are fiddly enough to be worth having in one place
+// rather than reimplemented in client script and left to drift.
+function veventLines(m) {
+  if (m.status === 'cancelled') return null;
+  const c = m.circuit ? C[m.circuit] : null, o = O[m.organiser];
+  const champs = (m.championships ?? []).map((id) => S[id]?.name ?? id);
+  const desc = [o?.name, champs.length ? 'Championships: ' + champs.join(', ') : '', m.notes,
+    m.entriesOpen ? 'Entries open: ' + m.entriesOpen : '',
+    m.entriesClose ? 'Entries CLOSE: ' + m.entriesClose : '',
+    m.status && m.status !== 'confirmed' ? 'Status: ' + m.status : '']
+    .filter(Boolean).join('\n');
+  return ['BEGIN:VEVENT',
+    `UID:${m.id}@${SITE.uidDomain ?? SITE.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
+    `DTSTAMP:${stamp}`,
+    `DTSTART;VALUE=DATE:${m.start.replace(/-/g, '')}`,
+    `DTEND;VALUE=DATE:${plusDay(m.end ?? m.start).replace(/-/g, '')}`,
+    fold(`SUMMARY:${icsEsc(`${c ? c.name + (m.config ? ' ' + m.config : '') : 'Venue TBC'} \u2014 ${o?.short ?? o?.name ?? m.organiser}${m.name ? ' (' + m.name + ')' : ''}`)}`),
+    fold(`LOCATION:${icsEsc(c ? c.name : '')}`),
+    desc ? fold(`DESCRIPTION:${icsEsc(desc)}`) : null,
+    m.entryUrl ? fold(`URL:${icsEsc(m.entryUrl)}`) : null,
+    'TRANSP:TRANSPARENT', 'END:VEVENT'].filter(Boolean);
+}
+
+const icsHeader = (name) => ['BEGIN:VCALENDAR', 'VERSION:2.0', `PRODID:-//${SITE.name}//EN`,
+  'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', `X-WR-CALNAME:${icsEsc(name)}`, 'X-PUBLISHED-TTL:PT12H'];
+
 function ics(list, name) {
-  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', `PRODID:-//${SITE.name}//EN`, 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
-    `X-WR-CALNAME:${icsEsc(name)}`, 'X-PUBLISHED-TTL:PT12H'];
+  const lines = icsHeader(name);
   for (const m of list) {
-    if (m.status === 'cancelled') continue;
-    const c = m.circuit ? C[m.circuit] : null, o = O[m.organiser];
-    const champs = (m.championships ?? []).map((id) => S[id]?.name ?? id);
-    const desc = [o?.name, champs.length ? 'Championships: ' + champs.join(', ') : '', m.notes,
-      m.entriesOpen ? 'Entries open: ' + m.entriesOpen : '',
-      m.entriesClose ? 'Entries CLOSE: ' + m.entriesClose : '',
-      m.status && m.status !== 'confirmed' ? 'Status: ' + m.status : '']
-      .filter(Boolean).join('\n');
-    lines.push('BEGIN:VEVENT',
-      `UID:${m.id}@${SITE.uidDomain ?? SITE.url.replace(/^https?:\/\//, '').replace(/\/$/, '')}`,
-      `DTSTAMP:${stamp}`,
-      `DTSTART;VALUE=DATE:${m.start.replace(/-/g, '')}`,
-      `DTEND;VALUE=DATE:${plusDay(m.end ?? m.start).replace(/-/g, '')}`,
-      fold(`SUMMARY:${icsEsc(`${c ? c.name + (m.config ? ' ' + m.config : '') : 'Venue TBC'} \u2014 ${o?.short ?? o?.name ?? m.organiser}${m.name ? ' (' + m.name + ')' : ''}`)}`),
-      fold(`LOCATION:${icsEsc(c ? c.name : '')}`),
-      desc ? fold(`DESCRIPTION:${icsEsc(desc)}`) : null,
-      m.entryUrl ? fold(`URL:${icsEsc(m.entryUrl)}`) : null,
-      'TRANSP:TRANSPARENT', 'END:VEVENT');
+    const ev = veventLines(m);
+    if (ev) lines.push(...ev);
   }
   lines.push('END:VCALENDAR');
-  return lines.filter(Boolean).join('\r\n') + '\r\n';
+  return lines.join('\r\n') + '\r\n';
 }
 
 /* ---------- emit ---------- */
@@ -758,7 +769,65 @@ write('feeds/index.html', layout({
 ${usedChamps.length ? `<h2>By championship</h2>\n<ul class="feeds">${usedChamps.map((s) => `<li><a href="championship-${s.id}.ics">${esc(s.name)}</a></li>`).join('')}</ul>` : ''}`,
 }));
 
-// clubs index
+// season planner
+{
+  const pick = upcoming.filter((m) => m.status !== 'cancelled');
+  // The VEVENT blocks the browser will stitch together, plus who each meeting
+  // clashes with so a plan can warn about its own double-bookings.
+  const payload = Object.fromEntries(pick.map((m) => [m.id, {
+    v: (veventLines(m) ?? []).join('\r\n'),
+    c: (clashMap.get(m.id) ?? []).map((x) => x.id).filter((id) => pick.some((p) => p.id === id)),
+  }]));
+  const groups = [];
+  for (const m of pick) {
+    const k = monthKey(m);
+    if (!groups.length || groups.at(-1).k !== k) groups.push({ k, items: [] });
+    groups.at(-1).items.push(m);
+  }
+  const row = (m) => {
+    const c = m.circuit ? C[m.circuit] : null, o = O[m.organiser];
+    const kind = m.kind ?? 'race';
+    const dl = dateLabel(m);
+    return `<li><label class="pick">
+      <input type="checkbox" value="${esc(m.id)}">
+      <span class="pick-date"><b>${esc(dl.big)}</b> ${esc(dl.small)}<em>${esc(dayLabel(m))}</em></span>
+      <span class="pick-name">${c ? esc(c.name) : 'Venue TBC'}${m.config ? ` <span class="cfg">${esc(m.config)}</span>` : ''}${
+        kind !== 'race' ? ` <span class="tag tag--kind">${esc(KINDS[kind])}</span>` : ''}${
+        m.round ? `<span class="pick-sub">Round ${esc(m.round)}</span>` : ''}</span>
+      <span class="pick-club">${esc(o?.short ?? o?.name ?? m.organiser)}</span>
+    </label></li>`;
+  };
+  write('plan/index.html', layout({
+    title: `Plan your 2027 season \u2014 ${SITE.name}`,
+    description: 'Pick the meetings you intend to enter and take them away as a calendar file, with a warning on any two that fall on the same weekend.',
+    canonical: '/plan/', base: '../', wide: true,
+    body: `<nav class="crumbs"><a href="../">Calendar</a> <span>/</span> Plan your season</nav>
+<h1>Plan your season</h1>
+<p class="lede">Tick the meetings you intend to enter. Your picks are kept in this browser \u2014 nothing is
+sent anywhere and there is no account \u2014 and you can take them away as a calendar file for your phone.</p>
+<div class="plan-bar">
+  <p class="plan-count" id="plan-count" aria-live="polite">Nothing picked yet</p>
+  <button type="button" id="plan-dl" class="btn" disabled>Download calendar</button>
+  <button type="button" id="plan-clear" class="btn btn--ghost" disabled>Clear</button>
+</div>
+<div id="plan-warn" class="plan-warn" hidden></div>
+${groups.map((g) => {
+  const [y, mo] = g.k.split('-');
+  return `<section class="plan-month">
+  <h2>${esc(MONTH[+mo - 1])} <span class="yr">${esc(y)}</span></h2>
+  <ul class="picks">${g.items.map(row).join('')}</ul>
+</section>`;
+}).join('')}
+<p class="pace-note">The file you download is a snapshot of the dates as they stand today. If a club
+moves a meeting after you have imported it, your phone will not know \u2014 the per-circuit and per-club
+feeds on the <a href="../feeds/">feeds page</a> do stay up to date, because they are live addresses
+rather than a file.</p>
+<script type="application/json" id="plandata">${JSON.stringify(payload).replace(/</g, '\\u003c')}</script>
+<script src="../plan.js" defer></script>`,
+  }));
+}
+
+// clubs index// clubs index
 {
   const published = organisers.filter((o) => all.some((m) => m.organiser === o.id));
   const awaiting = organisers.filter((o) => !all.some((m) => m.organiser === o.id));
@@ -834,7 +903,7 @@ write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="htt
 write('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${SITE.url}/sitemap.xml\n`);
 
 // static assets
-for (const f of ['style.css', 'filter.js', 'pace.js', 'theme.js', 'signup.js']) if (existsSync(join('src', f))) cpSync(join('src', f), join(OUT, f));
+for (const f of ['style.css', 'filter.js', 'pace.js', 'theme.js', 'signup.js', 'plan.js']) if (existsSync(join('src', f))) cpSync(join('src', f), join(OUT, f));
 if (existsSync('src/fonts')) cpSync('src/fonts', join(OUT, 'fonts'), { recursive: true });
 if (existsSync('src/img')) cpSync('src/img', join(OUT, 'img'), { recursive: true });
 if (SITE.hero && !existsSync(join('src', SITE.hero.src))) warn(`SITE.hero.src "${SITE.hero.src}" not found under src/`);
