@@ -232,38 +232,30 @@ export const meetings = [
     source: 'Southern 100 Racing announcement' },
 
   /* ---------------- EMRA 2027 ----------------
-     The announcement gives dates and round numbers only, with no venue against
-     any of them, so every round is left as TBC rather than guessed at. EMRA are
-     strongly associated with one circuit, but "strongly associated with" is not
-     a source — fill the venues in once the club states them.
+     Every round is at Mallory Park. The dates announcement gives dates and
+     round numbers only, with no venue against any of them; the venue was
+     confirmed separately, which is why `source` still names the dates post.
      Round 2 is the only two-day round.                                       */
   { id: 'emra-2027-test', start: '2027-03-20',
-    circuit: null, organiser: 'emra', kind: 'test',
+    circuit: 'mallory', organiser: 'emra', kind: 'test',
     name: 'EMRA Test Day', status: 'confirmed',
-    notes: 'Venue not stated in the announcement.',
     source: 'EMRA 2027 race dates announcement' },
   { id: 'emra-2027-r1', start: '2027-04-04',
-    circuit: null, organiser: 'emra', status: 'confirmed', round: '1',
-    notes: 'Venue not stated in the announcement.',
+    circuit: 'mallory', organiser: 'emra', status: 'confirmed', round: '1',
     source: 'EMRA 2027 race dates announcement' },
   { id: 'emra-2027-r2', start: '2027-05-15', end: '2027-05-16',
-    circuit: null, organiser: 'emra', status: 'confirmed', round: '2',
-    notes: 'Venue not stated in the announcement.',
+    circuit: 'mallory', organiser: 'emra', status: 'confirmed', round: '2',
     source: 'EMRA 2027 race dates announcement' },
   { id: 'emra-2027-r3', start: '2027-06-13',
-    circuit: null, organiser: 'emra', status: 'confirmed', round: '3',
-    notes: 'Venue not stated in the announcement.',
+    circuit: 'mallory', organiser: 'emra', status: 'confirmed', round: '3',
     source: 'EMRA 2027 race dates announcement' },
   { id: 'emra-2027-r4', start: '2027-08-08',
-    circuit: null, organiser: 'emra', status: 'confirmed', round: '4',
-    notes: 'Venue not stated in the announcement.',
+    circuit: 'mallory', organiser: 'emra', status: 'confirmed', round: '4',
     source: 'EMRA 2027 race dates announcement' },
   { id: 'emra-2027-r5', start: '2027-09-05',
-    circuit: null, organiser: 'emra', status: 'confirmed', round: '5',
-    notes: 'Venue not stated in the announcement.',
+    circuit: 'mallory', organiser: 'emra', status: 'confirmed', round: '5',
     source: 'EMRA 2027 race dates announcement' },
   { id: 'emra-2027-r6', start: '2027-10-03',
-    circuit: null, organiser: 'emra', status: 'confirmed', round: '6',
-    notes: 'Venue not stated in the announcement.',
+    circuit: 'mallory', organiser: 'emra', status: 'confirmed', round: '6',
     source: 'EMRA 2027 race dates announcement' },
 ];
