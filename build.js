@@ -441,7 +441,7 @@ ${jsonld.length ? `<script type="application/ld+json">${JSON.stringify(jsonld.le
 ${ticker()}
 <header class="site">
   <div class="wrap">
-    <a class="brand" href="${base}">
+    <a class="brand" href="${base || './'}">
       <svg class="mark" viewBox="0 0 60 30" aria-hidden="true" focusable="false">
         <clipPath id="ukq"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
         <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
@@ -472,7 +472,7 @@ ${signup ? `<div class="wrap">${signup}</div>` : ''}
       <p>An independent listing of UK motorcycle road race meetings, aggregated from the organising clubs\u2019 own calendars. Always check with the club before travelling \u2014 dates change.</p>
     </div>
     <div class="foot-links">
-      <a href="${base}">Calendar</a>
+      <a href="${base || './'}">Calendar</a>
       <a href="${base}clashes/">Date clashes</a>
       <a href="${base}feeds/">Calendar feeds</a>
       <a href="${base}about/">About &amp; corrections</a>
