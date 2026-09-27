@@ -64,6 +64,124 @@
     fx.checked = p.get('clashes') === '1';
   } catch (e) {}
 
+  /* ---------- suggestions ----------
+     Safari draws a <datalist> as a small popover rather than a dropdown that
+     filters, and on a phone it is worse, so the list attribute is dropped and
+     this drives its own listbox. The datalist stays in the markup as the
+     no-JavaScript fallback; removing the attribute means a browser never shows
+     both at once. */
+  (function () {
+    var box = document.getElementById('q-list');
+    var data = document.getElementById('searchterms');
+    if (!box || !data) return;
+    var terms = [].slice.call(data.options).map(function (o) {
+      return { t: o.value, k: o.dataset.kind || '' };
+    });
+    q.removeAttribute('list');
+    var open = [];
+    var active = -1;
+
+    function close() {
+      box.hidden = true; box.innerHTML = ''; open = []; active = -1;
+      q.setAttribute('aria-expanded', 'false');
+      q.removeAttribute('aria-activedescendant');
+    }
+
+    function mark(text, term) {
+      var i = text.toLowerCase().indexOf(term);
+      if (i < 0) return document.createTextNode(text);
+      var f = document.createDocumentFragment();
+      f.appendChild(document.createTextNode(text.slice(0, i)));
+      var b = document.createElement('b');
+      b.textContent = text.slice(i, i + term.length);
+      f.appendChild(b);
+      f.appendChild(document.createTextNode(text.slice(i + term.length)));
+      return f;
+    }
+
+    function show() {
+      var term = q.value.trim().toLowerCase();
+      if (!term) return close();
+      // Anywhere in the word, not just the start: "park" should find Cadwell
+      // Park. Ones that start with it rank first, because that is what a person
+      // typing two letters is usually after.
+      var hits = terms.filter(function (x) { return x.t.toLowerCase().indexOf(term) > -1; });
+      hits.sort(function (a, b) {
+        var ai = a.t.toLowerCase().indexOf(term) === 0 ? 0 : 1;
+        var bi = b.t.toLowerCase().indexOf(term) === 0 ? 0 : 1;
+        return ai - bi || a.t.localeCompare(b.t, 'en');
+      });
+      hits = hits.slice(0, 8);
+      // An exact match is already typed out in full; offering it says nothing.
+      if (!hits.length || (hits.length === 1 && hits[0].t.toLowerCase() === term)) return close();
+      box.innerHTML = '';
+      hits.forEach(function (x, i) {
+        var li = document.createElement('li');
+        li.id = 'q-opt-' + i;
+        li.setAttribute('role', 'option');
+        li.setAttribute('aria-selected', 'false');
+        // The name goes in its own element. The li is a flex row, so loose text
+        // nodes each became a flex item and the row gap opened up inside the
+        // word: "P embrey".
+        var name = document.createElement('span');
+        name.className = 'combo-name';
+        name.appendChild(mark(x.t, term));
+        li.appendChild(name);
+        if (x.k) {
+          var kind = document.createElement('span');
+          kind.className = 'combo-kind';
+          kind.textContent = x.k;
+          li.appendChild(kind);
+        }
+        // mousedown, not click: the input blurs first on click and the list is
+        // already gone by then.
+        li.addEventListener('mousedown', function (e) { e.preventDefault(); pick(i); });
+        box.appendChild(li);
+      });
+      open = hits; active = -1;
+      box.hidden = false;
+      q.setAttribute('aria-expanded', 'true');
+    }
+
+    function highlight(n) {
+      var items = box.children;
+      for (var i = 0; i < items.length; i++) {
+        var on = i === n;
+        items[i].classList.toggle('is-active', on);
+        items[i].setAttribute('aria-selected', String(on));
+      }
+      active = n;
+      if (n > -1) {
+        q.setAttribute('aria-activedescendant', 'q-opt-' + n);
+        if (items[n].scrollIntoView) items[n].scrollIntoView({ block: 'nearest' });
+      } else {
+        q.removeAttribute('aria-activedescendant');
+      }
+    }
+
+    function pick(n) {
+      if (!open[n]) return;
+      q.value = open[n].t;
+      close();
+      apply();
+    }
+
+    q.addEventListener('input', show);
+    q.addEventListener('focus', show);
+    q.addEventListener('blur', function () { setTimeout(close, 120); });
+    q.addEventListener('keydown', function (e) {
+      if (box.hidden) {
+        if (e.key === 'ArrowDown') { show(); e.preventDefault(); }
+        return;
+      }
+      if (e.key === 'ArrowDown') { e.preventDefault(); highlight((active + 1) % open.length); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); highlight((active - 1 + open.length) % open.length); }
+      else if (e.key === 'Enter' && active > -1) { e.preventDefault(); pick(active); }
+      else if (e.key === 'Escape') { close(); }
+    });
+    reset.addEventListener('click', close);
+  })();
+
   [q, fc, fo, ft, fr, fx].forEach(function (el) {
     el.addEventListener('input', apply);
     el.addEventListener('change', apply);

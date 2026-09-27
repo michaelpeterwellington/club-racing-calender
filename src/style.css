@@ -262,6 +262,28 @@ a.stat:hover{background:var(--hover)}
   font-family:var(--mono);font-size:.8125rem;text-transform:uppercase;letter-spacing:.1em;
   background:var(--panel-2);border:1px solid var(--line);color:var(--ink-2);
   padding:.45rem .6rem;border-radius:0;min-height:2rem;appearance:none;cursor:pointer}
+/* The wrapper carries the flex sizing so the listbox can be positioned against
+   it. min-width, not 0: the field was allowed to shrink narrower than its own
+   placeholder, which then clipped mid-word at around tablet width. */
+.combo{position:relative;flex:1 1 13rem;min-width:13.5rem;max-width:20rem;display:flex}
+.filters .combo input[type=search]{flex:1 1 auto;width:100%;min-width:0;max-width:none}
+.combo-list{position:absolute;top:calc(100% + 2px);left:0;right:0;z-index:5;
+  margin:0;padding:0;list-style:none;max-height:17rem;overflow-y:auto;
+  background:var(--panel-2);border:1px solid var(--line-2);
+  box-shadow:0 8px 24px rgba(0,0,0,.45)}
+:root[data-theme="light"] .combo-list{box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.combo-list li{display:flex;align-items:baseline;gap:.6rem;padding:.5rem .65rem;
+  font-family:var(--mono);font-size:.8125rem;color:var(--ink-2);cursor:pointer;
+  border-bottom:1px solid var(--line)}
+.combo-list li:last-child{border-bottom:0}
+.combo-list li b{color:var(--ink);font-weight:600}
+/* The kind — Circuit, Club, Series, Region — so two similar names are telling. */
+.combo-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.combo-kind{margin-left:auto;font-size:.6875rem;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;flex:0 0 auto}
+.combo-list li:hover,.combo-list li.is-active{background:var(--hover);color:var(--ink)}
+.combo-list li.is-active{box-shadow:inset 2px 0 0 var(--accent)}
+
 /* min-width, not 0: the field was allowed to shrink narrower than its own
    placeholder, which then clipped mid-word at around tablet width. */
 .filters input[type=search]{flex:1 1 13rem;min-width:13.5rem;max-width:20rem;

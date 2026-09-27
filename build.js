@@ -585,22 +585,31 @@ write('index.html', layout({
 </div>
 <div class="filters">
   <div class="wrap filters-in">
-    <input type="search" id="q" placeholder="Search circuit or club\u2026" aria-label="Search meetings" list="searchterms" autocomplete="off">
-    ${(() => {
-      // Native autocomplete: the browser filters these as you type, with no
-      // JavaScript and no custom listbox to get the keyboard handling wrong.
-      // Free text still searches everything the index holds — days of the week,
-      // layouts, meeting names — these are just the terms worth suggesting.
-      const terms = [
-        ...usedCircuits.map((c) => c.name),
-        ...usedOrgs.map((o) => o.short ?? o.name),
-        ...championships.filter((s) => all.some((m) => (m.championships ?? []).includes(s.id))).map((s) => s.name),
-        ...new Set(usedCircuits.map((c) => c.region)),
-      ];
-      return `<datalist id="searchterms">${[...new Set(terms)]
-        .sort((a, b) => a.localeCompare(b, 'en'))
-        .map((t) => `<option value="${esc(t)}"></option>`).join('')}</datalist>`;
-    })()}
+    <div class="combo">
+      <input type="search" id="q" placeholder="Search circuit or club\u2026" aria-label="Search meetings"
+             list="searchterms" autocomplete="off" role="combobox" aria-expanded="false"
+             aria-controls="q-list" aria-autocomplete="list">
+      <ul id="q-list" class="combo-list" role="listbox" aria-label="Suggestions" hidden></ul>
+      ${(() => {
+        // The datalist is the no-JavaScript fallback only. Safari renders it as a
+        // small popover rather than a dropdown that filters, so filter.js drops the
+        // list attribute and drives its own listbox instead \u2014 never both at once.
+        // Free text still searches everything the index holds: days of the week,
+        // circuit layouts, meeting names. These are the terms worth suggesting.
+        const terms = [
+          ...usedCircuits.map((c) => ({ t: c.name, k: 'Circuit' })),
+          ...usedOrgs.map((o) => ({ t: o.short ?? o.name, k: 'Club' })),
+          ...championships.filter((s) => all.some((m) => (m.championships ?? []).includes(s.id)))
+            .map((s) => ({ t: s.name, k: 'Series' })),
+          ...[...new Set(usedCircuits.map((c) => c.region))].map((r) => ({ t: r, k: 'Region' })),
+        ];
+        const seen = new Set();
+        return `<datalist id="searchterms">${terms
+          .filter((x) => !seen.has(x.t) && seen.add(x.t))
+          .sort((a, b) => a.t.localeCompare(b.t, 'en'))
+          .map((x) => `<option value="${esc(x.t)}" data-kind="${esc(x.k)}"></option>`).join('')}</datalist>`;
+      })()}
+    </div>
     <select id="f-circuit" aria-label="Filter by circuit"><option value="">All circuits</option>${usedCircuits.map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select>
     <select id="f-org" aria-label="Filter by club"><option value="">All clubs</option>${usedOrgs.map((o) => `<option value="${esc(o.id)}">${esc(o.short ?? o.name)}</option>`).join('')}</select>
     <select id="f-type" aria-label="Filter by circuit type"><option value="">Circuits &amp; roads</option><option value="short">Short circuits</option><option value="road">Road races</option></select>
