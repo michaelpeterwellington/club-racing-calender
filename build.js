@@ -585,7 +585,22 @@ write('index.html', layout({
 </div>
 <div class="filters">
   <div class="wrap filters-in">
-    <input type="search" id="q" placeholder="Search circuit or club\u2026" aria-label="Search meetings">
+    <input type="search" id="q" placeholder="Search circuit or club\u2026" aria-label="Search meetings" list="searchterms" autocomplete="off">
+    ${(() => {
+      // Native autocomplete: the browser filters these as you type, with no
+      // JavaScript and no custom listbox to get the keyboard handling wrong.
+      // Free text still searches everything the index holds — days of the week,
+      // layouts, meeting names — these are just the terms worth suggesting.
+      const terms = [
+        ...usedCircuits.map((c) => c.name),
+        ...usedOrgs.map((o) => o.short ?? o.name),
+        ...championships.filter((s) => all.some((m) => (m.championships ?? []).includes(s.id))).map((s) => s.name),
+        ...new Set(usedCircuits.map((c) => c.region)),
+      ];
+      return `<datalist id="searchterms">${[...new Set(terms)]
+        .sort((a, b) => a.localeCompare(b, 'en'))
+        .map((t) => `<option value="${esc(t)}"></option>`).join('')}</datalist>`;
+    })()}
     <select id="f-circuit" aria-label="Filter by circuit"><option value="">All circuits</option>${usedCircuits.map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select>
     <select id="f-org" aria-label="Filter by club"><option value="">All clubs</option>${usedOrgs.map((o) => `<option value="${esc(o.id)}">${esc(o.short ?? o.name)}</option>`).join('')}</select>
     <select id="f-type" aria-label="Filter by circuit type"><option value="">Circuits &amp; roads</option><option value="short">Short circuits</option><option value="road">Road races</option></select>

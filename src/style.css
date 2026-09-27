@@ -262,7 +262,9 @@ a.stat:hover{background:var(--hover)}
   font-family:var(--mono);font-size:.8125rem;text-transform:uppercase;letter-spacing:.1em;
   background:var(--panel-2);border:1px solid var(--line);color:var(--ink-2);
   padding:.45rem .6rem;border-radius:0;min-height:2rem;appearance:none;cursor:pointer}
-.filters input[type=search]{flex:1 1 13rem;min-width:0;max-width:20rem;
+/* min-width, not 0: the field was allowed to shrink narrower than its own
+   placeholder, which then clipped mid-word at around tablet width. */
+.filters input[type=search]{flex:1 1 13rem;min-width:13.5rem;max-width:20rem;
   text-transform:none;letter-spacing:.04em;cursor:text;color:var(--ink)}
 .filters input[type=search]::placeholder{color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .filters input:focus-visible,.filters select:focus-visible,.filters button:focus-visible,
