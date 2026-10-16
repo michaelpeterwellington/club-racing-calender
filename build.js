@@ -666,8 +666,21 @@ write('index.html', layout({
           .map((x) => `<option value="${esc(x.t)}" data-kind="${esc(x.k)}"></option>`).join('')}</datalist>`;
       })()}
     </div>
-    <select id="f-circuit" aria-label="Filter by circuit"><option value="">All circuits</option>${usedCircuits.map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}</select>
-    <select id="f-org" aria-label="Filter by club"><option value="">All clubs</option>${usedOrgs.map((o) => `<option value="${esc(o.id)}">${esc(o.short ?? o.name)}</option>`).join('')}</select>
+    ${(() => {
+      // Circuits and clubs take more than one pick — favourite tracks, the
+      // clubs you actually race with — so these are checkbox dropdowns rather
+      // than single selects. A <details> gives the open/close for free;
+      // filter.js reads the checked boxes and keeps the summary label honest.
+      // The filter name is visually-hidden text inside the summary, not an
+      // aria-label: a label would override the visible "2 circuits" state and
+      // a screen reader would never hear what is picked.
+      const msel = (id, label, allText, noun, opts) => `<details class="msel" id="${id}" data-noun="${noun}">
+      <summary><span class="vh">${label}:</span> <span class="msel-label">${allText}</span><span class="msel-caret" aria-hidden="true">▾</span></summary>
+      <ul class="msel-list">${opts.map(([v, t]) => `<li><label><input type="checkbox" value="${esc(v)}"> <span>${esc(t)}</span></label></li>`).join('')}</ul>
+    </details>`;
+      return msel('f-circuit', 'Filter by circuits', 'All circuits', 'circuits', usedCircuits.map((c) => [c.id, c.name]))
+        + '\n    ' + msel('f-org', 'Filter by clubs', 'All clubs', 'clubs', usedOrgs.map((o) => [o.id, o.short ?? o.name]));
+    })()}
     <select id="f-type" aria-label="Filter by circuit type"><option value="">Circuits &amp; roads</option><option value="short">Short circuits</option><option value="road">Road races</option></select>
     <label class="chk"><input type="checkbox" id="f-races"> Races only</label>
     <label class="chk"><input type="checkbox" id="f-clash"> Clashes only</label>
