@@ -707,10 +707,12 @@ ${LISTHEAD}
 for (const c of usedCircuits) {
   const list = all.filter((m) => m.circuit === c.id);
   const up = list.filter((m) => (m.end ?? m.start) >= TODAY);
+  const upRaces = up.filter((m) => (m.kind ?? 'race') === 'race');
+  const clubs = new Set(list.map((m) => m.organiser)).size;
   const links = circuitLinks[c.id] ?? [];
   write(`circuit/${c.id}/index.html`, layout({
     title: `${c.name} ${SEASON} race dates \u2014 ${SITE.name}`,
-    description: `Every motorcycle race meeting at ${c.name} in ${SEASON} \u2014 ${up.length} dates from ${new Set(list.map((m) => m.organiser)).size} clubs${PACE.some((x) => x.circuit === c.id) ? ', with 2026 lap times to measure yourself against' : ''}.`,
+    description: `Every motorcycle race meeting at ${c.name} in ${SEASON} \u2014 ${upRaces.length} date${upRaces.length === 1 ? '' : 's'} from ${clubs} club${clubs === 1 ? '' : 's'}${PACE.some((x) => x.circuit === c.id) ? ', with 2026 lap times to measure yourself against' : ''}.`,
     canonical: `/circuit/${c.id}/`, base: '../../', jsonld: up.slice(0, 40).map(eventLd),
     body: `<nav class="crumbs"><a href="../../">Calendar</a> <span>/</span> ${esc(c.name)}</nav>
 <h1>${esc(c.name)}</h1>
@@ -742,6 +744,11 @@ ${paceTable(c.id) ? '<script src="../../pace.js" defer></script>' : ''}`,
 for (const o of organisers) {
   const list = all.filter((m) => m.organiser === o.id);
   const up = list.filter((m) => (m.end ?? m.start) >= TODAY);
+  // Test days, schools and marshal training are dates, but they are not race
+  // dates. Counting them as such had ARA's page claiming 12 race meetings when
+  // six of the twelve were tests.
+  const races = up.filter((m) => (m.kind ?? 'race') === 'race');
+  const other = up.length - races.length;
   const awaiting = list.length === 0;
   write(`organiser/${o.id}/index.html`, layout({
     // Short form in the title to leave room before Google truncates, but not
@@ -753,15 +760,17 @@ for (const o of organisers) {
       // A club with one or two meetings should put the dates themselves in the
       // snippet. "All 1 Southern 100 2027 race dates" told searchers there was
       // one date without saying what it was, and took 78 impressions to 0 clicks.
-      : up.length === 1
-        ? `${o.short ?? o.name} ${SEASON}: ${dateLong(up[0]).replace(/ \d{4}$/, '')}${C[up[0].circuit] ? ` at ${C[up[0].circuit].name}` : ''}. Entry deadlines, weekend clashes with other clubs, and a calendar feed.`
-      : up.length <= 3
-        ? `${o.short ?? o.name} ${SEASON} race dates: ${up.map(shortRange).join(', ')}. Venues, entry deadlines and which weekends clash with other clubs.`
-      : `All ${up.length} ${o.short ?? o.name} ${SEASON} race dates \u2014 venues, entry deadlines, and which weekends clash with other clubs.${(o.short && o.short !== o.name) ? ` ${o.name}.` : ''}`,
+      : races.length === 0
+        ? `${o.short ?? o.name} have no ${SEASON} race meetings listed yet \u2014 ${other} test and practice date${other === 1 ? '' : 's'} are in the calendar, and a feed you can subscribe to.`
+      : races.length === 1
+        ? `${o.short ?? o.name} ${SEASON}: ${dateLong(races[0]).replace(/ \d{4}$/, '')}${C[races[0].circuit] ? ` at ${C[races[0].circuit].name}` : ''}. Entry deadlines, weekend clashes with other clubs, and a calendar feed.`
+      : races.length <= 3
+        ? `${o.short ?? o.name} ${SEASON} race dates: ${races.map(shortRange).join(', ')}. Venues, entry deadlines and which weekends clash with other clubs.`
+      : `All ${races.length} ${o.short ?? o.name} ${SEASON} race dates \u2014 venues, entry deadlines, and which weekends clash with other clubs.${(o.short && o.short !== o.name) ? ` ${o.name}.` : ''}`,
     canonical: `/organiser/${o.id}/`, base: '../../', jsonld: up.slice(0, 40).map(eventLd),
     body: `<nav class="crumbs"><a href="../../">Calendar</a> <span>/</span> ${esc(o.short ?? o.name)}</nav>
 <h1>${esc(o.name)}</h1>
-<p class="lede">${awaiting ? 'No dates published yet' : `${up.length} upcoming meeting${up.length === 1 ? '' : 's'}`}${o.website ? ` \u00b7 <a href="${esc(o.website)}" rel="noopener" class="js-out">Club website</a>` : ''}</p>
+<p class="lede">${awaiting ? 'No dates published yet' : `${races.length} upcoming race meeting${races.length === 1 ? '' : 's'}${other ? ` \u00b7 ${other} other date${other === 1 ? '' : 's'}` : ''}`}${o.website ? ` \u00b7 <a href="${esc(o.website)}" rel="noopener" class="js-out">Club website</a>` : ''}</p>
 ${awaiting ? `<div class="awaiting">
   <p><b>${esc(o.short ?? o.name)} have not published a 2027 calendar yet.</b> Most clubs
   release their dates between autumn and the new year. Nothing is being held back here —

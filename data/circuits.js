@@ -30,6 +30,12 @@ export const circuits = [
   { id: 'knockhill',     short: 'KNO', name: 'Knockhill',           region: 'Scotland',      type: 'short' },
   { id: 'kirkistown',    short: 'KIR', name: 'Kirkistown',          region: 'Northern Ireland', type: 'short' },
   { id: 'bishopscourt',  short: 'BIS', name: 'Bishopscourt',        region: 'Northern Ireland', type: 'short' },
+  // Isle of Man — short circuit
+  // A wartime airfield, still kept as an emergency landing strip, and the only
+  // short circuit on the Island. ARA run it clockwise and anti-clockwise on
+  // different days, so lap times across a weekend are not comparable — worth
+  // recording as layouts if pace data for Jurby ever appears.
+  { id: 'jurby',         short: 'JUR', name: 'Jurby',                region: 'Isle of Man',   type: 'short' },
   // Road courses
   { id: 'olivers-mount', short: 'OLV',name: "Oliver's Mount",      region: 'Yorkshire',     type: 'road' },
   { id: 'billown',       short: 'BIL', name: 'Billown Circuit',     region: 'Isle of Man',   type: 'road' },

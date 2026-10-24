@@ -389,4 +389,48 @@ export const meetings = [
     circuit: 'knockhill', organiser: 'kmsc', status: 'confirmed', round: '3',
     name: 'Scottish Championship Round 3',
     source: 'KMSC / Scottish Championship 2027 dates' },
+
+  /* ---------------- Andreas Racing Association 2027 ----------------
+     Jurby, Isle of Man. Six race meetings and six test days, taken from the
+     club's own 2027 poster. Every date matched the weekday printed against it,
+     which is the check that the year is right. Five of the six test days are
+     the Saturday before a race Sunday; 14 March stands alone. No round numbers
+     were given, so none are recorded — ARA have previously numbered each DAY of
+     a two-day meeting as its own round, so guessing them would likely be wrong. */
+  { id: 'ara-27-03-14-test', start: '2027-03-14',
+    circuit: 'jurby', organiser: 'ara', kind: 'test', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
+  { id: 'ara-27-03-20-test', start: '2027-03-20',
+    circuit: 'jurby', organiser: 'ara', kind: 'test', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
+  { id: 'ara-27-04-10-test', start: '2027-04-10',
+    circuit: 'jurby', organiser: 'ara', kind: 'test', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
+  { id: 'ara-27-05-08-test', start: '2027-05-08',
+    circuit: 'jurby', organiser: 'ara', kind: 'test', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
+  { id: 'ara-27-06-26-test', start: '2027-06-26',
+    circuit: 'jurby', organiser: 'ara', kind: 'test', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
+  { id: 'ara-27-09-11-test', start: '2027-09-11',
+    circuit: 'jurby', organiser: 'ara', kind: 'test', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
+  { id: 'ara-27-03-21', start: '2027-03-21',
+    circuit: 'jurby', organiser: 'ara', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
+  { id: 'ara-27-04-11', start: '2027-04-11',
+    circuit: 'jurby', organiser: 'ara', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
+  { id: 'ara-27-05-09', start: '2027-05-09',
+    circuit: 'jurby', organiser: 'ara', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
+  { id: 'ara-27-06-27', start: '2027-06-27',
+    circuit: 'jurby', organiser: 'ara', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
+  { id: 'ara-27-07-17', start: '2027-07-17', end: '2027-07-18',
+    circuit: 'jurby', organiser: 'ara', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
+  { id: 'ara-27-09-12', start: '2027-09-12',
+    circuit: 'jurby', organiser: 'ara', status: 'confirmed',
+    source: 'ARA 2027 events at Jurby (club poster)' },
 ];

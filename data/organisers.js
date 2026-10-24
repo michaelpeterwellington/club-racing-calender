@@ -44,6 +44,10 @@ export const organisers = [
       note: 'per-session results by season' }] },
   { id: 'auto-66',       name: 'Auto 66 Club',                            short: 'Auto 66',  website: null },
   { id: 'southern-100',  name: 'Southern 100 Racing',                     short: 'Southern 100', website: null },
+  { id: 'ara',           name: 'Andreas Racing Association',              short: 'ARA',      website: 'https://www.andreasracing.im',
+    note: 'The only club racing on a short circuit on the Isle of Man. ARA run their own '
+      + 'race school and pre-licence courses alongside the meetings, and pair most race '
+      + 'Sundays with a test day on the Saturday before.' },
   { id: 'mcui-ulster',   name: 'MCUI Ulster Centre clubs',                short: 'MCUI Ulster', website: null },
   { id: 'melville',      name: 'Melville Motor Club',                     short: 'Melville', website: null },
   { id: 'kmsc',          name: 'Knockhill Motor Sports Club (KMSC)',      short: 'KMSC',     website: 'https://www.knockhill.com/events/kmsc',
