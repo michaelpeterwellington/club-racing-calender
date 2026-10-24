@@ -369,4 +369,24 @@ export const meetings = [
   { id: 'bsb-2027-r11', start: '2027-10-15', end: '2027-10-17',
     circuit: 'brands-hatch', config: 'GP', organiser: 'bsb', status: 'confirmed', round: '11',
     source: 'BSB 2027 calendar (season planner)' },
+
+  /* ---------------- KMSC / Scottish Championship 2027 ----------------
+     KMSC rounds at Knockhill double as Scottish Championship rounds, so these
+     are one set of weekends, not two. All three fall Saturday–Sunday, which is
+     consistent with the club's usual format. 2026 ran four rounds, the last
+     being the Jock Taylor Memorial in October, so a final round is likely still
+     to be announced. Knockhill is SACU-permitted, so these will never appear in
+     the ACU permit data the scraper reads — they have to come from the club.    */
+  { id: 'kmsc-2027-r1', start: '2027-04-10', end: '2027-04-11',
+    circuit: 'knockhill', organiser: 'kmsc', status: 'confirmed', round: '1',
+    name: 'Scottish Championship Round 1',
+    source: 'KMSC / Scottish Championship 2027 dates' },
+  { id: 'kmsc-2027-r2', start: '2027-05-08', end: '2027-05-09',
+    circuit: 'knockhill', organiser: 'kmsc', status: 'confirmed', round: '2',
+    name: 'Scottish Championship Round 2',
+    source: 'KMSC / Scottish Championship 2027 dates' },
+  { id: 'kmsc-2027-r3', start: '2027-07-24', end: '2027-07-25',
+    circuit: 'knockhill', organiser: 'kmsc', status: 'confirmed', round: '3',
+    name: 'Scottish Championship Round 3',
+    source: 'KMSC / Scottish Championship 2027 dates' },
 ];
