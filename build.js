@@ -749,7 +749,14 @@ for (const o of organisers) {
     // page earning the most clicks on the site and they search "NG Road Racing".
     title: `${(o.short && o.short.length >= 4) ? o.short : o.name} ${SEASON} race dates \u2014 ${SITE.name}`,
     description: awaiting
-      ? `${o.name} have not published their ${SEASON} race dates yet. This page updates the day they do, and there is a calendar feed you can subscribe to now.`
+      ? `${o.name} have not published their ${SEASON} dates yet. This page updates the day they do \u2014 subscribe to the calendar feed now.`
+      // A club with one or two meetings should put the dates themselves in the
+      // snippet. "All 1 Southern 100 2027 race dates" told searchers there was
+      // one date without saying what it was, and took 78 impressions to 0 clicks.
+      : up.length === 1
+        ? `${o.short ?? o.name} ${SEASON}: ${dateLong(up[0]).replace(/ \d{4}$/, '')}${C[up[0].circuit] ? ` at ${C[up[0].circuit].name}` : ''}. Entry deadlines, weekend clashes with other clubs, and a calendar feed.`
+      : up.length <= 3
+        ? `${o.short ?? o.name} ${SEASON} race dates: ${up.map(shortRange).join(', ')}. Venues, entry deadlines and which weekends clash with other clubs.`
       : `All ${up.length} ${o.short ?? o.name} ${SEASON} race dates \u2014 venues, entry deadlines, and which weekends clash with other clubs.${(o.short && o.short !== o.name) ? ` ${o.name}.` : ''}`,
     canonical: `/organiser/${o.id}/`, base: '../../', jsonld: up.slice(0, 40).map(eventLd),
     body: `<nav class="crumbs"><a href="../../">Calendar</a> <span>/</span> ${esc(o.short ?? o.name)}</nav>
