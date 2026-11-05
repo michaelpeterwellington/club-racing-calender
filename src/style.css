@@ -284,6 +284,40 @@ a.stat:hover{background:var(--hover)}
 .combo-list li:hover,.combo-list li.is-active{background:var(--hover);color:var(--ink)}
 .combo-list li.is-active{box-shadow:inset 2px 0 0 var(--accent)}
 
+/* Multi-select dropdowns: a <details> styled as one of the filter controls,
+   its list a checkbox panel. Circuits and clubs take several picks at once. */
+.msel{position:relative}
+.msel>summary{display:inline-flex;align-items:center;gap:.5rem;list-style:none;
+  font-family:var(--mono);font-size:.8125rem;text-transform:uppercase;letter-spacing:.1em;
+  background:var(--panel-2);border:1px solid var(--line);color:var(--ink-2);
+  padding:.45rem .6rem;min-height:2rem;cursor:pointer;user-select:none}
+.msel>summary::-webkit-details-marker{display:none}
+.msel>summary::marker{content:'';font-size:0}
+.msel>summary:hover{border-color:var(--line-2);color:var(--ink)}
+.msel>summary:focus-visible{outline:none;border-color:var(--accent)}
+.msel-caret{font-size:.75rem;line-height:1;color:var(--muted);transition:transform .15s}
+.msel[open]>summary .msel-caret{transform:rotate(180deg)}
+.msel[open]>summary{border-color:var(--line-2);color:var(--ink)}
+/* Picks survive the dropdown closing, so the closed button has to say so. */
+.msel--on>summary{color:var(--ink);box-shadow:inset 2px 0 0 var(--accent)}
+.msel-list{position:absolute;top:calc(100% + 2px);left:0;z-index:5;
+  margin:0;padding:0;list-style:none;min-width:max(100%,14rem);max-width:min(22rem,calc(100vw - 2rem));
+  max-height:17rem;overflow-y:auto;
+  background:var(--panel-2);border:1px solid var(--line-2);
+  box-shadow:0 8px 24px rgba(0,0,0,.45)}
+:root[data-theme="light"] .msel-list{box-shadow:0 8px 24px rgba(0,0,0,.18)}
+/* Hung from the right edge instead when filter.js finds the open panel would
+   run off a narrow screen. */
+.msel-list--flip{left:auto;right:0}
+.msel-list li{border-bottom:1px solid var(--line)}
+.msel-list li:last-child{border-bottom:0}
+.msel-list label{display:flex;align-items:center;gap:.55rem;padding:.5rem .65rem;
+  font-family:var(--mono);font-size:.8125rem;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.msel-list label:hover{background:var(--hover);color:var(--ink)}
+.msel-list label span{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.msel-list input{accent-color:var(--accent);margin:0;width:.8rem;height:.8rem;flex:0 0 auto}
+.msel-list input:checked+span{color:var(--ink)}
+
 /* min-width, not 0: the field was allowed to shrink narrower than its own
    placeholder, which then clipped mid-word at around tablet width. */
 .filters input[type=search]{flex:1 1 13rem;min-width:13.5rem;max-width:20rem;

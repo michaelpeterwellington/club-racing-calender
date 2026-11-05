@@ -1,7 +1,51 @@
 (function () {
   var q = document.getElementById('q');
-  var fc = document.getElementById('f-circuit');
-  var fo = document.getElementById('f-org');
+  // Circuits and clubs are multi-selects: a <details> full of checkboxes, so a
+  // rider can keep their favourite tracks and preferred clubs ticked at once.
+  // This wraps one in a small object the rest of the code talks to.
+  function msel(id) {
+    var el = document.getElementById(id);
+    var boxes = [].slice.call(el.querySelectorAll('input[type=checkbox]'));
+    var label = el.querySelector('.msel-label');
+    var allText = label.textContent;
+    var noun = el.dataset.noun;
+    // The panel hangs from the button's left edge and is wider than the button,
+    // so a button that wrapped toward the right of a narrow screen would open
+    // its list past the viewport edge. Measured on open, because where the
+    // button sits depends on how the filter bar wrapped.
+    var list = el.querySelector('.msel-list');
+    el.addEventListener('toggle', function () {
+      if (!el.open) return;
+      list.classList.remove('msel-list--flip');
+      if (list.getBoundingClientRect().right > document.documentElement.clientWidth - 8) {
+        list.classList.add('msel-list--flip');
+      }
+    });
+    return {
+      el: el,
+      values: function () {
+        return boxes.filter(function (b) { return b.checked; })
+          .map(function (b) { return b.value; });
+      },
+      set: function (vals) {
+        boxes.forEach(function (b) { b.checked = vals.indexOf(b.value) > -1; });
+      },
+      clear: function () {
+        boxes.forEach(function (b) { b.checked = false; });
+      },
+      // The button says what is picked: the name itself for one, a count for
+      // more, so the state survives the dropdown closing.
+      sync: function () {
+        var on = boxes.filter(function (b) { return b.checked; });
+        label.textContent = !on.length ? allText
+          : on.length === 1 ? on[0].parentNode.textContent.trim()
+          : on.length + ' ' + noun;
+        el.classList.toggle('msel--on', on.length > 0);
+      }
+    };
+  }
+  var fc = msel('f-circuit');
+  var fo = msel('f-org');
   var ft = document.getElementById('f-type');
   var fr = document.getElementById('f-races');
   var fx = document.getElementById('f-clash');
@@ -79,13 +123,17 @@
 
   function apply() {
     var term = q.value.trim().toLowerCase();
-    var filtering = !!(term || fc.value || fo.value || ft.value || fr.checked || fx.checked);
+    var cs = fc.values();
+    var os = fo.values();
+    fc.sync();
+    fo.sync();
+    var filtering = !!(term || cs.length || os.length || ft.value || fr.checked || fx.checked);
     var shown = 0;
     var vis = [];
     rows.forEach(function (el) {
       var ok = (!term || el.dataset.search.indexOf(term) > -1)
-        && (!fc.value || el.dataset.circuit === fc.value)
-        && (!fo.value || el.dataset.organiser === fo.value)
+        && (!cs.length || cs.indexOf(el.dataset.circuit) > -1)
+        && (!os.length || os.indexOf(el.dataset.organiser) > -1)
         && (!ft.value || el.dataset.type === ft.value)
         && (!fr.checked || el.dataset.kind === 'race')
         && (!fx.checked || el.dataset.clash === '1');
@@ -109,8 +157,8 @@
     try {
       var p = new URLSearchParams();
       if (term) p.set('q', term);
-      if (fc.value) p.set('circuit', fc.value);
-      if (fo.value) p.set('club', fo.value);
+      if (cs.length) p.set('circuit', cs.join(','));
+      if (os.length) p.set('club', os.join(','));
       if (ft.value) p.set('type', ft.value);
       if (fr.checked) p.set('races', '1');
       if (fx.checked) p.set('clashes', '1');
@@ -122,8 +170,10 @@
   try {
     var p = new URLSearchParams(location.search);
     q.value = p.get('q') || '';
-    fc.value = p.get('circuit') || '';
-    fo.value = p.get('club') || '';
+    // Comma-separated so a link can carry several; a plain single value from an
+    // old link still parses as a one-entry list.
+    fc.set((p.get('circuit') || '').split(',').filter(Boolean));
+    fo.set((p.get('club') || '').split(',').filter(Boolean));
     ft.value = p.get('type') || '';
     fr.checked = p.get('races') === '1';
     fx.checked = p.get('clashes') === '1';
@@ -247,12 +297,28 @@
     reset.addEventListener('click', close);
   })();
 
-  [q, fc, fo, ft, fr, fx].forEach(function (el) {
+  [q, ft, fr, fx].forEach(function (el) {
     el.addEventListener('input', apply);
     el.addEventListener('change', apply);
   });
+  // A change event from any checkbox inside bubbles to the <details>, so one
+  // listener per dropdown covers the lot.
+  [fc, fo].forEach(function (f) {
+    f.el.addEventListener('change', apply);
+  });
+  // A <details> only closes itself when its own summary is clicked again, so
+  // clicking elsewhere — or opening the other dropdown — has to close it, or
+  // the list sits open over the results it is filtering.
+  document.addEventListener('click', function (e) {
+    [fc, fo].forEach(function (f) {
+      if (f.el.open && !f.el.contains(e.target)) f.el.open = false;
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') [fc, fo].forEach(function (f) { f.el.open = false; });
+  });
   reset.addEventListener('click', function () {
-    q.value = ''; fc.value = ''; fo.value = ''; ft.value = ''; fr.checked = false; fx.checked = false; apply();
+    q.value = ''; fc.clear(); fo.clear(); ft.value = ''; fr.checked = false; fx.checked = false; apply();
   });
 
   // Opening a row leaves the previous one open too, which turns a scan into a
