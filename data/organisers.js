@@ -42,7 +42,10 @@ export const organisers = [
   { id: 'bhr',           name: 'British Historic Racing Club (BHRC)',     short: 'BHRC',     website: null,
     results: [{ provider: 'The Results Live', years: '2016\u20132026', url: 'https://www.theresultslive.co.uk/british-historic-racing-club',
       note: 'per-session results by season' }] },
-  { id: 'auto-66',       name: 'Auto 66 Club',                            short: 'Auto 66',  website: null },
+  { id: 'auto-66',       name: 'Auto 66 Club',                            short: 'Auto 66',  website: 'https://oliversmount.com',
+    note: 'Auto 66 hold the permits for Oliver\u2019s Mount, which is promoted as Oliver\u2019s Mount '
+      + 'Racing \u2014 the club took the remaining shares in Scarborough Racing Circuits Ltd in 1996. '
+      + 'Tickets, entries and event detail all live on oliversmount.com, not under the club name.' },
   { id: 'southern-100',  name: 'Southern 100 Racing',                     short: 'Southern 100', website: null },
   { id: 'ara',           name: 'Andreas Racing Association',              short: 'ARA',      website: 'https://www.andreasracing.im',
     note: 'The only club racing on a short circuit on the Isle of Man. ARA run their own '

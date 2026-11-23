@@ -433,4 +433,40 @@ export const meetings = [
   { id: 'ara-27-09-12', start: '2027-09-12',
     circuit: 'jurby', organiser: 'ara', status: 'confirmed',
     source: 'ARA 2027 events at Jurby (club poster)' },
+
+  /* ---------------- Auto 66 / Oliver’s Mount 2027 ----------------
+     Auto 66 hold the permits; the venue is promoted as Oliver’s Mount Racing.
+     All seven weekends are Saturday–Sunday in 2027, and the event names match
+     the 2026 calendar, which is the corroboration that the list is genuine.
+     Two of the seven are hillclimbs and one is a British SuperMoto round rather
+     than road racing. They are kept here because they are the venue's own
+     calendar and they take the weekend either way; the names say which is which. */
+  { id: 'auto-66-2027-spring-cup', start: '2027-04-10', end: '2027-04-11',
+    circuit: 'olivers-mount', organiser: 'auto-66', status: 'confirmed',
+    name: 'The Bob Smith Spring Cup',
+    source: 'Oliver\u2019s Mount 2027 calendar' },
+  { id: 'auto-66-2027-may-hillclimb', start: '2027-05-01', end: '2027-05-02',
+    circuit: 'olivers-mount', organiser: 'auto-66', status: 'confirmed',
+    name: 'The Biker Lawyers May Hillclimb',
+    source: 'Oliver\u2019s Mount 2027 calendar' },
+  { id: 'auto-66-2027-barry-sheene', start: '2027-06-19', end: '2027-06-20',
+    circuit: 'olivers-mount', organiser: 'auto-66', status: 'confirmed',
+    name: 'The Pub & Kitchen Barry Sheene Festival',
+    source: 'Oliver\u2019s Mount 2027 calendar' },
+  { id: 'auto-66-2027-cock-o-the-north', start: '2027-07-24', end: '2027-07-25',
+    circuit: 'olivers-mount', organiser: 'auto-66', status: 'confirmed',
+    name: 'The Aran Sadler Cock o\u2019 The North',
+    source: 'Oliver\u2019s Mount 2027 calendar' },
+  { id: 'auto-66-2027-august-hillclimb', start: '2027-08-14', end: '2027-08-15',
+    circuit: 'olivers-mount', organiser: 'auto-66', status: 'confirmed',
+    name: 'The Biker Lawyers August Hillclimb',
+    source: 'Oliver\u2019s Mount 2027 calendar' },
+  { id: 'auto-66-2027-supermoto', start: '2027-08-21', end: '2027-08-22',
+    circuit: 'olivers-mount', organiser: 'auto-66', status: 'confirmed',
+    name: 'British SuperMoto Championship',
+    source: 'Oliver\u2019s Mount 2027 calendar' },
+  { id: 'auto-66-2027-gold-cup', start: '2027-09-11', end: '2027-09-12',
+    circuit: 'olivers-mount', organiser: 'auto-66', status: 'confirmed',
+    name: 'The HMH Civils Gold Cup',
+    source: 'Oliver\u2019s Mount 2027 calendar' },
 ];
